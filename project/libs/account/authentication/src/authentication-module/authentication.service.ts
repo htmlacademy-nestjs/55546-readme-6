@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { BlogUserRepository } from '@project/blog-user';
 import { CreateUserDto } from '../dto/create-user.dto';
-import { AUTH_USER_EXISTS } from './authentication.constants';
+import { AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from './authentication.constants';
 import { BlogUserEntity } from '@project/blog-user';
 import { LoginUserDto } from '../dto/login-user.dto';
 
@@ -44,5 +44,9 @@ export class AuthenticationService {
     }
 
     return existUser;
+  }
+
+  public async getUserById(id: string) {
+    return this.blogUserRepository.findById(id);
   }
 }

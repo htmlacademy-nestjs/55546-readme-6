@@ -9,10 +9,10 @@ export class BlogUserRepository extends BaseMemoryRepository<BlogUserEntity> {
     super(entityFactory);
   }
 
-  public findByEmail(email: string): Promise<BlogUserEntity | null> {
+  public async findByEmail(email: string): Promise<BlogUserEntity | null> {
     const entities = Array.from(this.entities.values());
     const user = entities.find((entity) => entity.email === email);
 
-    return Promise.resolve(this.entityFactory.create(user));
+    return user ? this.entityFactory.create(user) : null;
   }
 }
