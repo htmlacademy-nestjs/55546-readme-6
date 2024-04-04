@@ -18,11 +18,11 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Account Application')
-    .setDescription('The Readme site the account application description')
+    .setDescription('The Readme site the account application API description')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('spec', app, document);
 
   const port = process.env.PORT || PORT;
   await app.listen(port);

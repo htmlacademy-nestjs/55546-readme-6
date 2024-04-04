@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { BlogUserRepository } from '@project/blog-user';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from './authentication.constants';
@@ -22,7 +22,7 @@ export class AuthenticationService {
 
     const existUser = await this.blogUserRepository.findByEmail(email);
     if (existUser) {
-      throw new Error(AUTH_USER_EXISTS);
+      throw new ConflictException(AUTH_USER_EXISTS);
     }
 
     const userEntity = await new BlogUserEntity(blogUser).setPassword(password);
