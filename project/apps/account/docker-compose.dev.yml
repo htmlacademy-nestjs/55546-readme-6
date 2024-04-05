@@ -11,7 +11,7 @@ services:
       MONGO_INITDB_DATABASE: ${MONGO_DB}
 
     ports:
-      - 27018:27017
+      - ${MONGO_EXTERNAL_PORT}:${MONGO_PORT}
 
     volumes:
       - readmy.mongo.account:/data/db

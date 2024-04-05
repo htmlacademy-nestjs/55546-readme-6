@@ -16,6 +16,12 @@ export class MongoConfiguration {
   @IsOptional()
   public port: number = DEFAULT_MONGO_PORT;
 
+  @IsNumber({}, { message: EnvValidationMessage.DBPortRequired })
+  @Min(MIN_PORT)
+  @Max(MAX_PORT)
+  @IsOptional()
+  public externalPort: number = DEFAULT_MONGO_PORT;
+
   @IsString({ message: EnvValidationMessage.DBUserRequired })
   public user: string;
 
