@@ -1,6 +1,7 @@
-import { validateOrReject, IsString, IsNumber, Max, Min, IsOptional } from 'class-validator';
+import { validate, IsString, IsNumber, Max, Min, IsOptional } from 'class-validator';
 import { DEFAULT_MONGO_PORT, MAX_PORT, MIN_PORT } from "./mongo.const";
 import { EnvValidationMessage } from './mongo.messages';
+import { handleClassValidatorError } from '@project/shared/helpers';
 
 export class MongoConfiguration {
   @IsString({ message: EnvValidationMessage.DBNameRequired })
@@ -25,6 +26,6 @@ export class MongoConfiguration {
   public authBase: string;
 
   public async validate(): Promise<void> {
-    await validateOrReject(this);
+    handleClassValidatorError(await validate(this) as any);
   }
 }

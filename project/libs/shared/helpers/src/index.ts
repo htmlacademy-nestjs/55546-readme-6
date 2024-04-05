@@ -1,1 +1,1 @@
-export * from './lib/shared-helpers';
+export { handleClassValidatorError, getMongoConnectionString } from './lib/common';

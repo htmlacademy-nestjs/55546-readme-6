@@ -1,5 +1,6 @@
-import { validateOrReject, validate } from 'class-validator';
-import { IsString, IsNumber, IsIn, IsEnum } from 'class-validator';
+import { handleClassValidatorError } from '@project/shared/helpers';
+import { validate } from 'class-validator';
+import { IsString, IsNumber, IsIn } from 'class-validator';
 import { EnvValidationMessage } from './app.messages';
 import { ENVIRONMENTS, EnvironmentType } from './app.const';
 
@@ -12,11 +13,6 @@ export default class AppConfig {
   public port: number;
 
   public async validate(): Promise<void> {
-    const [firstError] = await validate(this);
-    if (firstError) {
-      throw new Error(
-        firstError.property + ' - ' +
-        firstError.value + ': ' + JSON.stringify(firstError.constraints));
-    }
+    handleClassValidatorError(await validate(this) as any);
   }
 }
