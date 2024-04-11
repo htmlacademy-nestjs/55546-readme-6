@@ -1,7 +1,7 @@
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { BlogUserRepository } from '@project/blog-user';
 import { CreateUserDto } from '../dto/create-user.dto';
-import { AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG } from './authentication.constants';
+import { AuthenticationResponseMessage } from './authentication.constants';
 import { BlogUserEntity } from '@project/blog-user';
 import { LoginUserDto } from '../dto/login-user.dto';
 
@@ -22,7 +22,7 @@ export class AuthenticationService {
 
     const existUser = await this.blogUserRepository.findByEmail(email);
     if (existUser) {
-      throw new ConflictException(AUTH_USER_EXISTS);
+      throw new ConflictException(AuthenticationResponseMessage.UserExist);
     }
 
     const userEntity = await new BlogUserEntity(blogUser).setPassword(password);
@@ -36,11 +36,11 @@ export class AuthenticationService {
     const { email, password } = dto;
     const existUser = await this.blogUserRepository.findByEmail(email);
     if (!existUser) {
-      throw new NotFoundException(AUTH_USER_NOT_FOUND);
+      throw new NotFoundException(AuthenticationResponseMessage.UserNotFound);
     }
 
     if (!await existUser.comparePassword(password)) {
-      throw new UnauthorizedException(AUTH_USER_PASSWORD_WRONG);
+      throw new UnauthorizedException(AuthenticationResponseMessage.UserPasswordWrong);
     }
 
     return existUser;
