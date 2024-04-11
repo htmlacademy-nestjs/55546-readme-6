@@ -1,0 +1,44 @@
+version: '3.9'
+services:
+  readmy.blog.postgres:
+    image: postgres:14-alpine
+    container_name: readmy.blog.postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - ${POSTGRES_EXTERNAL_PORT}:${PORT}
+    volumes:
+      - readmy.postgres.blog:/var/lib/postgresql/data
+
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d {POSTGRES_PASSWORD}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+    networks:
+      - readmy.blog
+
+  readmy.blog.pgadmin:
+    image: dpage/pgadmin4
+    container_name: readmy.blog.pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - 8082:80
+    depends_on:
+      - readmy.blog.postgres
+    networks:
+      - readmy.blog
+
+volumes:
+  readmy.postgres.blog:
+
+networks:
+  readmy.blog:
+      driver: bridge
