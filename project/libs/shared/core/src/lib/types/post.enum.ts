@@ -1,13 +1,22 @@
-
 export enum PostType {
-  Video = 'video',
-  Text = 'text',
-  Quote = 'quote',
-  Photo = 'photo',
-  Link = 'link'
+  Video = 'Video',
+  Text = 'Text',
+  Quote = 'Quote',
+  Photo = 'Photo',
+  Link = 'Link'
+}
+
+export enum PostDetailType {
+  Video = 'Video',
+  Photo = 'Photo',
+  Link = 'Link',
+  Description = 'Description',
+  QuoteAuthor = 'QuoteAuthor',
+  Announcement = 'Announcement',
+  Text = 'Text'
 }
 
 export enum PostStatus {
-  Published = 'published',
-  Draft = 'draft'
+  Published = 'Published',
+  Draft = 'Draft'
 }

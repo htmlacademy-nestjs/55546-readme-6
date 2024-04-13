@@ -4,9 +4,10 @@ export interface Post {
   id: string;
   type: PostType;
   status: PostStatus;
-  author: string;
+  authorId: string;
   title: string;
   tags?: string[];
+  likes?: string[];
   dateCreate: Date;
   dateUpdate: Date;
   isReposted: boolean;
