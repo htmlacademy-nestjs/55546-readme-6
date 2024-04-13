@@ -1,5 +1,5 @@
 import { validate, IsString, IsNumber, Max, Min, IsOptional } from 'class-validator';
-import { DEFAULT_MONGO_PORT, MAX_PORT, MIN_PORT } from "./mongo.const";
+import { DEFAULT_MONGO_PORT, PortRange } from "./mongo.const";
 import { EnvValidationMessage } from './mongo.messages';
 import { handleClassValidatorError } from '@project/shared/helpers';
 
@@ -11,14 +11,14 @@ export class MongoConfiguration {
   public host: string;
 
   @IsNumber({}, { message: EnvValidationMessage.DBPortRequired })
-  @Min(MIN_PORT)
-  @Max(MAX_PORT)
+  @Min(PortRange.Min)
+  @Max(PortRange.Max)
   @IsOptional()
   public port: number = DEFAULT_MONGO_PORT;
 
   @IsNumber({}, { message: EnvValidationMessage.DBPortRequired })
-  @Min(MIN_PORT)
-  @Max(MAX_PORT)
+  @Min(PortRange.Min)
+  @Max(PortRange.Max)
   @IsOptional()
   public externalPort: number = DEFAULT_MONGO_PORT;
 

@@ -1,3 +1,6 @@
-export const MIN_PORT = 0;
-export const MAX_PORT = 65535;
+export const PortRange = {
+  Min: 0,
+  Max: 65535
+} as const;
+
 export const DEFAULT_MONGO_PORT = 27018;

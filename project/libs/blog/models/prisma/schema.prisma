@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PostType {
+  Video
+  Text
+  Quote
+  Photo
+  Link
+}
+
+enum PostStatus {
+  Published
+  Draft
+}
+
+model Post {
+  id           String         @id @default(uuid()) @db.VarChar(100)
+  type         PostType
+  status       PostStatus
+  authorId     String         @map("author_id") @db.VarChar(100)
+  title        String         @db.VarChar(255)
+  tags         String[]       @db.VarChar(10)
+  dateCreate   DateTime       @default(now()) @map("date_create")
+  dateUpdate   DateTime       @updatedAt @map("date_update")
+  isReposted   Boolean        @default(false) @map("is_reposted")
+  likes        String[]       @db.VarChar(100)
+  Comment      Comment[]
+  PostsDetails PostsDetails[]
+
+  @@index([title])
+  @@map("posts")
+}
+
+model Comment {
+  id         String   @id @default(uuid()) @db.VarChar(100)
+  postId     String   @map("post_id") @db.VarChar(100)
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  authorId   String   @map("author_id") @db.VarChar(100)
+  text       String
+  dateCreate DateTime @default(now()) @map("date_create")
+
+  @@map("comments")
+}
+
+enum PostDetailType {
+  Video
+  Photo
+  Link
+  Description
+  QuoteAuthor
+  Announcement
+  Text
+}
+
+model PostsDetails {
+  id     String         @id @default(uuid()) @db.VarChar(100)
+  postId String         @map("post_id") @db.VarChar(100)
+  type   PostDetailType
+  value  String
+  post   Post           @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("posts_details")
+}
