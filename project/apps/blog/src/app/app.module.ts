@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 
+import { BlogPostModule } from '@project/blog-post';
+
 @Module({
-  imports: [],
+  imports: [BlogPostModule],
   controllers: [],
   providers: [],
 })

@@ -3,7 +3,7 @@ export { Entity } from './lib/base/entity';
 export { User } from './lib/types/user.interface';
 export { AuthUser } from './lib/types/auth-user.interface';
 
-export { Post } from './lib/types/post.interface';
+export { Post, CommonPostType } from './lib/types/post.interface';
 export { PostType, PostDetailType, PostStatus } from './lib/types/post.enum';
 export { TextPost } from './lib/types/text-post.interface';
 export { VideoPost } from './lib/types/video-post.interface';
