@@ -1,0 +1,29 @@
+# Get a blog post by id
+GET http://localhost:3002/api/posts/bffd128f-9a0d-4da7-8607-90245974f5ea HTTP 1.1
+
+# Create a new post
+POST http://localhost:3002/api/posts HTTP 1.1
+Content-Type: application/json
+
+{
+  "title": "Test Title",
+  "type": "Video",
+  "status": "Draft",
+  "authorId": "123",
+  "tags": ["test_tag"]
+}
+
+# Update an existed post
+PATCH http://localhost:3002/api/posts/bffd128f-9a0d-4da7-8607-90245974f5ea HTTP 1.1
+Content-Type: application/json
+
+{
+  "title": "Updated Test Title",
+  "type": "Video",
+  "status": "Draft",
+  "authorId": "123",
+  "tags": ["test_tag"]
+}
+
+# Delete an existed post
+DELETE http://localhost:3002/api/posts/bffd128f-9a0d-4da7-8607-90245974f5ea HTTP 1.1
