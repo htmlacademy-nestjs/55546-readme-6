@@ -50,7 +50,7 @@ model Comment {
   postId     String   @map("post_id") @db.VarChar(100)
   post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   authorId   String   @map("author_id") @db.VarChar(100)
-  text       String
+  message    String
   dateCreate DateTime @default(now()) @map("date_create")
 
   @@map("comments")

@@ -83,7 +83,7 @@ const generateComment = (post: PostType) => {
     id: randomUUID(),
     postId: post.id,
     authorId: new Types.ObjectId().toString(),
-    text: getRandomValue(COMMENTS_TEXTS),
+    message: getRandomValue(COMMENTS_TEXTS),
     dateCreate: randomDate(new Date(COMMENT_MIN_DATE), new Date())
   };
 }
@@ -94,7 +94,7 @@ const generatePostDetails = (post: PostType, type: typeof POSTS_DETAILS_TYPES[nu
     id: randomUUID(),
     postId: post.id,
     type,
-    value: (Math.random() + 1).toString(50)
+    value: (Math.random() + 1).toString(32)
   };
 }
 
