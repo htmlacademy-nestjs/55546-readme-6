@@ -2,6 +2,7 @@ version: '3.9'
 services:
   readmy.blog.postgres:
     image: postgres:14-alpine
+    restart: always
     container_name: readmy.blog.postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -24,6 +25,7 @@ services:
 
   readmy.blog.pgadmin:
     image: dpage/pgadmin4
+    restart: always
     container_name: readmy.blog.pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
