@@ -71,6 +71,14 @@ export class AuthenticationController {
     return data;
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: AuthenticationResponseMessage.JwtAuthSuccess
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: AuthenticationResponseMessage.JwtAuthError
+  })
   @UseGuards(JwtAuthGuard)
   @Get('/demo/:id')
   public async demoPipe(@Param('id') id: number) {
