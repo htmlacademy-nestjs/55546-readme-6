@@ -1,3 +1,4 @@
+import { Comment } from "./comment.interface";
 import { LinkPost } from "./link-post.interface";
 import { PhotoPost } from "./photo-post.interface";
 import { PostStatus, PostType } from "./post.enum";
@@ -16,6 +17,7 @@ export interface Post {
   dateCreate: Date;
   dateUpdate: Date;
   isReposted: boolean;
+  comments: Comment[];
 }
 
 export type CommonPostType = PhotoPost | TextPost | VideoPost | QuotePost | LinkPost;
