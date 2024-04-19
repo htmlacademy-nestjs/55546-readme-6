@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, Delete, Patch, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Delete, Patch, HttpCode, HttpStatus, Query } from '@nestjs/common';
 
 import { fillDto } from '@project/shared/helpers';
 
@@ -6,6 +6,8 @@ import { BlogPostService } from './blog-post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { BlogPostRdo } from './rdo/blog-post.rdo';
+import { BlogPostQuery } from './blog-post.query';
+import { BlogPostWithPaginationRdo } from './rdo/blog-post-with-pagination.rdo';
 
 @Controller('posts')
 export class BlogPostController {
@@ -13,23 +15,27 @@ export class BlogPostController {
     private readonly blogPostService: BlogPostService
   ) { }
 
-  @Get('/:id')
-  public async show(@Param('id') id: string) {
-    const postEntity = await this.blogPostService.getPost(id);
-    return fillDto(BlogPostRdo, postEntity.toPOJO() as any);
-  }
-
   @Get('/')
-  public async index() {
-    const blogPostEntities = await this.blogPostService.getAllPosts();
-    const posts = blogPostEntities.map((blogPost) => blogPost.toPOJO());
-    return fillDto(BlogPostRdo, posts as any);
+  public async index(@Query() query: BlogPostQuery) {
+    const postWithPagination = await this.blogPostService.getAllPosts(query);
+    const result = {
+      ...postWithPagination,
+      entities: postWithPagination.entities.map((blogPost) => blogPost.toPOJO())
+    };
+
+    return fillDto(BlogPostWithPaginationRdo, result);
   }
 
   @Post('/')
   public async create(@Body() dto: CreatePostDto) {
     const newPost = await this.blogPostService.createPost(dto);
     return fillDto(BlogPostRdo, newPost.toPOJO() as any);
+  }
+
+  @Get('/:id')
+  public async show(@Param('id') id: string) {
+    const postEntity = await this.blogPostService.getPost(id);
+    return fillDto(BlogPostRdo, postEntity.toPOJO() as any);
   }
 
   @Delete('/:id')

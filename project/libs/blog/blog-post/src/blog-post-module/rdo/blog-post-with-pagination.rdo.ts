@@ -1,7 +1,7 @@
 import { Expose } from "class-transformer";
-import { BlogPostRdo } from "./post.rdo";
+import { BlogPostRdo } from "./blog-post.rdo";
 
-export class BlogPostWithPagination {
+export class BlogPostWithPaginationRdo {
   @Expose()
   public entities: BlogPostRdo[];
 

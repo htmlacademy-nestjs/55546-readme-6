@@ -1,9 +1,11 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { BlogPostRepository } from './blog-post.repository';
 import { BlogPostEntity } from './blog-post.entity';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { CreatePostDto } from './dto/create-post.dto';
+import { PaginationResult } from '@project/shared/core';
+import { BlogPostQuery } from './blog-post.query';
 
 @Injectable()
 export class BlogPostService {
@@ -15,16 +17,11 @@ export class BlogPostService {
     return this.blogPostRepository.findById(id);
   }
 
-  public async getAllPosts(): Promise<BlogPostEntity[]> {
-    return await this.blogPostRepository.find();
+  public async getAllPosts(query?: BlogPostQuery): Promise<PaginationResult<BlogPostEntity>> {
+    return await this.blogPostRepository.find(query);
   }
 
   public async createPost(dto: CreatePostDto): Promise<BlogPostEntity> {
-    const existsPost = (await this.blogPostRepository.find({ title: dto.title })).at(0);
-    if (existsPost) {
-      throw new ConflictException('A post with the title already exists');
-    }
-
     const newPost = new BlogPostEntity(dto as any);
     await this.blogPostRepository.save(newPost);
 
@@ -48,20 +45,5 @@ export class BlogPostService {
     } catch {
       throw new NotFoundException(`Post with ID ${id} not found`);
     }
-  }
-
-  public async getPostsByIds(postIds: string[]): Promise<BlogPostEntity[]> {
-    const posts = await this.blogPostRepository.findByIds(postIds);
-
-    if (posts.length !== postIds.length) {
-      const foundPostIds = posts.map((post) => post.id);
-      const notFoundPostIds = postIds.filter((postId) => !foundPostIds.includes(postId));
-
-      if (notFoundPostIds.length > 0) {
-        throw new NotFoundException(`Posts with ids ${notFoundPostIds.join(', ')} not found.`);
-      }
-    }
-
-    return posts;
   }
 }

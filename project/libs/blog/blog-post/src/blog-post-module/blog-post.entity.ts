@@ -1,7 +1,6 @@
 import { CommonPostType, Entity, LinkPost, PhotoPost, PostStatus, PostType, QuotePost, TextPost, VideoPost } from '@project/shared/core';
 import { StorableEntity } from '@project/shared/core';
-import { BlogCommentEntity } from '@project/blog-comment';
-import { BlogCommentFactory } from 'libs/blog/blog-comment/src/blog-comment-module/blog-comment.factory';
+import { BlogCommentEntity, BlogCommentFactory } from '@project/blog-comment';
 
 function isPhotoType(obj: any): obj is PhotoPost {
   return obj.type === PostType.Photo;
@@ -63,7 +62,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<CommonPostT
     this.dateUpdate = post.dateUpdate ?? new Date();
 
     const blogCommentFactory = new BlogCommentFactory();
-    this.comments = post.comments.map(comment => blogCommentFactory.create(comment));
+    this.comments = post.comments?.map(comment => blogCommentFactory.create(comment)) ?? [];
 
     if (isPhotoType(post)) {
       this.photo = post.photo ?? undefined;
@@ -101,7 +100,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<CommonPostT
       dateCreate: this.dateCreate,
       dateUpdate: this.dateUpdate,
       isReposted: this.isReposted,
-      comments: this.comments.map(comment => comment.toPOJO())
+      comments: this.comments?.map(comment => comment.toPOJO()) ?? []
     };
 
     if (isPhotoType(this)) {
