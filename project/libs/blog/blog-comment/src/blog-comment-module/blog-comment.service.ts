@@ -12,8 +12,4 @@ export class BlogCommentService {
   public getComments(postId: string): Promise<BlogCommentEntity[]> {
     return this.blogCommentRepository.findByPostId(postId);
   }
-
-  public createComment(postIds: string, dto: CreateCommentDto): Promise<BlogCommentEntity> {
-    throw new NotImplementedException();
-  }
 }
