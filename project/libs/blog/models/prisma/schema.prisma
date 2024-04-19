@@ -38,7 +38,7 @@ model Post {
   dateUpdate   DateTime       @updatedAt @map("date_update")
   isReposted   Boolean        @default(false) @map("is_reposted")
   likes        String[]       @db.VarChar(100)
-  Comment      Comment[]
+  comments     Comment[]
   PostsDetails PostsDetails[]
 
   @@index([title])
