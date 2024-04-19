@@ -1,7 +1,7 @@
-import { PostStatus, PostType } from '@project/shared/core';
+import { Comment, PostStatus, PostType } from '@project/shared/core';
 import { Expose } from 'class-transformer';
 
-export class PostRdo {
+export class BlogPostRdo {
   @Expose()
   public id: string;
 
@@ -19,4 +19,10 @@ export class PostRdo {
 
   @Expose()
   public tags: string[];
+
+  @Expose()
+  public likes: string[];
+
+  @Expose()
+  public comments: Comment[];
 }

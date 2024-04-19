@@ -5,7 +5,7 @@ import { fillDto } from '@project/shared/helpers';
 import { BlogPostService } from './blog-post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { PostRdo } from './rdo/post.rdo';
+import { BlogPostRdo } from './rdo/blog-post.rdo';
 
 @Controller('posts')
 export class BlogPostController {
@@ -16,20 +16,20 @@ export class BlogPostController {
   @Get('/:id')
   public async show(@Param('id') id: string) {
     const postEntity = await this.blogPostService.getPost(id);
-    return fillDto(PostRdo, postEntity.toPOJO() as any);
+    return fillDto(BlogPostRdo, postEntity.toPOJO() as any);
   }
 
   @Get('/')
   public async index() {
     const blogPostEntities = await this.blogPostService.getAllPosts();
     const posts = blogPostEntities.map((blogPost) => blogPost.toPOJO());
-    return fillDto(PostRdo, posts as any);
+    return fillDto(BlogPostRdo, posts as any);
   }
 
   @Post('/')
   public async create(@Body() dto: CreatePostDto) {
     const newPost = await this.blogPostService.createPost(dto);
-    return fillDto(PostRdo, newPost.toPOJO() as any);
+    return fillDto(BlogPostRdo, newPost.toPOJO() as any);
   }
 
   @Delete('/:id')
@@ -41,6 +41,6 @@ export class BlogPostController {
   @Patch('/:id')
   public async update(@Param('id') id: string, @Body() dto: UpdatePostDto) {
     const updatedPost = await this.blogPostService.updatePost(id, dto);
-    return fillDto(PostRdo, updatedPost.toPOJO() as any);
+    return fillDto(BlogPostRdo, updatedPost.toPOJO() as any);
   }
 }
