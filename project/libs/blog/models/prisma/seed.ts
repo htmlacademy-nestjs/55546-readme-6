@@ -2,15 +2,14 @@ import { PrismaClient } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { Types } from 'mongoose';
 
+const DataCount = {
+  Post: 15,
+  Likes: 20,
+  Comment: 50,
+  Details: 150
+};
+
 const POST_MIN_DATE = '2019-01-01';
-
-const POSTS_COUNT = 15;
-
-const POSTS_LIKES_COUNT = 20;
-
-const POSTS_COMMENTS_COUNT = 50;
-
-const POSTS_DETAILS_COUNT = 150;
 
 const POSTS_TYPES = ['Video', 'Text', 'Quote', 'Photo', 'Link'];
 
@@ -69,7 +68,7 @@ const generatePost = () => {
     dateCreate: randomDate(new Date(POST_MIN_DATE), new Date()),
     dateUpdate: new Date(),
     isReposted: !!(Math.round(Math.random() * 1)),
-    likes: Array.from({ length: Math.floor(Math.random() * POSTS_LIKES_COUNT) }, () => {
+    likes: Array.from({ length: Math.floor(Math.random() * DataCount.Likes) }, () => {
       return new Types.ObjectId().toString();
     })
   };
@@ -99,7 +98,7 @@ const generatePostDetails = (post: PostType, type: typeof POSTS_DETAILS_TYPES[nu
 }
 
 const seedDb = async (prismaClient: PrismaClient) => {
-  const posts = Array.from({ length: POSTS_COUNT }, () => generatePost());
+  const posts = Array.from({ length: DataCount.Post }, () => generatePost());
   await Promise.all(
     posts.map(post => prismaClient.post.upsert({
       where: { id: post.id },
@@ -108,7 +107,7 @@ const seedDb = async (prismaClient: PrismaClient) => {
     }))
   );
 
-  const comments = Array.from({ length: POSTS_COMMENTS_COUNT },
+  const comments = Array.from({ length: DataCount.Comment },
     () => generateComment(getRandomValue(posts)));
   await Promise.all(
     comments.map(comment => prismaClient.comment.upsert({
@@ -118,7 +117,7 @@ const seedDb = async (prismaClient: PrismaClient) => {
     }))
   );
 
-  const postsDetails = Array.from({ length: POSTS_DETAILS_COUNT },
+  const postsDetails = Array.from({ length: DataCount.Details },
     () => generatePostDetails(
       getRandomValue(posts),
       getRandomValue(POSTS_DETAILS_TYPES as any)
