@@ -6,6 +6,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthenticationResponseMessage } from './authentication.constants';
 import { LoggedUserRdo } from '../rdo/logged-user.rdo';
 import { UserRdo } from '../rdo/user.rdo';
+import { MongoIdValidationPipe } from '@project/pipes';
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -59,7 +60,7 @@ export class AuthenticationController {
     description: AuthenticationResponseMessage.UserNotFound
   })
   @Get(':id')
-  public async get(@Param('id') id: string) {
+  public async show(@Param('id', MongoIdValidationPipe) id: string) {
     const existedUser = await this.authService.getUserById(id);
 
     const { passwordHash, ...data } = existedUser.toPOJO();
