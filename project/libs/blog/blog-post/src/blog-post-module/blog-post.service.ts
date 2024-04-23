@@ -1,30 +1,30 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { BlogPostRepository } from './blog-post.repository';
 import { BlogPostEntity } from './blog-post.entity';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { CreatePostDto } from './dto/create-post.dto';
+import { PaginationResult } from '@project/shared/core';
+import { BlogPostQuery } from './blog-post.query';
+import { BlogCommentFactory, BlogCommentRepository, CreateCommentDto } from '@project/blog-comment';
 
 @Injectable()
 export class BlogPostService {
   constructor(
-    private readonly blogPostRepository: BlogPostRepository
+    private readonly blogPostRepository: BlogPostRepository,
+    private readonly blogCommentRepository: BlogCommentRepository,
+    private readonly blogCommentFactory: BlogCommentFactory,
   ) { }
 
   public async getPost(id: string): Promise<BlogPostEntity> {
     return this.blogPostRepository.findById(id);
   }
 
-  public async getAllPosts(): Promise<BlogPostEntity[]> {
-    return await this.blogPostRepository.find();
+  public async getAllPosts(query?: BlogPostQuery): Promise<PaginationResult<BlogPostEntity>> {
+    return await this.blogPostRepository.find(query);
   }
 
   public async createPost(dto: CreatePostDto): Promise<BlogPostEntity> {
-    const existsPost = (await this.blogPostRepository.find({ title: dto.title })).at(0);
-    if (existsPost) {
-      throw new ConflictException('A post with the title already exists');
-    }
-
     const newPost = new BlogPostEntity(dto as any);
     await this.blogPostRepository.save(newPost);
 
@@ -50,18 +50,11 @@ export class BlogPostService {
     }
   }
 
-  public async getPostsByIds(postIds: string[]): Promise<BlogPostEntity[]> {
-    const posts = await this.blogPostRepository.findByIds(postIds);
+  async addComment(postId: string, dto: CreateCommentDto) {
+    const existsPost = await this.getPost(postId);
+    const newComment = this.blogCommentFactory.createFromDto(dto, existsPost.id);
+    await this.blogCommentRepository.save(newComment);
 
-    if (posts.length !== postIds.length) {
-      const foundPostIds = posts.map((post) => post.id);
-      const notFoundPostIds = postIds.filter((postId) => !foundPostIds.includes(postId));
-
-      if (notFoundPostIds.length > 0) {
-        throw new NotFoundException(`Posts with ids ${notFoundPostIds.join(', ')} not found.`);
-      }
-    }
-
-    return posts;
+    return newComment;
   }
 }
