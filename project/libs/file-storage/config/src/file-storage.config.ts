@@ -1,7 +1,9 @@
 import { plainToClass } from "class-transformer";
 import { FileStorageConfiguration } from "./file-storage/file-storage.env";
-import { DEFAULT_PORT } from "./file-storage/file-storage.const";
+import { DEFAULT_PORT, ENVIRONMENTS } from "./file-storage/file-storage.const";
 import { ConfigType, registerAs } from '@nestjs/config';
+
+type Environment = typeof ENVIRONMENTS[number];
 
 export interface FileStorageConfig {
   environment: string;
@@ -11,9 +13,9 @@ export interface FileStorageConfig {
 
 async function getFileStorageConfig(): Promise<FileStorageConfiguration> {
   const config = plainToClass(FileStorageConfiguration, {
-    environment: process.env.ENVIRONMENT,
+    environment: process.env.NODE_ENV as Environment,
     port: process.env.PORT ? parseInt(process.env.PORT, 10) : DEFAULT_PORT,
-    uploadDirectory: process.env.UPLOAD_DIRECTORY
+    uploadDirectory: process.env.UPLOAD_DIRECTORY_PATH
   });
 
   await config.validate();
