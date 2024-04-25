@@ -1,1 +1,1 @@
-export * from './lib/file-storage-config';
+export { default as FileStorageConfig } from './file-storage.config';
