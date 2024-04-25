@@ -1,6 +1,27 @@
-import { IsString, IsNumber, IsOptional, validate } from 'class-validator';
+import { IsString, IsNumber, IsOptional, validate, ValidateNested, IsObject, IsNotEmptyObject, IsDefined } from 'class-validator';
 import { handleClassValidatorError } from '@project/shared/helpers';
 import { EnvValidationMessage } from './file-storage.messages';
+import { Type } from 'class-transformer';
+
+export class FileStorageDbConfiguration {
+  @IsString({ message: EnvValidationMessage.DbHostRequired })
+  host: string;
+
+  @IsNumber({}, { message: EnvValidationMessage.DbPortRequired })
+  port: number;
+
+  @IsString({ message: EnvValidationMessage.DbUserRequired })
+  user: string;
+
+  @IsString({ message: EnvValidationMessage.DbNameRequired })
+  name: string;
+
+  @IsString({ message: EnvValidationMessage.DbPasswordRequired })
+  password: string;
+
+  @IsString({ message: EnvValidationMessage.DbAuthBaseRequired })
+  authBase: string;
+}
 
 export class FileStorageConfiguration {
   @IsString({ message: EnvValidationMessage.EnvironmentRequired })
@@ -12,6 +33,13 @@ export class FileStorageConfiguration {
 
   @IsString({ message: EnvValidationMessage.UploadDirectoryRequired })
   uploadDirectory: string;
+
+  @IsDefined()
+  @IsNotEmptyObject()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => FileStorageDbConfiguration)
+  db: FileStorageDbConfiguration;
 
   public async validate(): Promise<void> {
     handleClassValidatorError(await validate(this) as any);
