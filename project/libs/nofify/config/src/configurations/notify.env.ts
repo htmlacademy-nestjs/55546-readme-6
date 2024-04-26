@@ -51,9 +51,6 @@ export class NotifyConfiguration {
   @IsOptional()
   port: number;
 
-  @IsString({ message: EnvValidationMessage.UploadDirectoryRequired })
-  uploadDirectory: string;
-
   @IsDefined()
   @IsNotEmptyObject()
   @IsObject()
@@ -66,7 +63,7 @@ export class NotifyConfiguration {
   @IsObject()
   @ValidateNested()
   @Type(() => NotifyRabbitConfiguration)
-  reabbit: NotifyRabbitConfiguration;
+  rabbit: NotifyRabbitConfiguration;
 
   public async validate(): Promise<void> {
     handleClassValidatorError(await validate(this) as any);
