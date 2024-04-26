@@ -1,5 +1,5 @@
 import { ConfigType, registerAs } from '@nestjs/config';
-import { DEFAULT_MONGO_PORT, DEFAULT_PORT, DEFAULT_RABBIT_PORT, ENVIRONMENTS } from './notify.const';
+import { DEFAULT_MONGO_PORT, DEFAULT_PORT, DEFAULT_RABBIT_PORT, DEFAULT_SMTP_PORT, ENVIRONMENTS } from './notify.const';
 import { NotifyConfiguration } from './notify.env';
 import { plainToClass } from 'class-transformer';
 
@@ -23,6 +23,13 @@ export interface NotifyConfig {
     queue: string;
     exchange: string;
     port: number;
+  },
+  mail: {
+    host: string;
+    port: number;
+    user: string;
+    password: string;
+    from: string;
   }
 }
 
@@ -45,6 +52,13 @@ async function getConfig(): Promise<NotifyConfiguration> {
       user: process.env.RABBIT_USER,
       queue: process.env.RABBIT_QUEUE,
       exchange: process.env.RABBIT_EXCHANGE,
+    },
+    mail: {
+      host: process.env.MAIL_SMTP_HOST,
+      port: parseInt(process.env.MAIL_SMTP_PORT ?? DEFAULT_SMTP_PORT.toString(), 10),
+      user: process.env.MAIL_USER_NAME,
+      password: process.env.MAIL_USER_PASSWORD,
+      from: process.env.MAIL_FROM,
     }
   });
 

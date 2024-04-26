@@ -9,7 +9,7 @@ export function getRabbitMQOptions(optionSpace) {
       return {
         exchanges: [
           {
-            name: config.get<string>(`${optionSpace}.queue`),
+            name: config.get<string>(`${optionSpace}.exchange`),
             type: 'direct'
           }
         ],

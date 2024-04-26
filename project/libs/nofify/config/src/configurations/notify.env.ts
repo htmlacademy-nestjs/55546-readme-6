@@ -43,6 +43,23 @@ export class NotifyRabbitConfiguration {
   exchange: string;
 }
 
+export class NotifyMailConfiguration {
+  @IsString({ message: EnvValidationMessage.MailHostRequired })
+  host: string;
+
+  @IsNumber({}, { message: EnvValidationMessage.MailPortRequired })
+  port: number;
+
+  @IsString({ message: EnvValidationMessage.MailUserRequired })
+  user: string;
+
+  @IsString({ message: EnvValidationMessage.MailFromRequired })
+  from: string;
+
+  @IsString({ message: EnvValidationMessage.MailPasswordRequired })
+  password: string;
+}
+
 export class NotifyConfiguration {
   @IsString({ message: EnvValidationMessage.EnvironmentRequired })
   environment: string;
@@ -64,6 +81,13 @@ export class NotifyConfiguration {
   @ValidateNested()
   @Type(() => NotifyRabbitConfiguration)
   rabbit: NotifyRabbitConfiguration;
+
+  @IsDefined()
+  @IsNotEmptyObject()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => NotifyMailConfiguration)
+  mail: NotifyMailConfiguration;
 
   public async validate(): Promise<void> {
     handleClassValidatorError(await validate(this) as any);

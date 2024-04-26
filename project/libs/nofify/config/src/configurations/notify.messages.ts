@@ -14,5 +14,9 @@ export enum EnvValidationMessage {
   RabbitExchangeRequired = 'Rabbit exchange is required',
   RabbitPasswordRequired = 'Rabbit password is required',
   RabbitQueueRequired = 'Rabbit queue is required',
+  MailHostRequired = 'Mail host is required',
+  MailPortRequired = 'Mail port is required',
+  MailUserRequired = 'Mail user is required',
+  MailFromRequired = 'Mail from is required',
+  MailPasswordRequired = 'Mail password is required',
 }
-
