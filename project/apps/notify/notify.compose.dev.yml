@@ -1,0 +1,10 @@
+version: '3.9'
+services:
+  readmy.notify.fakesmtp:
+    image: gessnerfl/fake-smtp-server:2.2.0
+    restart: always
+    container_name: "readmy.notify.fakesmtp"
+    hostname: "readmy.notify.fakesmtp"
+    ports:
+      - "8025:8025"
+      - "1085:8080"
