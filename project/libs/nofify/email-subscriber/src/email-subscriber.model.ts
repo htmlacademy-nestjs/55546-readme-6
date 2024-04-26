@@ -14,10 +14,7 @@ export class EmailSubscriberModel extends Document implements Subscriber {
   public email: string;
 
   @Prop({ required: true })
-  public firstname: string;
-
-  @Prop({ required: true })
-  public lastname: string;
+  public name: string;
 
   public id?: string;
 }
