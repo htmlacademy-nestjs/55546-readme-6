@@ -7,6 +7,7 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "esModuleInterop": true,
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
@@ -16,12 +17,21 @@
     "baseUrl": ".",
     "paths": {
       "@project/account-config": ["libs/account/config/src/index.ts"],
+      "@project/account-notify": ["libs/account/nofify/src/index.ts"],
       "@project/authentication": ["libs/account/authentication/src/index.ts"],
       "@project/blog-comment": ["libs/blog/blog-comment/src/index.ts"],
       "@project/blog-models": ["libs/blog/models/src/index.ts"],
       "@project/blog-post": ["libs/blog/blog-post/src/index.ts"],
       "@project/blog-user": ["libs/account/blog-user/src/index.ts"],
       "@project/data-access": ["libs/shared/data-access/src/index.ts"],
+      "@project/email-subscriber": [
+        "libs/nofify/email-subscriber/src/index.ts"
+      ],
+      "@project/file-storage-config": ["libs/file-storage/config/src/index.ts"],
+      "@project/file-uploader": [
+        "libs/file-storage/file-uploader/src/index.ts"
+      ],
+      "@project/notify-config": ["libs/nofify/config/src/index.ts"],
       "@project/pipes": ["libs/shared/pipes/src/index.ts"],
       "@project/shared/core": ["libs/shared/core/src/index.ts"],
       "@project/shared/helpers": ["libs/shared/helpers/src/index.ts"]

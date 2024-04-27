@@ -19,6 +19,8 @@ const POSTS_TAGS = ['nature', 'globe', 'photo', 'canon', 'lands', 'random', 'new
 
 const POSTS_DETAILS_TYPES = ['Video', 'Text', 'QuoteAuthor', 'Photo', 'Link', 'Description', 'Announcement'] as const;
 
+const POSTS_DETAILS_LENGTH = 32;
+
 const POSTS_TITLES_LIST = [
   'The Moon by Night',
   'Rat Of The Ancestors',
@@ -93,7 +95,7 @@ const generatePostDetails = (post: PostType, type: typeof POSTS_DETAILS_TYPES[nu
     id: randomUUID(),
     postId: post.id,
     type,
-    value: (Math.random() + 1).toString(32)
+    value: (Math.random() + 1).toString(POSTS_DETAILS_LENGTH)
   };
 }
 
