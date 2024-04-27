@@ -7,6 +7,7 @@ import { resolve } from 'node:path';
 export function getMailerAsyncOptions(optionSpace: string): MailerAsyncOptions {
   return {
     useFactory: async (configService: ConfigService) => {
+
       return {
         transport: {
           host: configService.get<string>(`${optionSpace}.host`),
