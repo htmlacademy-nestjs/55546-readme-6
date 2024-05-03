@@ -10,6 +10,14 @@ export class JWTConfiguration {
   @IsNotEmpty()
   accessTokenExpiresIn: string;
 
+  @IsString()
+  @IsNotEmpty()
+  refreshTokenSecret: string;
+
+  @IsString()
+  @IsNotEmpty()
+  refreshTokenExpiresIn: string;
+
   public async validate(): Promise<void> {
     handleClassValidatorError(await validate(this) as any);
   }
