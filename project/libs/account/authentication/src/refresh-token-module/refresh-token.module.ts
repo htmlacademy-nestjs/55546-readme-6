@@ -15,8 +15,6 @@ import { RefreshTokenFactory } from './refresh-token.factory';
     RefreshTokenRepository,
     RefreshTokenFactory,
   ],
-  exports: [
-    RefreshTokenService
-  ]
+  exports: [RefreshTokenService]
 })
 export class RefreshTokenModule { }
