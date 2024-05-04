@@ -11,6 +11,8 @@ import { NotifyService } from '@project/account-notify';
 import { LocalAuthGuard } from '../guards/local-auth.guard';
 import { RequestWithUser } from './request-with-user.interface';
 import { JwtRefreshGuard } from '../guards/jwt-refresh.guard';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { RequestWithTokenPayload } from './request-with-token-payload.interface';
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -94,5 +96,12 @@ export class AuthenticationController {
   })
   public async refreshToken(@Req() { user }: RequestWithUser) {
     return this.authService.createUserToken(user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('check')
+  @HttpCode(HttpStatus.OK)
+  public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
+    return payload;
   }
 }

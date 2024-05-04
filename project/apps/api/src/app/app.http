@@ -12,3 +12,18 @@ Content-Type: application/json
 # Get new JWT pair
 POST http://localhost:3001/api/users/refresh HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIiLCJlbWFpbCI6InVzZXJAbm90Zm91bmQubG9jYWwiLCJyb2xlIjoidXNlciIsImxhc3RuYW1lIjoiU21pdGgiLCJmaXJzdG5hbWUiOiJLZWtzIiwidG9rZW5JZCI6IjBiMzk0NDA1LWM0ZTQtNGRmMy04NGNjLTg4ZTI5YTRiOGJkZiIsImlhdCI6MTcxNDY2NDEwOSwiZXhwIjoxNzE3MjU2MTA5fQ.A_-yL6zgW1H6VJbfMzXpQvJnK5flYjpwYOZiCxybnio
+
+###
+
+# Create a new post
+POST http://localhost:3001/api/posts HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIiLCJlbWFpbCI6InVzZXJAbm90Zm91bmQubG9jYWwiLCJyb2xlIjoidXNlciIsImxhc3RuYW1lIjoiU21pdGgiLCJmaXJzdG5hbWUiOiJLZWtzIiwidG9rZW5JZCI6IjBiMzk0NDA1LWM0ZTQtNGRmMy04NGNjLTg4ZTI5YTRiOGJkZiIsImlhdCI6MTcxNDY2NDEwOSwiZXhwIjoxNzE3MjU2MTA5fQ.A_-yL6zgW1H6VJbfMzXpQvJnK5flYjpwYOZiCxybnio
+Content-Type: application/json
+
+{
+  "title": "test",
+  "type": "Video",
+  "status": "Draft",
+  "authorId": "661022d3615ce5c3c722054f",
+  "tags": ["test_tag"]
+}
