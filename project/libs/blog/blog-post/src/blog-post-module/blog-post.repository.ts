@@ -6,7 +6,6 @@ import { BasePostgresRepository } from '@project/data-access';
 
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
-import { MAX_POST_LIMIT, PostFilter, postFilterToPrismaFilter } from './blog-post.filter';
 import { Prisma } from '@prisma/client';
 import { BlogPostQuery } from './blog-post.query';
 
