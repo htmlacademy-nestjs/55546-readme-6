@@ -31,6 +31,7 @@
       "@project/file-uploader": [
         "libs/file-storage/file-uploader/src/index.ts"
       ],
+      "@project/interceptors": ["libs/shared/interceptors/src/index.ts"],
       "@project/notify-config": ["libs/nofify/config/src/index.ts"],
       "@project/pipes": ["libs/shared/pipes/src/index.ts"],
       "@project/shared/core": ["libs/shared/core/src/index.ts"],

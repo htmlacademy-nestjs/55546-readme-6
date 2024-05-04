@@ -1,5 +1,5 @@
 import { ConfigType, registerAs } from '@nestjs/config';
-import { DEFAULT_MONGO_PORT, DEFAULT_PORT, DEFAULT_RABBIT_PORT, DEFAULT_SMTP_PORT, ENVIRONMENTS } from './notify.const';
+import { DEFAULT_RABBIT_PORT, DEFAULT_SMTP_PORT, DefaultPort, ENVIRONMENTS } from './notify.const';
 import { NotifyConfiguration } from './notify.env';
 import { plainToClass } from 'class-transformer';
 
@@ -36,10 +36,10 @@ export interface NotifyConfig {
 async function getConfig(): Promise<NotifyConfiguration> {
   const config = plainToClass(NotifyConfiguration, {
     environment: process.env.NODE_ENV as Environment,
-    port: parseInt(process.env.PORT || `${DEFAULT_PORT}`, 10),
+    port: parseInt(process.env.PORT || `${DefaultPort.Notify}`, 10),
     db: {
       host: process.env.MONGO_HOST,
-      port: parseInt(process.env.MONGO_PORT ?? DEFAULT_MONGO_PORT.toString(), 10),
+      port: parseInt(process.env.MONGO_PORT ?? DefaultPort.Mongo.toString(), 10),
       name: process.env.MONGO_DB,
       user: process.env.MONGO_USER,
       password: process.env.MONGO_PASSWORD,

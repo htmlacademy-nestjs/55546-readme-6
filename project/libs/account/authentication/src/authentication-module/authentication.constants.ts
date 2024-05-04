@@ -8,6 +8,7 @@ export const AuthenticationResponseMessage = {
   UserPasswordWrong: 'User password is wrong',
   JwtAuthSuccess: 'Successful user authorization with jwt',
   JwtAuthError: 'Failed user authorization with jwt',
+  GetNewTokens: 'Get a new access/refresh tokens',
 } as const;
 
 export const AuthenticationValidateMessage = {

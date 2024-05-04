@@ -24,3 +24,11 @@ GET http://localhost:4000/api/auth/661022d3615ce5c3c722054f HTTP 1.1
 # Checking user authorization by token
 GET http://localhost:4000/api/auth/demo/661022d3615ce5c3c722054f HTTP 1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IiIsImVtYWlsIjoidGVzdC11c2VyQG1haWwucnUiLCJuYW1lIjoiTmV3VXNlciIsImlhdCI6MTcxMzU1MDk3MCwiZXhwIjoxNzEzNTUxMjcwfQ.PzvqPTGDQzUWV7fTeNk5cAF7WMZo8KCHIekWh_Qz_rM
+
+# Get new JWT pair
+GET http://localhost:4000/api/auth/refresh HTTP 1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IiIsImVtYWlsIjoidGVzdC11c2VyQG1haWwucnUiLCJuYW1lIjoiTmV3VXNlciIsImlhdCI6MTcxMzU1MDk3MCwiZXhwIjoxNzEzNTUxMjcwfQ.PzvqPTGDQzUWV7fTeNk5cAF7WMZo8KCHIekWh_Qz_rM
+
+# Check user token
+POST http://localhost:4000/api/auth/check HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDQwMzJmYmU0Y2FlYjg2OGM2ZWVjMzYiLCJlbWFpbCI6InVzZXJAbm90Zm91bmQubG9jYWwiLCJyb2xlIjoidXNlciIsImxhc3RuYW1lIjoiU21pdGgiLCJmaXJzdG5hbWUiOiJLZWtzIiwiaWF0IjoxNjgzMTIxMzU1LCJleHAiOjE2ODMxMjE5NTV9.laK4-SAzu_ZMznRVsRWrHxELTGu_P48kpY_CwHPjxtk
