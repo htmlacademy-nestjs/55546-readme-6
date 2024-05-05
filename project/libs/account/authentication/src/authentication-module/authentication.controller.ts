@@ -7,19 +7,19 @@ import { LoggedUserRdo } from '../rdo/logged-user.rdo';
 import { UserRdo } from '../rdo/user.rdo';
 import { MongoIdValidationPipe } from '@project/pipes';
 import { fillDto } from '@project/shared/helpers';
-import { NotifyService } from '@project/account-notify';
 import { LocalAuthGuard } from '../guards/local-auth.guard';
 import { RequestWithUser } from './request-with-user.interface';
 import { JwtRefreshGuard } from '../guards/jwt-refresh.guard';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { RequestWithTokenPayload } from './request-with-token-payload.interface';
+import IsGuestGuard from '../guards/is-guest.guard';
+import { ChangeUserPasswordDto } from '../dto/change-user-password.dto';
 
 @ApiTags('authentication')
 @Controller('auth')
 export class AuthenticationController {
   constructor(
     private readonly authService: AuthenticationService,
-    private readonly notifyService: NotifyService
   ) { }
 
   @ApiResponse({
@@ -30,14 +30,11 @@ export class AuthenticationController {
     status: HttpStatus.CONFLICT,
     description: AuthenticationResponseMessage.UserExist
   })
+  @UseGuards(IsGuestGuard)
   @Post('register')
   public async create(@Body() dto: CreateUserDto) {
-    const newUser = await this.authService.register(dto);
-
-    const { id, email, name } = newUser;
-    await this.notifyService.registerSubscriber({ id, email, name });
-
-    return newUser.toPOJO();
+    console.log('test')
+    return this.authService.register(dto);
   }
 
   @ApiResponse({
@@ -59,6 +56,13 @@ export class AuthenticationController {
     const userToken = await this.authService.createUserToken(user);
 
     return fillDto(LoggedUserRdo, { ...user.toPOJO(), ...userToken })
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @Post('change-password')
+  public async changePassword(@Req() { user: { id } }: RequestWithUser, @Body() changeUserPasswordDto: ChangeUserPasswordDto) {
+    return this.authService.changeUserPassword(id, changeUserPasswordDto.oldPassword, changeUserPasswordDto.newPassword);
   }
 
   @ApiResponse({

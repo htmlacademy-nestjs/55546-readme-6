@@ -15,3 +15,16 @@ export const AuthenticationValidateMessage = {
   EmailNotValid: 'The email is not valid',
 } as const;
 
+export const NameLength = {
+  Min: 3,
+  Max: 50
+};
+
+export const PasswordLength = {
+  Min: 6,
+  Max: 12
+};
+
+export const AVATAR_MAX_SIZE = 500000;
+
+export const AVATAR_AVAILABLE_TYPES = /(jpe?g|png)/;

@@ -4,6 +4,8 @@ import { ConfigService } from '@nestjs/config';
 
 import { resolve } from 'node:path';
 
+const TEMPLATE_DIR = 'assets';
+
 export function getMailerAsyncOptions(optionSpace: string): MailerAsyncOptions {
   return {
     useFactory: async (configService: ConfigService) => {
@@ -22,7 +24,7 @@ export function getMailerAsyncOptions(optionSpace: string): MailerAsyncOptions {
           from: configService.get<string>('mail.from'),
         },
         template: {
-          dir: resolve(__dirname, 'assets'),
+          dir: resolve(__dirname, TEMPLATE_DIR),
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true

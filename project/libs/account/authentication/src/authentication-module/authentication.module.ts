@@ -10,6 +10,8 @@ import { JwtAccessStrategy } from '../strategies/jwt-access.strategy';
 import { LocalStrategy } from '../strategies/local.strategy';
 import { JwtRefreshStrategy } from '../strategies/jwt-refresh.strategy';
 import { RefreshTokenModule } from '../refresh-token-module/refresh-token.module';
+import { HttpModule } from '@nestjs/axios';
+import { HttpClient } from '@project/api-config';
 
 @Module({
   imports: [
@@ -19,7 +21,11 @@ import { RefreshTokenModule } from '../refresh-token-module/refresh-token.module
       useFactory: getJwtOptions
     }),
     NotifyModule,
-    RefreshTokenModule
+    RefreshTokenModule,
+    HttpModule.register({
+      timeout: HttpClient.Timeout,
+      maxRedirects: HttpClient.MaxRedirects,
+    }),
   ],
   controllers: [AuthenticationController],
   providers: [AuthenticationService, JwtAccessStrategy, LocalStrategy, JwtRefreshStrategy],

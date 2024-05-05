@@ -1,10 +1,14 @@
+import 'multer';
 import { HttpService } from '@nestjs/axios';
-import { Body, Controller, Post, Req, UseFilters } from '@nestjs/common';
+import { Body, Controller, ParseFilePipeBuilder, Post, Req, UploadedFile, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 
-import { LoginUserDto } from '@project/authentication';
+import { AVATAR_AVAILABLE_TYPES, AVATAR_MAX_SIZE, ChangeUserPasswordDto, CreateUserDto, LoginUserDto } from '@project/authentication';
+import { ApplicationServiceURL } from '@project/api-config';
 
-import { ApplicationServiceURL } from './app.config';
 import { AxiosExceptionFilter } from './filters/axios-exception.filter';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { saveFile } from '@project/shared/helpers';
+import { CheckAuthGuard } from './guards/check-auth.guard';
 
 @Controller('users')
 @UseFilters(AxiosExceptionFilter)
@@ -13,10 +17,36 @@ export class UsersController {
     private readonly httpService: HttpService
   ) { }
 
+  @Post('register')
+  @UseInterceptors(FileInterceptor('avatar'))
+  public async register(@Body() createUserDto: CreateUserDto, @UploadedFile(
+    (new ParseFilePipeBuilder())
+      .addMaxSizeValidator({ maxSize: AVATAR_MAX_SIZE })
+      .addFileTypeValidator({ fileType: AVATAR_AVAILABLE_TYPES })
+      .build({ fileIsRequired: false })
+  ) avatar?: Express.Multer.File) {
+    const id = avatar ? (await saveFile(this.httpService, avatar)).id : undefined;
+
+    const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Users}/register`,
+      { ...createUserDto, avatarId: id });
+
+    return data;
+  }
+
   @Post('login')
   public async login(@Body() loginUserDto: LoginUserDto) {
     const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Users}/login`, loginUserDto);
     return data;
+  }
+
+  @UseGuards(CheckAuthGuard)
+  @Post('change-password')
+  public async changePassword(@Req() request: Request, @Body() changeUserPasswordDto: ChangeUserPasswordDto) {
+    this.httpService.axiosRef.post(`${ApplicationServiceURL.Users}/change-password`, changeUserPasswordDto, {
+      headers: {
+        'Authorization': request.headers['authorization']
+      }
+    });
   }
 
   @Post('refresh')
