@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { UsersController } from './users.controller';
-import { CheckAuthGuard } from './guards/check-auth.guard';
 import { BlogController } from './blog.controller';
 import { HttpClient } from '@project/api-config';
+import { CheckAuthGuard } from '@project/guards';
 
 @Module({
   imports: [

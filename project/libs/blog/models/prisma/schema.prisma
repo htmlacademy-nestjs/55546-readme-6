@@ -28,18 +28,20 @@ enum PostStatus {
 }
 
 model Post {
-  id           String         @id @default(uuid()) @db.VarChar(100)
-  type         PostType
-  status       PostStatus
-  authorId     String         @map("author_id") @db.VarChar(100)
-  title        String         @db.VarChar(255)
-  tags         String[]       @db.VarChar(10)
-  dateCreate   DateTime       @default(now()) @map("date_create")
-  dateUpdate   DateTime       @updatedAt @map("date_update")
-  isReposted   Boolean        @default(false) @map("is_reposted")
-  likes        String[]       @db.VarChar(100)
-  comments     Comment[]
-  PostsDetails PostsDetails[]
+  id               String         @id @default(uuid()) @db.VarChar(100)
+  originalId       String?        @map("original_id")
+  type             PostType
+  status           PostStatus
+  authorId         String         @map("author_id") @db.VarChar(100)
+  originalAuthorId String?        @map("original_author_id") @db.VarChar(100)
+  title            String         @db.VarChar(255)
+  tags             String[]       @db.VarChar(10)
+  dateCreate       DateTime       @default(now()) @map("date_create")
+  dateUpdate       DateTime       @updatedAt @map("date_update")
+  isReposted       Boolean        @default(false) @map("is_reposted")
+  likes            String[]       @db.VarChar(100)
+  comments         Comment[]
+  postsDetails     PostsDetails[]
 
   @@index([title])
   @@map("posts")

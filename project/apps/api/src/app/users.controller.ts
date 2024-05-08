@@ -8,7 +8,7 @@ import { ApplicationServiceURL } from '@project/api-config';
 import { AxiosExceptionFilter } from './filters/axios-exception.filter';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { saveFile } from '@project/shared/helpers';
-import { CheckAuthGuard } from './guards/check-auth.guard';
+import { CheckAuthGuard } from '@project/guards';
 
 @Controller('users')
 @UseFilters(AxiosExceptionFilter)
@@ -19,12 +19,15 @@ export class UsersController {
 
   @Post('register')
   @UseInterceptors(FileInterceptor('avatar'))
-  public async register(@Body() createUserDto: CreateUserDto, @UploadedFile(
-    (new ParseFilePipeBuilder())
-      .addMaxSizeValidator({ maxSize: AVATAR_MAX_SIZE })
-      .addFileTypeValidator({ fileType: AVATAR_AVAILABLE_TYPES })
-      .build({ fileIsRequired: false })
-  ) avatar?: Express.Multer.File) {
+  public async register(
+    @Body() createUserDto: CreateUserDto,
+    @UploadedFile(
+      (new ParseFilePipeBuilder())
+        .addMaxSizeValidator({ maxSize: AVATAR_MAX_SIZE })
+        .addFileTypeValidator({ fileType: AVATAR_AVAILABLE_TYPES })
+        .build({ fileIsRequired: false })
+    ) avatar?: Express.Multer.File
+  ) {
     const id = avatar ? (await saveFile(this.httpService, avatar)).id : undefined;
 
     const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Users}/register`,

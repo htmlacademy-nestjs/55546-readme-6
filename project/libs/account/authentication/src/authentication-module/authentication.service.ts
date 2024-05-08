@@ -92,6 +92,10 @@ export class AuthenticationService {
     return this.blogUserRepository.findById(id);
   }
 
+  public async getUsersByListId(usersListId: string[]) {
+    return this.blogUserRepository.findListById(usersListId);
+  }
+
   public async createUserToken(user: User): Promise<Token> {
     const accessTokenPayload = createJWTPayload(user);
     const refreshTokenPayload = { ...accessTokenPayload, tokenId: crypto.randomUUID() };

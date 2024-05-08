@@ -1,4 +1,4 @@
-import { Document, Model } from 'mongoose';
+import { Document, Model, Schema } from 'mongoose';
 import { Entity, EntityFactory, StorableEntity } from "@project/shared/core";
 import { Repository } from "./repository.interface";
 

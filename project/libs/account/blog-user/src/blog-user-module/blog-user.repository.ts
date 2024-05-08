@@ -4,7 +4,7 @@ import { BlogUserEntity } from "./blog-user.entity";
 import { BlogUserFactory } from './blog-user.factory';
 import { BlogUserModel } from './blog-user.model';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Schema } from 'mongoose';
 
 @Injectable()
 export class BlogUserRepository extends BaseMongoRepository<BlogUserEntity, BlogUserModel> {
@@ -19,5 +19,13 @@ export class BlogUserRepository extends BaseMongoRepository<BlogUserEntity, Blog
     const document = await this.model.findOne({ email }).exec();
 
     return this.createEntityFromDocument(document);
+  }
+
+  public async findListById(listId: string[]): Promise<BlogUserEntity[]> {
+    const documents = await this.model.find({
+      _id: { $in: listId }
+    }).where({}).exec();
+
+    return documents.map(document => this.createEntityFromDocument(document));
   }
 }

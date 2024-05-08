@@ -33,7 +33,6 @@ export class AuthenticationController {
   @UseGuards(IsGuestGuard)
   @Post('register')
   public async create(@Body() dto: CreateUserDto) {
-    console.log('test')
     return this.authService.register(dto);
   }
 
@@ -81,6 +80,19 @@ export class AuthenticationController {
     const { passwordHash, ...data } = existedUser.toPOJO();
 
     return data;
+  }
+
+  @Post('get-users-by-id')
+  public async getUserList(@Body('usersListId') usersListId: string[]) {
+    const users = await this.authService.getUsersByListId(usersListId);
+
+    return users.map(user => {
+      const { passwordHash, ...data } = user.toPOJO();
+
+      return data;
+    });
+
+    // return data;
   }
 
   @ApiResponse({

@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { PostStatus, PostType } from '@prisma/client';
-import { IsArray, IsEnum, IsMongoId, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { ArrayMaxSize, IsArray, IsEnum, IsMongoId, IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator';
+import { MAX_POST_TAGS, TAG_VALIDATE_REGEXP } from '../blog-post.constants';
 
 export class CreatePostDto {
   @ApiProperty({
@@ -45,6 +46,8 @@ export class CreatePostDto {
   })
   @IsOptional()
   @IsString({ each: true })
+  @ArrayMaxSize(MAX_POST_TAGS)
+  @Matches(TAG_VALIDATE_REGEXP, { each: true })
   @IsArray()
   public tags?: string[];
 }

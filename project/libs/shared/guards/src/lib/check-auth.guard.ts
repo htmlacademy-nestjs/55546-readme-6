@@ -15,10 +15,11 @@ export class CheckAuthGuard implements CanActivate {
       headers: {
         'Authorization': request.headers['authorization']
       }
-    })
+    });
 
     request['user'] = data;
 
     return true;
   }
 }
+

@@ -25,7 +25,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('spec', app, document);
 
-  const port = process.env.PORT || PORT;
+  const port = process.env.BLOG_PORT || PORT;
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
