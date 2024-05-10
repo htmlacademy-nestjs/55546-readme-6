@@ -53,6 +53,18 @@ export class BlogController {
 
   }
 
+  @Get('/content-ribbon/:userId')
+  public async contentRibbon(@Param('userId') userId: string, @Query() params: BlogPostQuery) {
+    try {
+      const { data } = await this.httpService
+        .axiosRef.get(`${ApplicationServiceURL.Blog}/content-ribbon/${userId}`, { params });
+
+      return data;
+    } catch (err) {
+      return err.response.data;
+    }
+  }
+
   @Get('/search')
   public async search(@Query('title') title: string) {
     const { data } = await this.httpService

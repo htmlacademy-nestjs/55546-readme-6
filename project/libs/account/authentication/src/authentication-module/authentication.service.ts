@@ -136,4 +136,20 @@ export class AuthenticationService {
 
     this.blogUserRepository.update(userEntity);
   }
+
+  public async subscribe(subscriberId: string, authorId: string) {
+    const subscriber = await this.blogUserRepository.findById(subscriberId);
+    if (!subscriber) {
+      throw new NotFoundException(`Subscriber user with id ${subscriberId} not found`);
+    }
+
+    const author = await this.blogUserRepository.findById(authorId);
+    if (!author) {
+      throw new NotFoundException(`Author user with id ${authorId} not found`);
+    }
+
+    await this.blogUserRepository.update(subscriber.updateSubscribers(authorId));
+
+    return subscriber;
+  }
 }

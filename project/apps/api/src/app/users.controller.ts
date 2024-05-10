@@ -2,7 +2,7 @@ import 'multer';
 import { HttpService } from '@nestjs/axios';
 import { Body, Controller, ParseFilePipeBuilder, Post, Req, UploadedFile, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 
-import { AVATAR_AVAILABLE_TYPES, AVATAR_MAX_SIZE, ChangeUserPasswordDto, CreateUserDto, LoginUserDto } from '@project/authentication';
+import { AVATAR_AVAILABLE_TYPES, AVATAR_MAX_SIZE, ChangeUserPasswordDto, CreateSubscribeDto, CreateUserDto, LoginUserDto } from '@project/authentication';
 import { ApplicationServiceURL } from '@project/api-config';
 
 import { AxiosExceptionFilter } from './filters/axios-exception.filter';
@@ -55,6 +55,18 @@ export class UsersController {
   @Post('refresh')
   public async refreshToken(@Req() req: Request) {
     const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Users}/refresh`, null, {
+      headers: {
+        'Authorization': req.headers['authorization']
+      }
+    });
+
+    return data;
+  }
+
+  @UseGuards(CheckAuthGuard)
+  @Post('subscribe')
+  public async subscribe(@Req() req: Request, @Body() dto: CreateSubscribeDto) {
+    const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Users}/subscribe`, dto, {
       headers: {
         'Authorization': req.headers['authorization']
       }

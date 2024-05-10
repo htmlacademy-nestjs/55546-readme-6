@@ -14,6 +14,8 @@ import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { RequestWithTokenPayload } from './request-with-token-payload.interface';
 import IsGuestGuard from '../guards/is-guest.guard';
 import { ChangeUserPasswordDto } from '../dto/change-user-password.dto';
+import { CreateSubscriberDto } from 'libs/account/notify/src/dto/create-subscriber.dto';
+import { CreateSubscribeDto } from '../dto/create-subscribe.dto';
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -64,6 +66,14 @@ export class AuthenticationController {
     return this.authService.changeUserPassword(id, changeUserPasswordDto.oldPassword, changeUserPasswordDto.newPassword);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @Post('subscribe')
+  public async subscribe(@Req() { user }: RequestWithUser, @Body() dto: CreateSubscribeDto) {
+    console.log('user', user)
+    return this.authService.subscribe(user.id, dto.authorId);
+  }
+
   @ApiResponse({
     type: UserRdo,
     status: HttpStatus.OK,
@@ -91,8 +101,6 @@ export class AuthenticationController {
 
       return data;
     });
-
-    // return data;
   }
 
   @ApiResponse({

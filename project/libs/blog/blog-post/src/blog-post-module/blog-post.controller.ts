@@ -15,12 +15,15 @@ import { CommentRdo } from '@project/blog-comment';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MAX_SEARCH_COUNT, PostResponseMessage } from './blog-post.constants';
 import { PostValidationPipe } from './pipes/post-validation.pipe';
+import { HttpService } from '@nestjs/axios';
+import { ApplicationServiceURL } from '@project/api-config';
 
 @ApiTags('posts')
 @Controller('posts')
 export class BlogPostController {
   constructor(
-    private readonly blogPostService: BlogPostService
+    private readonly blogPostService: BlogPostService,
+    private readonly httpService: HttpService,
   ) { }
 
   @ApiResponse({
@@ -40,6 +43,22 @@ export class BlogPostController {
     return result;
 
     return fillDto(BlogPostWithPaginationRdo, result);
+  }
+
+  @Get('/content-ribbon/:userId')
+  public async contentRibbon(@Param('userId') userId: string, @Query() query: BlogPostQuery) {
+    const { data: user } = await this.httpService
+      .axiosRef.get(`${ApplicationServiceURL.Users}/${userId}`);
+
+    const postWithPagination = await this.blogPostService.getAllPosts(query, false, [...user.subscribers, user.id]);
+
+    const result = {
+      ...postWithPagination,
+      entities: postWithPagination.entities.map((blogPost) =>
+        ({ ...blogPost.toPOJO(), ...blogPost.detailsToObject() }))
+    };
+
+    return result;
   }
 
   @UseGuards(CheckAuthGuard)

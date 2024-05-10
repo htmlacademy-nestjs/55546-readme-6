@@ -118,13 +118,17 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     await this.client.post.delete({ where: { id } });
   }
 
-  public async find(query?: BlogPostQuery, isOnlyDraft = false): Promise<PaginationResult<BlogPostEntity>> {
+  public async find(query?: BlogPostQuery, isOnlyDraft = false, usersIds: string[] = []): Promise<PaginationResult<BlogPostEntity>> {
     const skip = query?.page && query?.limit ? (query.page - 1) * query.limit : undefined;
     const take = query?.limit;
     const where: Prisma.PostWhereInput = {};
     const orderBy: Prisma.PostOrderByWithRelationInput = {};
 
     where.status = isOnlyDraft ? PostStatus.Draft : PostStatus.Published;
+
+    if (usersIds?.length > 0) {
+      where.authorId = { in: usersIds };
+    }
 
     if (query?.sortByComments) {
       orderBy.comments = { _count: query.sortByComments };

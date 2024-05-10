@@ -16,8 +16,8 @@ export class BlogPostService {
     return this.blogPostRepository.findById(id);
   }
 
-  public async getAllPosts(query?: BlogPostQuery, isOnlyDraft = false): Promise<PaginationResult<BlogPostEntity>> {
-    return await this.blogPostRepository.find(query, isOnlyDraft);
+  public async getAllPosts(query?: BlogPostQuery, isOnlyDraft = false, usersIds: string[] = []): Promise<PaginationResult<BlogPostEntity>> {
+    return await this.blogPostRepository.find(query, isOnlyDraft, usersIds);
   }
 
   public async createPost(dto: CreatePostDto): Promise<BlogPostEntity> {

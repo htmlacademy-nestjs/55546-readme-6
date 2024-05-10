@@ -55,6 +55,16 @@ export class BlogUserEntity extends Entity implements StorableEntity<AuthUser> {
     return this;
   }
 
+  public updateSubscribers(authorId: string) {
+    if (this.subscribers.includes(authorId)) {
+      this.subscribers = this.subscribers.filter(subscriberId => subscriberId !== authorId);
+    } else {
+      this.subscribers.push(authorId);
+    }
+
+    return this;
+  }
+
   public async comparePassword(password: string): Promise<boolean> {
     return compare(password, this.passwordHash);
   }
