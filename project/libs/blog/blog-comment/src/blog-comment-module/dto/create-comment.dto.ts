@@ -13,6 +13,14 @@ export class CreateCommentDto {
   @MaxLength(CommentLength.Max, { message: BlogCommentValidateMessage.MessageGreaterMax })
   public message: string;
 
+  // @ApiProperty({
+  //   description: 'ID of the post for which the comment is being created',
+  //   example: '86eba68c-b5dc-424a-ae57-361967d0b262'
+  // })
+  // @IsString()
+  // @IsMongoId({ message: BlogCommentValidateMessage.InvalidID })
+  // public postId: string;
+
   @ApiProperty({
     description: 'Comment author ID',
     example: '661022d3615ce5c3c722054f'

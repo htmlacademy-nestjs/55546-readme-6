@@ -1,3 +1,4 @@
 export enum RabbitRouting {
-  AddSubscriber = 'notify.addSubscriber'
+  AddSubscriber = 'notify.addSubscriber',
+  NewPostsAppeared = 'notify.newPostsAppeared'
 }

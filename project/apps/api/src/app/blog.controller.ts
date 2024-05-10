@@ -8,8 +8,8 @@ import { BlogPostQuery, UpdatePostDto } from '@project/blog-post';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { saveFile } from '@project/shared/helpers';
 import { RequestWithUser } from '@project/authentication';
-import 'express';
 import { CommonPostType } from '@project/shared/core';
+import 'express';
 
 @Controller('posts')
 @UseFilters(AxiosExceptionFilter)
@@ -33,13 +33,23 @@ export class BlogController {
 
   @Get('/')
   public async index(@Query() params: BlogPostQuery) {
-    const { data } = await this.httpService
-      .axiosRef.get(`${ApplicationServiceURL.Blog}`, { params });
 
-    return {
-      ...data,
-      entities: this.getPostsWithUsersData(data.entities)
-    };
+    try {
+      const { data } = await this.httpService
+        .axiosRef.get(`${ApplicationServiceURL.Blog}`, { params });
+
+      return {
+        ...data,
+        entities: await this.getPostsWithUsersData(data.entities)
+      };
+    } catch (err) {
+      return err.response.data;
+    }
+
+    // return {
+    //   ...data,
+    //   entities: this.getPostsWithUsersData(data.entities)
+    // };
 
   }
 
@@ -131,6 +141,26 @@ export class BlogController {
     try {
       const { data } = await this.httpService
         .axiosRef.post(`${ApplicationServiceURL.Blog}/repost/${postId}`, {}, {
+          headers: {
+            'Authorization': request.headers['authorization']
+          }
+        });
+
+      return data;
+    } catch (err) {
+      return err.response.data;
+    }
+  }
+
+  @UseGuards(CheckAuthGuard)
+  @Patch('/like/:postId')
+  public async like(
+    @Req() request: Request,
+    @Param('postId') postId: string
+  ) {
+    try {
+      const { data } = await this.httpService
+        .axiosRef.patch(`${ApplicationServiceURL.Blog}/like/${postId}`, {}, {
           headers: {
             'Authorization': request.headers['authorization']
           }

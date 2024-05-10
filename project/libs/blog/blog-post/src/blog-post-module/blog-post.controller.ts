@@ -42,6 +42,12 @@ export class BlogPostController {
     return fillDto(BlogPostWithPaginationRdo, result);
   }
 
+  @UseGuards(CheckAuthGuard)
+  @Get('/find-after-date')
+  public async findAfterDate(@Query('date') date: Date) {
+    return await this.blogPostService.findAfterDate(date);
+  }
+
   @Get('/search')
   public async search(@Query('title') title: string) {
     const postWithPagination = await this.blogPostService
@@ -179,26 +185,47 @@ export class BlogPostController {
     // return fillDto(CommentRdo, newComment.toPOJO() as any)
   }
 
-  @ApiResponse({
-    type: CommentRdo,
-    status: HttpStatus.CREATED,
-    description: PostResponseMessage.CommentCreated
-  })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
-    description: PostResponseMessage.CommentValidationError
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: PostResponseMessage.PostNotFound
-  })
   @UseGuards(CheckAuthGuard)
-  @Post('/:postId/comments')
-  public async createComment(@Param('postId') postId: string, @Body() dto: CreateCommentDto) {
-    const newComment = await this.blogPostService.addComment(postId, dto);
+  @Patch('/like/:postId')
+  public async like(
+    @Req() request: Request & RequestWithUser, @Param('postId') postId: string
+  ) {
+    const post = await this.blogPostService.like(postId, request.user.id);
 
-    return fillDto(CommentRdo, newComment.toPOJO() as any)
+    return { ...post.toPOJO(), ...post.detailsToObject() };
   }
+
+  // @ApiResponse({
+  //   type: CommentRdo,
+  //   status: HttpStatus.CREATED,
+  //   description: PostResponseMessage.CommentCreated
+  // })
+  // @ApiResponse({
+  //   status: HttpStatus.BAD_REQUEST,
+  //   description: PostResponseMessage.CommentValidationError
+  // })
+  // @ApiResponse({
+  //   status: HttpStatus.NOT_FOUND,
+  //   description: PostResponseMessage.PostNotFound
+  // })
+  // @UseGuards(CheckAuthGuard)
+  // @Post('/:postId/comment')
+  // public async createComment(@Param('postId') postId: string, @Body() dto: CreateCommentDto) {
+  //   const newComment = await this.blogPostService.addComment(postId, dto);
+  //
+  //   return fillDto(CommentRdo, { ...newComment.toPOJO() })
+  // }
+  //
+  // @UseGuards(CheckAuthGuard)
+  // @Delete('/comment/:commentId')
+  // public async deleteComment(@Req() { user }: RequestWithUser, @Param('commentId') commentId: string) {
+  //   return this.blogPostService.deleteComment(commentId, user.id);
+  // }
+  //
+  // @Get('/:postId/comments')
+  // public async getCommentsByPostId(@Param('postId') postId: string, @Query() query: BlogCommentQuery) {
+  //   return this.blogPostService.getCommentsByPostId(postId, query);
+  // }
 
   // @UseGuards(CheckAuthGuard)
   // @Post('/get-users-posts')

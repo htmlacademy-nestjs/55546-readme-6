@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { PostStatus, PostType } from '@prisma/client';
 import { ArrayMaxSize, IsArray, IsEnum, IsMongoId, IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator';
 import { MAX_POST_TAGS, TAG_VALIDATE_REGEXP } from '../blog-post.constants';
+import { Transform } from 'class-transformer';
 
 export class CreatePostDto {
   @ApiProperty({
@@ -46,6 +47,7 @@ export class CreatePostDto {
   })
   @IsOptional()
   @IsString({ each: true })
+  @Transform(({ value }) => [...new Set(value.map((tag: string) => tag.toLowerCase()))])
   @ArrayMaxSize(MAX_POST_TAGS)
   @Matches(TAG_VALIDATE_REGEXP, { each: true })
   @IsArray()

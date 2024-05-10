@@ -106,6 +106,16 @@ export class BlogPostEntity extends Entity implements StorableEntity<CommonPostT
     return this.postsDetails;
   }
 
+  toggleLike(userId: string) {
+    if (this.likes.includes(userId)) {
+      this.likes = this.likes.filter(id => id !== userId);
+    } else {
+      this.likes.push(userId);
+    }
+
+    return this;
+  }
+
   addDetail(detail: { type: PostDetailType, value: string }) {
     this.postsDetails.push(
       (new BlogPostDetailFactory()).create({

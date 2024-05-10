@@ -6,18 +6,11 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { CreatePostDto } from './dto/create-post.dto';
 import { PaginationResult } from '@project/shared/core';
 import { BlogPostQuery } from './blog-post.query';
-import { BlogCommentFactory, BlogCommentRepository, CreateCommentDto } from '@project/blog-comment';
-import { HttpService } from '@nestjs/axios';
-import { ApplicationServiceURL } from '@project/api-config';
+import { PostStatus } from '@prisma/client';
 
 @Injectable()
 export class BlogPostService {
-  constructor(
-    private readonly blogPostRepository: BlogPostRepository,
-    private readonly blogCommentRepository: BlogCommentRepository,
-    private readonly blogCommentFactory: BlogCommentFactory,
-    private readonly httpService: HttpService,
-  ) { }
+  constructor(private readonly blogPostRepository: BlogPostRepository) { }
 
   public async getPost(id: string): Promise<BlogPostEntity> {
     return this.blogPostRepository.findById(id);
@@ -91,11 +84,25 @@ export class BlogPostService {
     return await this.blogPostRepository.repost(existsPost, userId);
   }
 
-  async addComment(postId: string, dto: CreateCommentDto) {
+  public async like(postId: string, userId: string) {
     const existsPost = await this.getPost(postId);
-    const newComment = this.blogCommentFactory.createFromDto(dto, existsPost.id);
-    await this.blogCommentRepository.save(newComment);
+    if (!existsPost) {
+      throw new NotFoundException(`Post with ID ${postId} not found`);
+    }
 
-    return newComment;
+    if (existsPost.status !== PostStatus.Published) {
+      throw new ForbiddenException(`You can only like published articles.`);
+    }
+
+    try {
+      await this.blogPostRepository.like(existsPost.toggleLike(userId));
+      return existsPost;
+    } catch {
+      throw new NotFoundException(`Post with ID ${postId} not found`);
+    }
+  }
+
+  public async findAfterDate(date: Date) {
+    return await this.blogPostRepository.findAfterDate(date);
   }
 }

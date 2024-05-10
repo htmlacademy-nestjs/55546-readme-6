@@ -66,6 +66,14 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     });
   }
 
+  public async like(entity: BlogPostEntity): Promise<void> {
+    const pojoEntity = entity.toPOJO();
+    await this.client.post.update({
+      where: { id: entity.id },
+      data: { likes: pojoEntity.likes }
+    });
+  }
+
   public async repost(entity: BlogPostEntity, authorId: string): Promise<BlogPostEntity> {
     const { id, ...pojoEntity } = entity.toPOJO();
 
@@ -160,5 +168,14 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       itemsPerPage: take,
       totalItems: postCount
     };
+  }
+
+  public async findAfterDate(date: Date) {
+    const posts = await this.client.post.findMany({
+      where: { dateCreate: { gt: date } },
+      include: { comments: true, postsDetails: true }
+    });
+
+    return posts.map(post => this.createEntityFromDocument(post).createResponseObject());
   }
 }

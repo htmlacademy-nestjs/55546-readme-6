@@ -4,7 +4,7 @@ import { BlogUserEntity } from "./blog-user.entity";
 import { BlogUserFactory } from './blog-user.factory';
 import { BlogUserModel } from './blog-user.model';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Schema } from 'mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class BlogUserRepository extends BaseMongoRepository<BlogUserEntity, BlogUserModel> {

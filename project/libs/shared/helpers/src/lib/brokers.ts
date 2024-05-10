@@ -5,6 +5,26 @@ import { getRabbitMQConnectionString } from './common';
 export function getRabbitMQOptions(optionSpace) {
   return {
     useFactory: async (config: ConfigService) => {
+      console.log(
+        'getRabbitMQOptions',
+        optionSpace,
+        config.get<string>(`${optionSpace}`),
+        {
+          exchanges: [
+            {
+              name: config.get<string>(`${optionSpace}.exchange`),
+              type: 'direct'
+            }
+          ],
+          uri: getRabbitMQConnectionString({
+            host: config.get<string>(`${optionSpace}.host`),
+            password: config.get<string>(`${optionSpace}.password`),
+            user: config.get<string>(`${optionSpace}.user`),
+            port: config.get<string>(`${optionSpace}.port`),
+          }),
+          connectionInitOptions: { wait: true },
+          enableControllerDiscovery: true,
+        });
 
       return {
         exchanges: [

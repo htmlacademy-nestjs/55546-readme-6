@@ -14,6 +14,7 @@ import crypto from 'crypto';
 import { HttpService } from '@nestjs/axios';
 import { ApplicationServiceURL } from '@project/api-config';
 import { NotifyService } from '@project/account-notify';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class AuthenticationService {
@@ -93,7 +94,8 @@ export class AuthenticationService {
   }
 
   public async getUsersByListId(usersListId: string[]) {
-    return this.blogUserRepository.findListById(usersListId);
+    return this.blogUserRepository.findListById(
+      usersListId.filter(id => Types.ObjectId.isValid(id)));
   }
 
   public async createUserToken(user: User): Promise<Token> {
