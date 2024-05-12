@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
+import { UploadedFileRdo } from '@project/file-uploader';
 
 export class UserRdo {
   @ApiProperty({
@@ -14,7 +15,11 @@ export class UserRdo {
     example: '/images/user.png'
   })
   @Expose()
-  public avatar: string;
+  public avatarId: string;
+
+  @Expose()
+  @Type(() => UploadedFileRdo)
+  public avatar: UploadedFileRdo
 
   @ApiProperty({
     description: 'User name',

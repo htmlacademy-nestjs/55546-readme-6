@@ -1,0 +1,3 @@
+# Launches a newsletter with notifications of new posts to all users
+GET http://localhost:3001/api/notify/new-posts-appeared HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc

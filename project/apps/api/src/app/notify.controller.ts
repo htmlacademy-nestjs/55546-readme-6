@@ -6,7 +6,7 @@ import { rabbitConfig } from '@project/account-config';
 import { ApplicationServiceURL } from '@project/api-config';
 import { CheckAuthGuard } from '@project/guards';
 import { RabbitRouting } from '@project/shared/core';
-import { AxiosExceptionFilter } from './filters/axios-exception.filter';
+import { AxiosExceptionFilter } from '@project/filters';
 import { InjectAxiosAuthorization } from '@project/interceptors';
 
 @Controller('notify')

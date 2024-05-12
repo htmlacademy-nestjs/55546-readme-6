@@ -6,6 +6,7 @@ import { CheckAuthGuard } from '@project/guards';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { NewsletterRdo } from './rdo/newsletter.rdo';
 import { NewsletterResponseMessage } from './newsletter.constants';
+import { fillDto } from '@project/shared/helpers';
 
 @ApiTags('newsletter')
 @Controller()
@@ -35,6 +36,7 @@ export class NewsletterController {
   @UseGuards(CheckAuthGuard)
   @Get('/get-last-newsletter')
   public async getLastNewsletterDate() {
-    return this.newsletterService.getLastNewsletter();
+    const entity = await this.newsletterService.getLastNewsletter();
+    return fillDto(NewsletterRdo, { ...entity.toPOJO() });
   }
 }

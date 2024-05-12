@@ -1,9 +1,9 @@
 import 'multer';
 import { HttpService } from '@nestjs/axios';
-import { Body, Controller, ParseFilePipeBuilder, Post, UploadedFile, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseFilePipeBuilder, Patch, Post, UploadedFile, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AVATAR_AVAILABLE_TYPES, AVATAR_MAX_SIZE, ChangeUserPasswordDto, CreateSubscribeDto, CreateUserDto, LoginUserDto } from '@project/authentication';
 import { ApplicationServiceURL } from '@project/api-config';
-import { AxiosExceptionFilter } from './filters/axios-exception.filter';
+import { AxiosExceptionFilter } from '@project/filters';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CheckAuthGuard } from '@project/guards';
 import { InjectAxiosAuthorization } from '@project/interceptors';
@@ -39,9 +39,9 @@ export class UsersController {
   }
 
   @UseGuards(CheckAuthGuard)
-  @Post('change-password')
+  @Patch('change-password')
   public async changePassword(@Body() changeUserPasswordDto: ChangeUserPasswordDto) {
-    this.httpService.axiosRef.post(`${ApplicationServiceURL.Users}/change-password`, changeUserPasswordDto);
+    this.httpService.axiosRef.patch(`${ApplicationServiceURL.Users}/change-password`, changeUserPasswordDto);
   }
 
   @Post('refresh')
@@ -55,5 +55,10 @@ export class UsersController {
   public async subscribe(@Body() dto: CreateSubscribeDto) {
     const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Users}/subscribe`, dto);
     return data;
+  }
+
+  @Get(':userId')
+  public async getUserInfo(@Param('userId') userId: string) {
+    return this.usersService.getUserInfo(userId);
   }
 }

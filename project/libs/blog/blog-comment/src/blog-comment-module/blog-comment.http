@@ -1,3 +1,24 @@
-# Get all comments for post
-GET http://localhost:3002/api/posts/ccaf61d0-0530-4cfc-98fa-4712838d9d96/comments HTTP/1.1
+# Create new comment for the post
+POST http://localhost:3002/api/posts/ccaf61d0-0530-4cfc-98fa-4712838d9d96/comments HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBiNTBjMzNmODExMTE3MWRjZWI1NyIsImVtYWlsIjoidGVzdC11c2VyNUBtYWlsLnJ1IiwibmFtZSI6Ik5ld1VzZXIiLCJpYXQiOjE3MTU1MTg0MzMsImV4cCI6MTcxNTYwNDgzM30.SR8-Tat6isf7m1h890c0udIMGxcfJ6kkspZLmfq0CdM
+Content-Type: application/json
 
+{
+  "message": "Test post comment message..."
+}
+
+###
+
+# Delete comment by id
+DELETE http://localhost:3002/api/posts/ccaf61d0-0530-4cfc-98fa-4712838d9d96/comments/b01dfa44-be41-49e3-bffe-5d5159762e49 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBiNTBjMzNmODExMTE3MWRjZWI1NyIsImVtYWlsIjoidGVzdC11c2VyNUBtYWlsLnJ1IiwibmFtZSI6Ik5ld1VzZXIiLCJpYXQiOjE3MTU1MTg0MzMsImV4cCI6MTcxNTYwNDgzM30.SR8-Tat6isf7m1h890c0udIMGxcfJ6kkspZLmfq0CdM
+
+###
+
+# Get comments list by a post id
+GET http://localhost:3002/api/posts/ccaf61d0-0530-4cfc-98fa-4712838d9d96/comments/find HTTP/1.1
+
+###
+
+# Get comment by id
+GET http://localhost:3002/api/posts/ccaf61d0-0530-4cfc-98fa-4712838d9d96/comments/7cda9493-3e9a-4324-b5fb-866067e20b4e HTTP/1.1

@@ -1,29 +1,82 @@
+# Get a list of posts filtered using query parameters
+GET http://localhost:3002/api/posts?limit=3&page=1 HTTP/1.1
+
+###
+
+# Receive the user's posts in accordance with the point of reference - My feed
+GET http://localhost:3002/api/posts/content-ribbon/663b6d0bf48517d912b1b267 HTTP/1.1
+
+###
+
 # Get a blog post by id
-GET http://localhost:3002/api/posts/bffd128f-9a0d-4da7-8607-90245974f5ea HTTP 1.1
+GET http://localhost:3002/api/posts/bc483014-9e00-47ab-8abd-0560878f1bd3 HTTP/1.1
+
+###
+
+# Receiving a list of posts published after a certain date for organizing a mailing list
+GET http://localhost:3002/api/posts/find-after-date?date=2024-05-10T00:00:00.000Z HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBiNTBjMzNmODExMTE3MWRjZWI1NyIsImVtYWlsIjoidGVzdC11c2VyNUBtYWlsLnJ1IiwibmFtZSI6Ik5ld1VzZXIiLCJpYXQiOjE3MTU1MTg0MzMsImV4cCI6MTcxNTYwNDgzM30.SR8-Tat6isf7m1h890c0udIMGxcfJ6kkspZLmfq0CdM
+
+###
+
+# Get a list of posts filtered by title
+GET http://localhost:3002/api/posts/search?title=new HTTP/1.1
+
+###
+
+# Get a list of posts filtered by a particular user
+GET http://localhost:3002/api/posts/user/663b6d0bf48517d912b1b267 HTTP/1.1
+
+###
+
+# Get a list of user posts in draft status
+GET http://localhost:3002/api/posts/draft HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBiNTBjMzNmODExMTE3MWRjZWI1NyIsImVtYWlsIjoidGVzdC11c2VyNUBtYWlsLnJ1IiwibmFtZSI6Ik5ld1VzZXIiLCJpYXQiOjE3MTU1MTg0MzMsImV4cCI6MTcxNTYwNDgzM30.SR8-Tat6isf7m1h890c0udIMGxcfJ6kkspZLmfq0CdM
+
+###
+
+# Delete an existed post
+DELETE http://localhost:3002/api/posts/4d30b6b9-022d-428c-80b1-a41de5dce5a2 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBiNTBjMzNmODExMTE3MWRjZWI1NyIsImVtYWlsIjoidGVzdC11c2VyNUBtYWlsLnJ1IiwibmFtZSI6Ik5ld1VzZXIiLCJpYXQiOjE3MTU1MTg0MzMsImV4cCI6MTcxNTYwNDgzM30.SR8-Tat6isf7m1h890c0udIMGxcfJ6kkspZLmfq0CdM
+
+###
+
+# Reposting someone else's post
+POST http://localhost:3002/api/posts/repost/5176640d-e53d-4635-8c33-01ee8a4fd46a HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBiNTBjMzNmODExMTE3MWRjZWI1NyIsImVtYWlsIjoidGVzdC11c2VyNUBtYWlsLnJ1IiwibmFtZSI6Ik5ld1VzZXIiLCJpYXQiOjE3MTU1MTg0MzMsImV4cCI6MTcxNTYwNDgzM30.SR8-Tat6isf7m1h890c0udIMGxcfJ6kkspZLmfq0CdM
+
+###
+
+# Adds a like/removes a like to someone else's post
+PATCH  http://localhost:3002/api/posts/like/a4263130-9163-4e12-98ef-cbec6aa5bb53 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBiNTBjMzNmODExMTE3MWRjZWI1NyIsImVtYWlsIjoidGVzdC11c2VyNUBtYWlsLnJ1IiwibmFtZSI6Ik5ld1VzZXIiLCJpYXQiOjE3MTU1MTg0MzMsImV4cCI6MTcxNTYwNDgzM30.SR8-Tat6isf7m1h890c0udIMGxcfJ6kkspZLmfq0CdM
+
+###
 
 # Create a new post
-POST http://localhost:3002/api/posts HTTP 1.1
+POST http://localhost:3002/api/posts HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBiNTBjMzNmODExMTE3MWRjZWI1NyIsImVtYWlsIjoidGVzdC11c2VyNUBtYWlsLnJ1IiwibmFtZSI6Ik5ld1VzZXIiLCJpYXQiOjE3MTU1MTg0MzMsImV4cCI6MTcxNTYwNDgzM30.SR8-Tat6isf7m1h890c0udIMGxcfJ6kkspZLmfq0CdM
 Content-Type: application/json
 
 {
-  "title": "Test Title",
+  "title": "Test Title 2",
   "type": "Video",
   "status": "Draft",
-  "authorId": "123",
-  "tags": ["test_tag"]
+  "tags": ["testtag"],
+  "link": "https://www.youtube.com/test"
 }
 
+###
+
 # Update an existed post
-PATCH http://localhost:3002/api/posts/bffd128f-9a0d-4da7-8607-90245974f5ea HTTP 1.1
+PATCH http://localhost:3002/api/posts/dd783135-8981-4724-bc1c-4bdfe95029ec HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBiNTBjMzNmODExMTE3MWRjZWI1NyIsImVtYWlsIjoidGVzdC11c2VyNUBtYWlsLnJ1IiwibmFtZSI6Ik5ld1VzZXIiLCJpYXQiOjE3MTU1MTg0MzMsImV4cCI6MTcxNTYwNDgzM30.SR8-Tat6isf7m1h890c0udIMGxcfJ6kkspZLmfq0CdM
 Content-Type: application/json
 
 {
   "title": "Updated Test Title",
   "type": "Video",
   "status": "Draft",
-  "authorId": "123",
-  "tags": ["test_tag"]
+  "tags": ["testtag"],
+  "link": "https://www.youtube.com/test"
 }
-
-# Delete an existed post
-DELETE http://localhost:3002/api/posts/bffd128f-9a0d-4da7-8607-90245974f5ea HTTP 1.1

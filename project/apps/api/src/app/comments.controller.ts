@@ -4,7 +4,7 @@ import { ApplicationServiceURL } from '@project/api-config';
 import { BlogCommentQuery, CreateCommentDto } from '@project/blog-comment';
 import { CheckAuthGuard } from '@project/guards';
 import { InjectAxiosAuthorization, InjectUserIdInterceptor } from '@project/interceptors';
-import { AxiosExceptionFilter } from './filters/axios-exception.filter';
+import { AxiosExceptionFilter } from '@project/filters';
 
 @Controller('posts/:postId/comments')
 @UseFilters(AxiosExceptionFilter)

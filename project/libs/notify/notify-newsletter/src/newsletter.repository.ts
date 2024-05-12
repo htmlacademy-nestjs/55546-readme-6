@@ -19,6 +19,7 @@ export class NewsletterRepository extends BaseMongoRepository<NewsletterEntity, 
     const document = await this.model.findOne().sort({ lastMailingDate: -1 }).exec();
     if (!document) {
       const newEntity = new NewsletterEntity({ lastMailingDate: new Date() });
+
       await this.save(newEntity);
 
       return newEntity;

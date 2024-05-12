@@ -1,34 +1,76 @@
 # Create a new user
-POST http://localhost:4000/api/auth/register HTTP 1.1
+POST http://localhost:4000/api/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "test-user@mail.ru",
+  "email": "test-user5@mail.ru",
   "password": "123456",
   "avatar": "",
   "name": "NewUser"
 }
 
+###
+
 # Login user by email and password
-POST http://localhost:4000/api/auth/login HTTP 1.1
+POST http://localhost:4000/api/auth/login HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "test-user@mail.ru",
-  "password": "123456",
+  "email": "test-user5@mail.ru",
+  "password": "123456"
 }
 
-# Get user by ID
-GET http://localhost:4000/api/auth/661022d3615ce5c3c722054f HTTP 1.1
+###
 
-# Checking user authorization by token
-GET http://localhost:4000/api/auth/demo/661022d3615ce5c3c722054f HTTP 1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IiIsImVtYWlsIjoidGVzdC11c2VyQG1haWwucnUiLCJuYW1lIjoiTmV3VXNlciIsImlhdCI6MTcxMzU1MDk3MCwiZXhwIjoxNzEzNTUxMjcwfQ.PzvqPTGDQzUWV7fTeNk5cAF7WMZo8KCHIekWh_Qz_rM
+# Get user by ID
+GET http://localhost:4000/api/auth/6640b50c33f8111171dceb57 HTTP/1.1
+
+###
+
+# Get user public info by user ID
+GET http://localhost:4000/api/auth/public-info/663b6d0bf48517d912b1b267 HTTP/1.1
+
+###
+
+# Change user password
+PATCH http://localhost:4000/api/auth/change-password HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBiNTBjMzNmODExMTE3MWRjZWI1NyIsImVtYWlsIjoidGVzdC11c2VyNUBtYWlsLnJ1IiwibmFtZSI6Ik5ld1VzZXIiLCJpYXQiOjE3MTU1MTg0MzMsImV4cCI6MTcxNTYwNDgzM30.SR8-Tat6isf7m1h890c0udIMGxcfJ6kkspZLmfq0CdM
+Content-Type: application/json
+
+{
+  "oldPassword": "123456",
+  "newPassword": "123456"
+}
+
+###
+
+# Subscribe on an other user
+POST http://localhost:4000/api/auth/subscribe HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBiNTBjMzNmODExMTE3MWRjZWI1NyIsImVtYWlsIjoidGVzdC11c2VyNUBtYWlsLnJ1IiwibmFtZSI6Ik5ld1VzZXIiLCJpYXQiOjE3MTU1MTg0MzMsImV4cCI6MTcxNTYwNDgzM30.SR8-Tat6isf7m1h890c0udIMGxcfJ6kkspZLmfq0CdM
+Content-Type: application/json
+
+{
+  "authorId": "66388809f4390810a5d5a742"
+}
+
+###
+
+# Get a list of users to collect data in API Gateway
+POST http://localhost:4000/api/auth/get-users-by-id HTTP/1.1
+Content-Type: application/json
+
+{
+  "usersIds": ["66388809f4390810a5d5a742", "663b6d0bf48517d912b1b267"]
+}
+
+###
 
 # Get new JWT pair
-GET http://localhost:4000/api/auth/refresh HTTP 1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IiIsImVtYWlsIjoidGVzdC11c2VyQG1haWwucnUiLCJuYW1lIjoiTmV3VXNlciIsImlhdCI6MTcxMzU1MDk3MCwiZXhwIjoxNzEzNTUxMjcwfQ.PzvqPTGDQzUWV7fTeNk5cAF7WMZo8KCHIekWh_Qz_rM
+POST http://localhost:4000/api/auth/refresh HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBiNTBjMzNmODExMTE3MWRjZWI1NyIsImVtYWlsIjoidGVzdC11c2VyNUBtYWlsLnJ1IiwibmFtZSI6Ik5ld1VzZXIiLCJ0b2tlbklkIjoiMTNkOWE5NjItMmY4Ny00MjkyLTg2MTctNmZkYTQxOTE5NTU2IiwiaWF0IjoxNzE1NTE4Mzc1LCJleHAiOjE3MTgxMTAzNzV9.FrqyfuZ9f7lDeq_Y54dwbz8Rl1K6i1hjuZJh9iwPl7s
+
+###
 
 # Check user token
 POST http://localhost:4000/api/auth/check HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2NDQwMzJmYmU0Y2FlYjg2OGM2ZWVjMzYiLCJlbWFpbCI6InVzZXJAbm90Zm91bmQubG9jYWwiLCJyb2xlIjoidXNlciIsImxhc3RuYW1lIjoiU21pdGgiLCJmaXJzdG5hbWUiOiJLZWtzIiwiaWF0IjoxNjgzMTIxMzU1LCJleHAiOjE2ODMxMjE5NTV9.laK4-SAzu_ZMznRVsRWrHxELTGu_P48kpY_CwHPjxtk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBiNTBjMzNmODExMTE3MWRjZWI1NyIsImVtYWlsIjoidGVzdC11c2VyNUBtYWlsLnJ1IiwibmFtZSI6Ik5ld1VzZXIiLCJpYXQiOjE3MTU1MTg0MzMsImV4cCI6MTcxNTYwNDgzM30.SR8-Tat6isf7m1h890c0udIMGxcfJ6kkspZLmfq0CdM

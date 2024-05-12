@@ -1,0 +1,224 @@
+# Create a new video post
+POST http://localhost:3001/api/posts HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
+Content-Type: application/json
+
+{
+  "title": "Video Post",
+  "type": "Video",
+  "status": "Draft",
+  "tags": ["video", "youtube"],
+  "link": "https://www.youtube.com/test"
+}
+
+###
+
+# Create a new text post
+POST http://localhost:3001/api/posts HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
+Content-Type: application/json
+
+{
+  "title": "Text Post",
+  "type": "Text",
+  "status": "Draft",
+  "tags": ["text", "content", "more"],
+  "announcement": "announcement must be longer than or equal to 50 characters",
+  "text": "text must be longer than or equal to 100 characters text must be shorter than or equal to 1024 characters"
+}
+
+###
+
+# Create a new link post
+POST http://localhost:3001/api/posts HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
+Content-Type: application/json
+
+{
+  "title": "Link Post",
+  "type": "Link",
+  "status": "Draft",
+  "tags": ["study", "academy", "html", "keks"],
+  "link": "https://htmlacademy.ru",
+  "description": "Link post description..."
+}
+
+###
+
+# Create a new quote post
+POST http://localhost:3001/api/posts HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
+Content-Type: application/json
+
+{
+  "title": "Quote Post",
+  "type": "Quote",
+  "status": "Draft",
+  "text": "Some text information by quoute...",
+  "quoteAuthor": "AuthorName"
+}
+
+###
+
+# Create a new photo post
+POST http://localhost:3001/api/posts HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="photo"; filename="/home/arcmag/Загрузки/test-file.jpg"
+Content-Type: image/jpeg
+
+< /home/arcmag/Загрузки/test-file.jpg
+
+--boundary
+Content-Disposition: form-data; name="title"
+
+Photo Post
+--boundary
+Content-Disposition: form-data; name="type"
+
+Photo
+--boundary
+Content-Disposition: form-data; name="status"
+
+Draft
+--boundary--
+
+###
+
+# Update video post
+PATCH http://localhost:3001/api/posts/e9b0adfd-9ca2-4f52-880b-d38e64fb8564 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
+Content-Type: application/json
+
+{
+  "title": "Updated Video Post",
+  "type": "Video",
+  "status": "Published",
+  "tags": ["video", "youtube"],
+  "link": "https://www.youtube.com/test"
+}
+
+###
+
+# Update text post
+PATCH http://localhost:3001/api/posts/f6b5a5a1-775b-4193-b6f5-a1132723e453 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
+Content-Type: application/json
+
+{
+  "title": "Updated Text Post",
+  "type": "Text",
+  "status": "Published",
+  "tags": ["text", "content", "more"],
+  "announcement": "updated announcement must be longer than or equal to 50 characters",
+  "text": "updated text must be longer than or equal to 100 characters text must be shorter than or equal to 1024 characters"
+}
+
+###
+
+# Update link post
+PATCH http://localhost:3001/api/posts/09f0be29-de56-4a52-a5c8-efa4e04c4e33 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
+Content-Type: application/json
+
+{
+  "title": "Updated Link Post",
+  "type": "Link",
+  "status": "Published",
+  "tags": ["updated", "study", "academy", "html", "keks"],
+  "link": "https://up.htmlacademy.ru/nodejs-2/6",
+  "description": "Updated link post description..."
+}
+
+###
+
+# Update quote post
+PATCH http://localhost:3001/api/posts/e9b65f20-cf3a-43f3-932a-fc5d8fead50c HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
+Content-Type: application/json
+
+{
+  "title": "Updated Quote Post",
+  "type": "Quote",
+  "status": "Published",
+  "text": "Updated some text information by quoute...",
+  "quoteAuthor": "UpdatedAuthorName"
+}
+
+###
+
+# Update photo post
+PATCH http://localhost:3001/api/posts/f2696507-eb21-4b1d-8bbf-2642f8df1c97 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="photo"; filename="/home/arcmag/Загрузки/test-file.jpg"
+Content-Type: image/jpeg
+
+< /home/arcmag/Загрузки/updated-test-file.jpg
+
+--boundary
+Content-Disposition: form-data; name="title"
+
+Updated Photo Post
+--boundary
+Content-Disposition: form-data; name="type"
+
+Photo
+--boundary
+Content-Disposition: form-data; name="status"
+
+Published
+--boundary--
+
+###
+
+# Get post by id
+GET http://localhost:3001/api/posts/09f0be29-de56-4a52-a5c8-efa4e04c4e33 HTTP/1.1
+
+###
+
+# Delete an existed post
+DELETE http://localhost:3001/api/posts/f2696507-eb21-4b1d-8bbf-2642f8df1c97 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
+
+###
+
+# Reposting someone else's post
+POST http://localhost:3001/api/posts/repost/09f0be29-de56-4a52-a5c8-efa4e04c4e33 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
+
+###
+
+# Adds a like/removes a like to someone else's post
+PATCH  http://localhost:3001/api/posts/like/09f0be29-de56-4a52-a5c8-efa4e04c4e33 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
+
+###
+
+# Get a list of posts filtered using query parameters
+GET http://localhost:3001/api/posts?limit=3&page=1 HTTP/1.1
+
+###
+
+# Get a list of posts filtered by title (only "Published" status!)
+GET http://localhost:3001/api/posts/search?title=post HTTP/1.1
+
+###
+
+# Get a list of posts filtered by a particular user (only "Published" status!)
+GET http://localhost:3001/api/posts/user/663b6d0bf48517d912b1b267 HTTP/1.1
+
+###
+
+# Get a list of user posts in draft status
+GET http://localhost:3001/api/posts/draft HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
+
+###
+
+# Receive the user's posts in accordance with the point of reference - My feed
+GET http://localhost:3001/api/posts/content-ribbon/6640e8af14daa796d67073d7 HTTP/1.1

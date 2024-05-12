@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Body, Delete, Patch, HttpCode, HttpStatus, Query, UseGuards, Req, UsePipes } from '@nestjs/common';
+import { Controller, UseFilters, Get, Param, Post, Body, Delete, Patch, HttpCode, HttpStatus, Query, UseGuards, Req, UsePipes, UseInterceptors } from '@nestjs/common';
 import { fillDto } from '@project/shared/helpers';
 import { CheckAuthGuard } from '@project/guards';
 import { BlogPostService } from './blog-post.service';
@@ -13,9 +13,12 @@ import { MAX_SEARCH_COUNT, ParamDescription, PostResponseMessage, QueryDescripti
 import { PostValidationPipe } from './pipes/post-validation.pipe';
 import { HttpService } from '@nestjs/axios';
 import { ApplicationServiceURL } from '@project/api-config';
+import { AxiosExceptionFilter } from '@project/filters';
+import { InjectUserIdInterceptor } from '@project/interceptors';
 
 @ApiTags('posts')
 @Controller('posts')
+@UseFilters(AxiosExceptionFilter)
 export class BlogPostController {
   constructor(
     private readonly blogPostService: BlogPostService,
@@ -153,6 +156,7 @@ export class BlogPostController {
   })
   @ApiBody({ type: CreatePostDto })
   @UseGuards(CheckAuthGuard)
+  @UseInterceptors(InjectUserIdInterceptor)
   @UsePipes(PostValidationPipe)
   @Post('/')
   public async create(@Body() dto: CreatePostDto) {
@@ -173,6 +177,7 @@ export class BlogPostController {
   @ApiParam({ name: "id", required: true, description: ParamDescription.PostId })
   @ApiBody({ type: UpdatePostDto })
   @UseGuards(CheckAuthGuard)
+  @UseInterceptors(InjectUserIdInterceptor)
   @UsePipes(PostValidationPipe)
   @Patch('/:id')
   public async update(

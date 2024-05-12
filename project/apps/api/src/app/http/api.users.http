@@ -1,0 +1,68 @@
+# Create a new user
+POST http://localhost:3001/api/users/register HTTP/1.1
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="avatar"; filename="/home/arcmag/Загрузки/test-file.jpg"
+Content-Type: image/jpeg
+
+< /home/arcmag/Загрузки/test-file.jpg
+
+--boundary
+Content-Disposition: form-data; name="email"
+
+test-user57@mail.ru
+--boundary
+Content-Disposition: form-data; name="name"
+
+TestUser
+--boundary
+Content-Disposition: form-data; name="password"
+
+123456
+--boundary--
+
+###
+
+# Login user by email and password
+POST http://localhost:3001/api/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "test-user57@mail.ru",
+  "password": "123456"
+}
+
+###
+
+# Get user public info by user ID
+GET http://localhost:3001/api/users/6640e8af14daa796d67073d7 HTTP/1.1
+
+###
+
+# Change user password
+PATCH http://localhost:3001/api/users/change-password HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
+Content-Type: application/json
+
+{
+  "oldPassword": "123456",
+  "newPassword": "123456"
+}
+
+###
+
+# Subscribe on an other user
+POST http://localhost:3001/api/users/subscribe HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
+Content-Type: application/json
+
+{
+  "authorId": "66388809f4390810a5d5a742"
+}
+
+###
+
+# Get new JWT pair
+POST http://localhost:3001/api/users/refresh HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsInRva2VuSWQiOiJmOGY2OGVhMy0wMDUwLTQ4NDMtOGVhZS0xNTRlOWFmYjNhMjIiLCJpYXQiOjE3MTU1MzMxNDIsImV4cCI6MTcxODEyNTE0Mn0.-VwTDIO1cd0a7CX__zC0xlodWGlGW9dJFSQEYYjSxUM

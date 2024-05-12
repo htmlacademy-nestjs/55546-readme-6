@@ -79,6 +79,13 @@ export class BlogPostRdo {
   public isReposted: boolean;
 
   @ApiProperty({
+    description: 'Post creation date',
+    example: new Date('2024-05-10')
+  })
+  @Expose()
+  public dateCreate: Date;
+
+  @ApiProperty({
     description: 'List of user comments to this post',
     isArray: true,
     example: [{

@@ -17,7 +17,6 @@ async function bootstrap() {
   app.setGlobalPrefix(GLOBAL_PREFIX);
   app.useGlobalInterceptors(new RequestIdInterceptor());
 
-  // app.useGlobalPipes(new ValidationPipe({ transform: true }));
   const port = process.env.API_PORT || PORT;
   await app.listen(port);
   Logger.log(

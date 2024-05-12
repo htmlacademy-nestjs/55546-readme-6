@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -15,6 +15,7 @@ import { RequestWithTokenPayload } from './request-with-token-payload.interface'
 import IsGuestGuard from '../guards/is-guest.guard';
 import { ChangeUserPasswordDto } from '../dto/change-user-password.dto';
 import { CreateSubscribeDto } from '../dto/create-subscribe.dto';
+import { UserPublicInfoRdo } from '../rdo/user-public-info.rdo';
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -75,7 +76,7 @@ export class AuthenticationController {
   @ApiBody({ type: ChangeUserPasswordDto })
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  @Post('change-password')
+  @Patch('change-password')
   public async changePassword(
     @Req() { user: { id } }: RequestWithUser,
     @Body() { oldPassword, newPassword }: ChangeUserPasswordDto
@@ -99,31 +100,7 @@ export class AuthenticationController {
     const userData = await this.authService.subscribe(user.id, dto.authorId);
     return fillDto(UserRdo, {
       ...userData.toPOJO(),
-      avatar: await this.authService.getAvatar(userData.avatarId)
-    });
-  }
-
-  @ApiResponse({
-    type: UserRdo,
-    status: HttpStatus.OK,
-    description: AuthenticationResponseMessage.UserFound
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: AuthenticationResponseMessage.UserNotFound
-  })
-  @ApiResponse({
-    status: HttpStatus.BAD_REQUEST,
-    description: AuthenticationResponseMessage.BadMongoIdError
-  })
-  @ApiParam({ name: "id", required: true, description: ParamDescription.UserId })
-  @Get(':id')
-  public async show(@Param('id', MongoIdValidationPipe) id: string) {
-    const existedUser = await this.authService.getUserById(id);
-
-    return fillDto(UserRdo, {
-      ...existedUser.toPOJO(),
-      avatar: await this.authService.getAvatar(existedUser.avatarId)
+      avatar: userData.avatarId ? await this.authService.getAvatar(userData.avatarId) : undefined
     });
   }
 
@@ -135,7 +112,6 @@ export class AuthenticationController {
   @Post('get-users-by-id')
   public async getUserList(@Body('usersIds') usersIds: string[]) {
     const users = await this.authService.getUsersByListId(usersIds);
-
     return users.map(user => fillDto(UserRdo, { ...user.toPOJO() }));
   }
 
@@ -167,5 +143,55 @@ export class AuthenticationController {
   @HttpCode(HttpStatus.OK)
   public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
     return payload;
+  }
+
+  @ApiResponse({
+    type: UserRdo,
+    status: HttpStatus.OK,
+    description: AuthenticationResponseMessage.UserFound
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: AuthenticationResponseMessage.UserNotFound
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: AuthenticationResponseMessage.BadMongoIdError
+  })
+  @ApiParam({ name: "id", required: true, description: ParamDescription.UserId })
+  @Get(':id')
+  public async show(@Param('id', MongoIdValidationPipe) id: string) {
+
+    try {
+      const existedUser = await this.authService.getUserById(id);
+
+      return fillDto(UserRdo, {
+        ...existedUser.toPOJO(),
+        avatar: existedUser.avatarId ? await this.authService.getAvatar(existedUser.avatarId) : undefined
+      });
+    } catch (err) {
+      return err.response.data;
+    }
+  }
+
+  @ApiResponse({
+    type: UserPublicInfoRdo,
+    status: HttpStatus.OK,
+    description: AuthenticationResponseMessage.UserFound
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: AuthenticationResponseMessage.UserNotFound
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: AuthenticationResponseMessage.BadMongoIdError
+  })
+  @ApiParam({ name: "userId", required: true, description: ParamDescription.UserId })
+  @Get('/public-info/:userId')
+  public async getUserPublicInfo(@Param('userId', MongoIdValidationPipe) userId: string) {
+    const user = (await this.authService.getUserById(userId)).toPOJO();
+
+    return fillDto(UserPublicInfoRdo, { ...user, subscribers: user.subscribers.length });
   }
 }

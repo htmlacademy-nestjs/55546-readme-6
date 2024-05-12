@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseFilePipeBuilder, Patch, Post, Query, Req, UploadedFile, UploadedFiles, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { AxiosExceptionFilter } from './filters/axios-exception.filter';
+import { AxiosExceptionFilter } from '@project/filters';
 import { ApplicationServiceURL } from '@project/api-config';
 import { InjectAxiosAuthorization, InjectUserIdInterceptor } from '@project/interceptors';
 import { CheckAuthGuard } from '@project/guards';

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Query, Req, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { BlogCommentService } from './blog-comment.service';
 import { CommentRdo } from './rdo/comment.rdo';
 import { fillDto } from '@project/shared/helpers';
@@ -9,9 +9,12 @@ import { RequestWithUser } from '@project/authentication';
 import { BlogCommentQuery } from './blog-comment.query';
 import { BlogCommentResponseMessage, ParamDescription } from './blog-comment.constants';
 import { BlogCommentWithPaginationRdo } from './rdo/blog-comment-with-pagination.rdo';
+import { AxiosExceptionFilter } from '@project/filters';
+import { InjectUserIdInterceptor } from '@project/interceptors';
 
 @ApiTags('comments')
 @Controller('posts/:postId/comments')
+@UseFilters(AxiosExceptionFilter)
 export class BlogCommentController {
   constructor(
     private readonly blogCommentService: BlogCommentService,
@@ -32,6 +35,7 @@ export class BlogCommentController {
   })
   @ApiParam({ name: "postId", required: true, description: ParamDescription.PostId })
   @ApiBody({ type: CreateCommentDto })
+  @UseInterceptors(InjectUserIdInterceptor)
   @UseGuards(CheckAuthGuard)
   @Post('/')
   public async createComment(@Param('postId') postId: string, @Body() dto: CreateCommentDto) {
