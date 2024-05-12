@@ -6,36 +6,32 @@ import { ValidationError, validate } from "class-validator";
 import { CreateVideoPostDto } from "../dto/create-video-post.dto";
 import { CreateQuotePostDto } from "../dto/create-quote-post.dto";
 import { CreateLinkPostDto } from "../dto/create-link-post.dto";
-import { FileInterceptor } from "@nestjs/platform-express";
 import { CreatePhotoPostDto } from "../dto/create-photo-post.dto";
+import { PostType } from "@prisma/client";
 
 @Injectable()
 export class PostValidationPipe implements PipeTransform {
-  @UseInterceptors(FileInterceptor('photo'))
   async transform(post: CreatePostDto, metadata: ArgumentMetadata) {
-    if (metadata.type === 'custom') {
-      return;
-    }
     if (metadata.type !== 'body') {
-      throw new Error('This pipe must used only with body!')
+      return post;
     }
 
     let postDto = null;
 
     switch (post.type) {
-      case 'Photo':
+      case PostType.Photo:
         postDto = CreatePhotoPostDto;
         break;
-      case "Video":
+      case PostType.Video:
         postDto = CreateVideoPostDto;
         break;
-      case "Text":
+      case PostType.Text:
         postDto = CreateTextPostDto;
         break;
-      case "Quote":
+      case PostType.Quote:
         postDto = CreateQuotePostDto;
         break;
-      case "Link":
+      case PostType.Link:
         postDto = CreateLinkPostDto;
         break;
 
@@ -44,20 +40,6 @@ export class PostValidationPipe implements PipeTransform {
     }
 
     const errors = await validate(plainToClass(postDto, post));
-    // if (post.type === 'Photo') {
-    //   const photoId = photo ? (await saveFile(this.httpService, photo)).id : undefined;
-    //   console.log('photoId', photoId);
-    //   errors = await validate(plainToClass(CreatePhotoPostDto, { ...post, photoId }));
-    // } else {
-    //   const postDto = ({
-    //     Video: CreateVideoPostDto,
-    //     Text: CreateTextPostDto,
-    //     Quote: CreateQuotePostDto,
-    //     Link: CreateLinkPostDto
-    //   }[post.type]);
-    //
-    //   errors = await validate(plainToClass(postDto, post));
-    // }
 
     if (errors.length === 0) {
       return post;

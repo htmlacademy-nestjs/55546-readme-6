@@ -8,6 +8,8 @@ import { BlogCommentController } from './comments.controller';
 import { NotifyController } from './notify.controller';
 import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 import { getRabbitMQOptions } from '@project/shared/helpers';
+import { UsersService } from './services/users.service';
+import { BlogService } from './services/blog.service';
 
 @Module({
   imports: [
@@ -22,6 +24,6 @@ import { getRabbitMQOptions } from '@project/shared/helpers';
     }),
   ],
   controllers: [UsersController, BlogController, BlogCommentController, NotifyController],
-  providers: [CheckAuthGuard],
+  providers: [UsersService, BlogService, CheckAuthGuard],
 })
 export class AppModule { }

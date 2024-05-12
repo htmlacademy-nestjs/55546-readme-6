@@ -1,28 +1,8 @@
-import { CommonPostType, Entity, LinkPost, PhotoPost, QuotePost, TextPost, VideoPost } from '@project/shared/core';
+import { CommonPostType, Entity } from '@project/shared/core';
 import { StorableEntity } from '@project/shared/core';
 import { BlogCommentEntity, BlogCommentFactory } from '@project/blog-comment';
 import { BlogPostDetailEntity, BlogPostDetailFactory } from '@project/blog-post-detail';
 import { PostDetailType, PostType, PostStatus } from '@prisma/client';
-
-function isPhotoType(obj: any): obj is PhotoPost {
-  return obj.type === PostType.Photo;
-}
-
-function isTextType(obj: any): obj is TextPost {
-  return obj.type === PostType.Text;
-}
-
-function isLinkType(obj: any): obj is LinkPost {
-  return obj.type === PostType.Link;
-}
-
-function isVideoType(obj: any): obj is VideoPost {
-  return obj.type === PostType.Video;
-}
-
-function isQuoteType(obj: any): obj is QuotePost {
-  return obj.type === PostType.Quote;
-}
 
 export class BlogPostEntity extends Entity implements StorableEntity<CommonPostType> {
   public originalId: string;
@@ -37,14 +17,6 @@ export class BlogPostEntity extends Entity implements StorableEntity<CommonPostT
   public dateUpdate?: Date;
   public isReposted: boolean;
   public comments: BlogCommentEntity[];
-
-  // public photoId?: string;
-  // public text?: string;
-  // public announcement?: string;
-  // public quoteAuthor?: string;
-  // public link?: string;
-  // public description?: string;
-
   public postsDetails: BlogPostDetailEntity[] = [];
 
   constructor(post?: CommonPostType) {
@@ -141,25 +113,14 @@ export class BlogPostEntity extends Entity implements StorableEntity<CommonPostT
       dateUpdate: this.dateUpdate,
       isReposted: this.isReposted,
       comments: this.comments?.map(comment => comment.toPOJO()) ?? [],
-      postsDetails: []
+      postsDetails: this.postsDetails?.map(detail => detail.toPOJO()) ?? []
     } as CommonPostType;
   }
 
-  // public toRepostedPOJO(originalId: string, authorId: string): any {
-  //   const { id, ...pojoEntity } = this.toPOJO();
-  //   return {
-  //     ...pojoEntity,
-  //     originalId,
-  //     authorId,
-  //     dateCreate: new Date(),
-  //     dateUpdate: new Date(),
-  //     isReposted: true,
-  //   };
-  // }
-
   public detailsToObject() {
-    return this.postsDetails.reduce((result, detail) => {
-      result[detail.type.toLowerCase()] = detail.value;
+    return this.postsDetails.reduce((result, { type, value }) => {
+      const detailName = type[0].toLowerCase() + type.slice(1);
+      result[detailName] = value;
       return result;
     }, {});
   }

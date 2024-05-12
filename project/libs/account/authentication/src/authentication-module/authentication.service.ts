@@ -4,7 +4,7 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { AuthenticationResponseMessage } from './authentication.constants';
 import { BlogUserEntity } from '@project/blog-user';
 import { LoginUserDto } from '../dto/login-user.dto';
-import { Token, User } from '@project/shared/core';
+import { STATIC_DIR, Token, User } from '@project/shared/core';
 import { JwtService } from '@nestjs/jwt';
 import { jwtConfig } from '@project/account-config';
 import { ConfigType } from '@nestjs/config';
@@ -29,7 +29,7 @@ export class AuthenticationService {
     private readonly notifyService: NotifyService,
   ) { }
 
-  private async getAvatar(fileId: string) {
+  public async getAvatar(fileId: string) {
     const { data } = await this.httpService.axiosRef.get(`${ApplicationServiceURL.FilesStorage}/${fileId}`);
 
     return data;
@@ -42,7 +42,7 @@ export class AuthenticationService {
 
     const data = await this.getAvatar(fileId);
 
-    return `/static/${data.subDirectory}/${data.hashName}`;
+    return `${STATIC_DIR}/${data.subDirectory}/${data.hashName}`;
   }
 
   public async register(dto: CreateUserDto) {
@@ -90,7 +90,12 @@ export class AuthenticationService {
   }
 
   public async getUserById(id: string) {
-    return this.blogUserRepository.findById(id);
+    const existUser = this.blogUserRepository.findById(id);
+    if (!existUser) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
+    return existUser;
   }
 
   public async getUsersByListId(usersListId: string[]) {

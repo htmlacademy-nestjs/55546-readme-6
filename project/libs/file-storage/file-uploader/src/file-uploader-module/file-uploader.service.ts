@@ -88,4 +88,8 @@ export class FileUploaderService {
 
     return existFile;
   }
+
+  public async getFilesById(filesIds: string[]): Promise<FileUploaderEntity[]> {
+    return await this.fileRepository.getFilesById(filesIds);
+  }
 }

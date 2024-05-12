@@ -13,7 +13,6 @@ export interface RabbitConfig {
 }
 
 async function getConfig(): Promise<RabbitConfiguration> {
-  console.log('env', process.env);
   const config = plainToClass(RabbitConfiguration, {
     host: process.env.RABBIT_HOST,
     password: process.env.RABBIT_PASSWORD,
@@ -29,6 +28,5 @@ async function getConfig(): Promise<RabbitConfiguration> {
 }
 
 export default registerAs('rabbit', async (): Promise<ConfigType<typeof getConfig>> => {
-  console.log('getConfig')
   return getConfig();
 });

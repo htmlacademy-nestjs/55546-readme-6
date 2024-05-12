@@ -10,7 +10,7 @@ export class CheckAuthGuard implements CanActivate {
   ) { }
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<Request>();
     const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Users}/check`, {}, {
       headers: {
         'Authorization': request.headers['authorization']

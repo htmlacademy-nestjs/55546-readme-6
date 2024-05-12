@@ -1,8 +1,6 @@
-import { Controller, Get, Param, Post, Body, Delete, Patch, HttpCode, HttpStatus, Query, UseGuards, Req, UsePipes, UseFilters } from '@nestjs/common';
-
+import { Controller, Get, Param, Post, Body, Delete, Patch, HttpCode, HttpStatus, Query, UseGuards, Req, UsePipes } from '@nestjs/common';
 import { fillDto } from '@project/shared/helpers';
 import { CheckAuthGuard } from '@project/guards';
-
 import { BlogPostService } from './blog-post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -10,10 +8,8 @@ import { BlogPostRdo } from './rdo/blog-post.rdo';
 import { BlogPostQuery } from './blog-post.query';
 import { BlogPostWithPaginationRdo } from './rdo/blog-post-with-pagination.rdo';
 import { RequestWithUser } from '@project/authentication';
-import { CreateCommentDto } from '@project/blog-comment';
-import { CommentRdo } from '@project/blog-comment';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { MAX_SEARCH_COUNT, PostResponseMessage } from './blog-post.constants';
+import { ApiBody, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { MAX_SEARCH_COUNT, ParamDescription, PostResponseMessage, QueryDescription } from './blog-post.constants';
 import { PostValidationPipe } from './pipes/post-validation.pipe';
 import { HttpService } from '@nestjs/axios';
 import { ApplicationServiceURL } from '@project/api-config';
@@ -31,57 +27,14 @@ export class BlogPostController {
     status: HttpStatus.OK,
     description: PostResponseMessage.FoundPostList
   })
+  @ApiQuery({ type: BlogPostQuery, description: QueryDescription.PaginationList })
   @Get('/')
   public async index(@Query() query: BlogPostQuery) {
     const postWithPagination = await this.blogPostService.getAllPosts(query);
     const result = {
       ...postWithPagination,
-      entities: postWithPagination.entities.map((blogPost) =>
-        ({ ...blogPost.toPOJO(), ...blogPost.detailsToObject() }))
+      entities: postWithPagination.entities.map(post => post.createResponseObject())
     };
-
-    return result;
-
-    return fillDto(BlogPostWithPaginationRdo, result);
-  }
-
-  @Get('/content-ribbon/:userId')
-  public async contentRibbon(@Param('userId') userId: string, @Query() query: BlogPostQuery) {
-    const { data: user } = await this.httpService
-      .axiosRef.get(`${ApplicationServiceURL.Users}/${userId}`);
-
-    const postWithPagination = await this.blogPostService.getAllPosts(query, false, [...user.subscribers, user.id]);
-
-    const result = {
-      ...postWithPagination,
-      entities: postWithPagination.entities.map((blogPost) =>
-        ({ ...blogPost.toPOJO(), ...blogPost.detailsToObject() }))
-    };
-
-    return result;
-  }
-
-  @UseGuards(CheckAuthGuard)
-  @Get('/find-after-date')
-  public async findAfterDate(@Query('date') date: Date) {
-    return await this.blogPostService.findAfterDate(date);
-  }
-
-  @Get('/search')
-  public async search(@Query('title') title: string) {
-    const postWithPagination = await this.blogPostService
-      .getAllPosts({ title, limit: MAX_SEARCH_COUNT } as BlogPostQuery);
-
-    return postWithPagination.entities.map((blogPost) =>
-      ({ ...blogPost.toPOJO(), ...blogPost.detailsToObject() }));
-
-    const result = {
-      ...postWithPagination,
-      entities: postWithPagination.entities.map((blogPost) =>
-        ({ ...blogPost.toPOJO(), ...blogPost.detailsToObject() }))
-    };
-
-    return result;
 
     return fillDto(BlogPostWithPaginationRdo, result);
   }
@@ -91,20 +44,90 @@ export class BlogPostController {
     status: HttpStatus.OK,
     description: PostResponseMessage.FoundPostList
   })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: PostResponseMessage.UserNotFound
+  })
+  @ApiQuery({ type: BlogPostQuery, description: QueryDescription.PaginationList })
+  @ApiParam({ name: "userId", required: true, description: ParamDescription.UserId })
+  @Get('/content-ribbon/:userId')
+  public async contentRibbon(@Param('userId') userId: string, @Query() query: BlogPostQuery) {
+    const { data: user } = await this.httpService
+      .axiosRef.get(`${ApplicationServiceURL.Users}/${userId}`);
+
+    const postWithPagination = await this.blogPostService.getAllPosts(query, false, [...user.subscribers, user.id]);
+
+    const result = {
+      ...postWithPagination,
+      entities: postWithPagination.entities.map(post => post.createResponseObject())
+    };
+
+    return fillDto(BlogPostWithPaginationRdo, result);
+  }
+
+  @ApiResponse({
+    type: [BlogPostRdo],
+    status: HttpStatus.OK,
+    description: PostResponseMessage.FoundPostList
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: PostResponseMessage.JwtAuthError
+  })
+  @ApiQuery({ type: 'date', description: QueryDescription.LastDate })
+  @UseGuards(CheckAuthGuard)
+  @Get('/find-after-date')
+  public async findAfterDate(@Query('date') date: Date) {
+    const posts = await this.blogPostService.findAfterDate(date);
+
+    return posts.map(post => fillDto(BlogPostRdo, post.createResponseObject()));
+  }
+
+  @ApiResponse({
+    type: [BlogPostRdo],
+    status: HttpStatus.OK,
+    description: PostResponseMessage.FoundPostList
+  })
+  @ApiQuery({ type: 'string', description: QueryDescription.SearchedTitle })
+  @Get('/search')
+  public async search(@Query('title') title: string) {
+    const postWithPagination = await this.blogPostService
+      .getAllPosts({ title, limit: MAX_SEARCH_COUNT } as BlogPostQuery);
+
+    return postWithPagination.entities.map((blogPost) =>
+      blogPost.createResponseObject());
+  }
+
+  @ApiResponse({
+    type: BlogPostWithPaginationRdo,
+    status: HttpStatus.OK,
+    description: PostResponseMessage.FoundPostList
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: PostResponseMessage.UserNotFound
+  })
+  @ApiParam({ name: "userId", required: true, description: ParamDescription.UserId })
   @Get('/user/:userId')
   public async getUserPosts(@Param('userId') authorId: string) {
     const postWithPagination = await this.blogPostService.getAllPosts({ authorId } as BlogPostQuery);
     const result = {
       ...postWithPagination,
-      entities: postWithPagination.entities.map((blogPost) =>
-        ({ ...blogPost.toPOJO(), ...blogPost.detailsToObject() }))
+      entities: postWithPagination.entities.map((blogPost) => blogPost.createResponseObject())
     };
-
-    return result;
 
     return fillDto(BlogPostWithPaginationRdo, result);
   }
 
+  @ApiResponse({
+    type: BlogPostWithPaginationRdo,
+    status: HttpStatus.OK,
+    description: PostResponseMessage.FoundPostList
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: PostResponseMessage.JwtAuthError
+  })
   @UseGuards(CheckAuthGuard)
   @Get('/draft')
   public async getUserDraftPosts(@Req() { user }: RequestWithUser) {
@@ -113,11 +136,8 @@ export class BlogPostController {
 
     const result = {
       ...postWithPagination,
-      entities: postWithPagination.entities.map((blogPost) =>
-        ({ ...blogPost.toPOJO(), ...blogPost.detailsToObject() }))
+      entities: postWithPagination.entities.map((blogPost) => blogPost.createResponseObject())
     };
-
-    return result;
 
     return fillDto(BlogPostWithPaginationRdo, result);
   }
@@ -131,47 +151,14 @@ export class BlogPostController {
     status: HttpStatus.BAD_REQUEST,
     description: PostResponseMessage.PostValidationError
   })
+  @ApiBody({ type: CreatePostDto })
   @UseGuards(CheckAuthGuard)
   @UsePipes(PostValidationPipe)
-  // @UseFilters(ValidationExceptionFilter)
   @Post('/')
   public async create(@Body() dto: CreatePostDto) {
     const newPost = await this.blogPostService.createPost(dto);
 
-    return { ...newPost.toPOJO(), ...newPost.detailsToObject() };
-    return fillDto(BlogPostRdo, newPost.toPOJO() as any);
-  }
-
-  @ApiResponse({
-    type: BlogPostRdo,
-    status: HttpStatus.OK,
-    description: PostResponseMessage.PostFound
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: PostResponseMessage.PostNotFound
-  })
-  @Get('/:id')
-  public async show(@Param('id') id: string) {
-    const postEntity = await this.blogPostService.getPost(id);
-
-    return postEntity.createResponseObject();
-    // return fillDto(BlogPostRdo, postEntity.toPOJO() as any);
-  }
-
-  @ApiResponse({
-    status: HttpStatus.NO_CONTENT,
-    description: PostResponseMessage.PostDeleted
-  })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: PostResponseMessage.PostNotFound
-  })
-  @UseGuards(CheckAuthGuard)
-  @Delete('/:id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  public async destroy(@Req() { user }: RequestWithUser, @Param('id') id: string) {
-    await this.blogPostService.deletePost(id, user.id);
+    return fillDto(BlogPostRdo, newPost.createResponseObject());
   }
 
   @ApiResponse({
@@ -183,74 +170,101 @@ export class BlogPostController {
     status: HttpStatus.NOT_FOUND,
     description: PostResponseMessage.PostNotFound
   })
+  @ApiParam({ name: "id", required: true, description: ParamDescription.PostId })
+  @ApiBody({ type: UpdatePostDto })
   @UseGuards(CheckAuthGuard)
+  @UsePipes(PostValidationPipe)
   @Patch('/:id')
-  public async update(@Req() { user }: RequestWithUser, @Param('id') id: string, @Body() dto: UpdatePostDto) {
+  public async update(
+    @Req() { user }: RequestWithUser,
+    @Param('id') id: string,
+    @Body() dto: UpdatePostDto
+  ) {
     const updatedPost = await this.blogPostService.updatePost(id, user.id, dto);
 
-    return { ...updatedPost.toPOJO(), ...updatedPost.detailsToObject() };
-    return fillDto(BlogPostRdo, updatedPost.toPOJO() as any);
+    return fillDto(BlogPostRdo, updatedPost.createResponseObject());
   }
 
+  @ApiResponse({
+    type: BlogPostRdo,
+    status: HttpStatus.OK,
+    description: PostResponseMessage.PostFound
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: PostResponseMessage.PostNotFound
+  })
+  @ApiParam({ name: "id", required: true, description: ParamDescription.PostId })
+  @Get('/:id')
+  public async show(@Param('id') id: string) {
+    const postEntity = await this.blogPostService.getPost(id);
+
+    return fillDto(BlogPostRdo, postEntity.createResponseObject());
+  }
+
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: PostResponseMessage.PostDeleted
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: PostResponseMessage.PostNotFound
+  })
+  @ApiParam({ name: "id", required: true, description: ParamDescription.PostId })
+  @UseGuards(CheckAuthGuard)
+  @Delete('/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  public async destroy(@Req() { user }: RequestWithUser, @Param('id') id: string) {
+    await this.blogPostService.deletePost(id, user.id);
+  }
+
+  @ApiResponse({
+    type: BlogPostRdo,
+    status: HttpStatus.OK,
+    description: PostResponseMessage.PostFound
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: PostResponseMessage.PostNotFound
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: PostResponseMessage.JwtAuthError
+  })
+  @ApiParam({ name: "postId", required: true, description: ParamDescription.PostId })
   @UseGuards(CheckAuthGuard)
   @Post('/repost/:postId')
   public async repost(
-    @Req() request: Request & RequestWithUser, @Param('postId') postId: string
+    @Req() request: Request & RequestWithUser,
+    @Param('postId') postId: string
   ) {
     const repostedPost = await this.blogPostService.repost(postId, request.user.id);
 
-    return { ...repostedPost.toPOJO(), ...repostedPost.detailsToObject() }
-
-    // return fillDto(CommentRdo, newComment.toPOJO() as any)
+    return fillDto(BlogPostRdo, repostedPost.createResponseObject());
   }
 
+  @ApiResponse({
+    type: BlogPostRdo,
+    status: HttpStatus.OK,
+    description: PostResponseMessage.PostFound
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: PostResponseMessage.PostNotFound
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: PostResponseMessage.JwtAuthError
+  })
+  @ApiParam({ name: "postId", required: true, description: ParamDescription.PostId })
   @UseGuards(CheckAuthGuard)
   @Patch('/like/:postId')
   public async like(
-    @Req() request: Request & RequestWithUser, @Param('postId') postId: string
+    @Req() request: Request & RequestWithUser,
+    @Param('postId') postId: string
   ) {
     const post = await this.blogPostService.like(postId, request.user.id);
 
-    return { ...post.toPOJO(), ...post.detailsToObject() };
+    return fillDto(BlogPostRdo, post.createResponseObject());
   }
-
-  // @ApiResponse({
-  //   type: CommentRdo,
-  //   status: HttpStatus.CREATED,
-  //   description: PostResponseMessage.CommentCreated
-  // })
-  // @ApiResponse({
-  //   status: HttpStatus.BAD_REQUEST,
-  //   description: PostResponseMessage.CommentValidationError
-  // })
-  // @ApiResponse({
-  //   status: HttpStatus.NOT_FOUND,
-  //   description: PostResponseMessage.PostNotFound
-  // })
-  // @UseGuards(CheckAuthGuard)
-  // @Post('/:postId/comment')
-  // public async createComment(@Param('postId') postId: string, @Body() dto: CreateCommentDto) {
-  //   const newComment = await this.blogPostService.addComment(postId, dto);
-  //
-  //   return fillDto(CommentRdo, { ...newComment.toPOJO() })
-  // }
-  //
-  // @UseGuards(CheckAuthGuard)
-  // @Delete('/comment/:commentId')
-  // public async deleteComment(@Req() { user }: RequestWithUser, @Param('commentId') commentId: string) {
-  //   return this.blogPostService.deleteComment(commentId, user.id);
-  // }
-  //
-  // @Get('/:postId/comments')
-  // public async getCommentsByPostId(@Param('postId') postId: string, @Query() query: BlogCommentQuery) {
-  //   return this.blogPostService.getCommentsByPostId(postId, query);
-  // }
-
-  // @UseGuards(CheckAuthGuard)
-  // @Post('/get-users-posts')
-  // public async getUsersPosts(@Req() { user }: RequestWithUser) {
-  //   const newComment = await this.blogPostService.addComment(postId, dto);
-  //
-  //   return fillDto(CommentRdo, newComment.toPOJO() as any)
-  // }
 }

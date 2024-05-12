@@ -29,8 +29,6 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
   public async save(entity: BlogPostEntity): Promise<void> {
     const pojoEntity = entity.toPOJO();
 
-    await this.client.postsDetails.deleteMany({ where: { postId: pojoEntity.id } });
-
     const record = await this.client.post.create({
       data: {
         ...pojoEntity,
@@ -80,7 +78,6 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     const record = await this.client.post.create({
       data: {
         ...pojoEntity,
-
         originalId: id,
         authorId,
         originalAuthorId: entity.authorId,
@@ -139,7 +136,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     }
 
     if (query?.title) {
-      where.title = { contains: query.title };
+      where.title = { contains: query.title, mode: 'insensitive' };
     }
 
     if (query?.type) {
@@ -174,12 +171,12 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     };
   }
 
-  public async findAfterDate(date: Date) {
+  public async findAfterDate(date: Date): Promise<BlogPostEntity[]> {
     const posts = await this.client.post.findMany({
       where: { dateCreate: { gt: date } },
       include: { comments: true, postsDetails: true }
     });
 
-    return posts.map(post => this.createEntityFromDocument(post).createResponseObject());
+    return posts.map(post => this.createEntityFromDocument(post));
   }
 }

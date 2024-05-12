@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-
 import applicationConfig from './configurations/app.config';
 import mongoConfig from './configurations/mongo.config';
 import jwtConfig from './configurations/jwt.config';

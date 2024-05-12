@@ -13,3 +13,19 @@ export const BlogCommentValidateMessage = {
   MessageLesserMin: `The message is less than the minimum acceptable value ${CommentLength.Min}`,
   MessageGreaterMax: `Message greater than maximum allowed value ${CommentLength.Max}`,
 } as const;
+
+export const ParamDescription = {
+  CommentId: 'Comment ID',
+  PostId: 'Post ID',
+} as const;
+
+export const BlogCommentResponseMessage = {
+  CommentCreated: 'The new comment has been successfully created',
+  CommentDeleted: 'The comment has been successfully deleted',
+  CommentValidationError: 'Validation error when creating comment',
+  CommentFound: 'Comment found',
+  CommentNotFound: 'Comment not found',
+  PostNotFound: 'Post not found',
+  JwtAuthError: 'Failed user authorization with jwt',
+  FoundCommentList: 'Successfully retrieving a list of comments based on request parameters',
+} as const;

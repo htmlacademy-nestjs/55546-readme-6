@@ -12,6 +12,13 @@ export class BlogPostRdo {
   public id: string;
 
   @ApiProperty({
+    description: 'If the post is a repost, then this id points to the original post',
+    example: 'ccaf61d0-0530-4cfc-98fa-4712838d9d96'
+  })
+  @Expose()
+  public originalId: string;
+
+  @ApiProperty({
     description: 'Post title',
     example: 'Guests With A Cheeky Smile'
   })
@@ -42,6 +49,13 @@ export class BlogPostRdo {
   public authorId: string;
 
   @ApiProperty({
+    description: 'If the post is a repost, then this id points to the original post author',
+    example: '661022d3615ce5c3c722054f'
+  })
+  @Expose()
+  public originaAuthorlId: string;
+
+  @ApiProperty({
     description: 'Post tags list',
     isArray: true,
     example: ['new', 'tag', 'something']
@@ -56,6 +70,13 @@ export class BlogPostRdo {
   })
   @Expose()
   public likes: string[];
+
+  @ApiProperty({
+    description: 'Flag whether the post is reposted',
+    example: false
+  })
+  @Expose()
+  public isReposted: boolean;
 
   @ApiProperty({
     description: 'List of user comments to this post',
@@ -78,4 +99,53 @@ export class BlogPostRdo {
   @Expose()
   @Type(() => CommentRdo)
   public comments: Comment[];
+
+  @ApiProperty({
+    description: 'Photo ID for a photo post',
+    example: '661022d3615ce5c3c722054f'
+  })
+  @Expose()
+  public photo: string;
+
+  @ApiProperty({
+    description: 'Field with information for text and quote posts',
+    example: 'Doll size crop laugh, juicy sock teeny-tiny betty stupendous attack punch, frame separated harmony lying.'
+  })
+  @Expose()
+  public text: string;
+
+  @ApiProperty({
+    description: 'Field with brief information for a text post',
+    example: 'Doll size crop laugh, juicy sock teeny-tiny betty...'
+  })
+  @Expose()
+  public announcement: string;
+
+  @ApiProperty({
+    description: 'Quote author for a quote post',
+    example: 'Some author name'
+  })
+  @Expose()
+  public quoteAuthor: string;
+
+  @ApiProperty({
+    description: 'Link for a link post',
+    example: 'https://htmlacademy.ru'
+  })
+  @Expose()
+  public link: string;
+
+  @ApiProperty({
+    description: 'Description field for a link post',
+    example: 'Online school for web developers'
+  })
+  @Expose()
+  public description: string;
+
+  @ApiProperty({
+    description: 'Video field for a video post',
+    example: 'https://www.youtube.com/watch?v=0uqhAoMkFUc'
+  })
+  @Expose()
+  public video: string;
 }

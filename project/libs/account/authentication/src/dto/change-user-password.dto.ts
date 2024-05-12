@@ -23,4 +23,3 @@ export class ChangeUserPasswordDto {
   @MaxLength(PasswordLength.Max)
   public newPassword: string;
 }
-

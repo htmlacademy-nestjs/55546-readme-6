@@ -1,19 +1,20 @@
 import 'multer';
 import { HttpService } from '@nestjs/axios';
-import { Body, Controller, ParseFilePipeBuilder, Post, Req, UploadedFile, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
-
+import { Body, Controller, ParseFilePipeBuilder, Post, UploadedFile, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AVATAR_AVAILABLE_TYPES, AVATAR_MAX_SIZE, ChangeUserPasswordDto, CreateSubscribeDto, CreateUserDto, LoginUserDto } from '@project/authentication';
 import { ApplicationServiceURL } from '@project/api-config';
-
 import { AxiosExceptionFilter } from './filters/axios-exception.filter';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { saveFile } from '@project/shared/helpers';
 import { CheckAuthGuard } from '@project/guards';
+import { InjectAxiosAuthorization } from '@project/interceptors';
+import { UsersService } from './services/users.service';
 
 @Controller('users')
 @UseFilters(AxiosExceptionFilter)
+@UseInterceptors(InjectAxiosAuthorization)
 export class UsersController {
   constructor(
+    private readonly usersService: UsersService,
     private readonly httpService: HttpService
   ) { }
 
@@ -28,12 +29,7 @@ export class UsersController {
         .build({ fileIsRequired: false })
     ) avatar?: Express.Multer.File
   ) {
-    const id = avatar ? (await saveFile(this.httpService, avatar)).id : undefined;
-
-    const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Users}/register`,
-      { ...createUserDto, avatarId: id });
-
-    return data;
+    return this.usersService.register(createUserDto, avatar);
   }
 
   @Post('login')
@@ -44,34 +40,20 @@ export class UsersController {
 
   @UseGuards(CheckAuthGuard)
   @Post('change-password')
-  public async changePassword(@Req() request: Request, @Body() changeUserPasswordDto: ChangeUserPasswordDto) {
-    this.httpService.axiosRef.post(`${ApplicationServiceURL.Users}/change-password`, changeUserPasswordDto, {
-      headers: {
-        'Authorization': request.headers['authorization']
-      }
-    });
+  public async changePassword(@Body() changeUserPasswordDto: ChangeUserPasswordDto) {
+    this.httpService.axiosRef.post(`${ApplicationServiceURL.Users}/change-password`, changeUserPasswordDto);
   }
 
   @Post('refresh')
-  public async refreshToken(@Req() req: Request) {
-    const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Users}/refresh`, null, {
-      headers: {
-        'Authorization': req.headers['authorization']
-      }
-    });
-
+  public async refreshToken() {
+    const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Users}/refresh`);
     return data;
   }
 
   @UseGuards(CheckAuthGuard)
   @Post('subscribe')
-  public async subscribe(@Req() req: Request, @Body() dto: CreateSubscribeDto) {
-    const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Users}/subscribe`, dto, {
-      headers: {
-        'Authorization': req.headers['authorization']
-      }
-    });
-
+  public async subscribe(@Body() dto: CreateSubscribeDto) {
+    const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Users}/subscribe`, dto);
     return data;
   }
 }

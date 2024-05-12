@@ -30,3 +30,5 @@ export { Subscriber } from './lib/types/subscriber.interface';
 export { Newsletter } from './lib/types/newsletter.interface';
 
 export { RabbitRouting } from './lib/types/rabbit-routing.enum';
+
+export * from './lib/app.constants';

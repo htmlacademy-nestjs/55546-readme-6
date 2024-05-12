@@ -6,7 +6,6 @@ import { PrismaClientService } from "@project/blog-models";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { BlogCommentQuery } from "./blog-comment.query";
 import { MAX_COMMENTS_COUNT } from "./blog-comment.constants";
-import { Prisma } from "@prisma/client";
 
 @Injectable()
 export class BlogCommentRepository extends BasePostgresRepository<BlogCommentEntity, Comment> {
@@ -42,14 +41,6 @@ export class BlogCommentRepository extends BasePostgresRepository<BlogCommentEnt
       where: { id }
     });
   }
-
-  // public async findByPostId(postId: string): Promise<BlogCommentEntity[]> {
-  //   const records = await this.client.comment.findMany({
-  //     where: { postId }
-  //   });
-  //
-  //   return records.map(record => this.createEntityFromDocument(record))
-  // }
 
   public async findByPostId(postId: string, query?: BlogCommentQuery): Promise<PaginationResult<BlogCommentEntity>> {
     const [records, commentsCount] = await Promise.all([

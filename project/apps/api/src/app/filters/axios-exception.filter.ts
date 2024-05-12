@@ -11,12 +11,14 @@ export class AxiosExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const status = error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR;
     const message = error.response?.statusText || INTERNAL_SERVER_ERROR_MESSAGE;
+    const data = error.response?.data || {};
 
     response
       .status(status)
       .json({
         statusCode: status,
         message,
+        ...(typeof data === 'object' ? data : {})
       });
   }
 }

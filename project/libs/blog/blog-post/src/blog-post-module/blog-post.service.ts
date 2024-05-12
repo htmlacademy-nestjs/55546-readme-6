@@ -27,6 +27,26 @@ export class BlogPostService {
     return newPost;
   }
 
+  public async updatePost(postId: string, userId: string, dto: UpdatePostDto): Promise<BlogPostEntity> {
+    const existsPost = await this.getPost(postId);
+    if (!existsPost) {
+      throw new NotFoundException(`Post with ID ${postId} not found`);
+    }
+
+    if (existsPost.authorId !== userId) {
+      throw new ForbiddenException(`The user is not the author of this post`);
+    }
+
+    const blogPostEntity = new BlogPostEntity({ ...existsPost.toPOJO(), ...dto });
+
+    try {
+      await this.blogPostRepository.update(blogPostEntity);
+      return blogPostEntity;
+    } catch (err) {
+      throw new NotFoundException(`Post with ID ${postId} not found`);
+    }
+  }
+
   public async deletePost(postId: string, userId: string): Promise<void> {
     const existsPost = await this.getPost(postId);
     if (!existsPost) {
@@ -39,26 +59,6 @@ export class BlogPostService {
 
     try {
       await this.blogPostRepository.deleteById(postId);
-    } catch {
-      throw new NotFoundException(`Post with ID ${postId} not found`);
-    }
-  }
-
-  public async updatePost(postId: string, userId: string, dto: UpdatePostDto): Promise<BlogPostEntity> {
-    const existsPost = await this.getPost(postId);
-    if (!existsPost) {
-      throw new NotFoundException(`Post with ID ${postId} not found`);
-    }
-
-    if (existsPost.authorId !== userId) {
-      throw new ForbiddenException(`The user is not the author of this post`);
-    }
-
-    const blogPostEntity = new BlogPostEntity({ id: postId, ...dto } as any);
-
-    try {
-      await this.blogPostRepository.update(blogPostEntity);
-      return blogPostEntity;
     } catch {
       throw new NotFoundException(`Post with ID ${postId} not found`);
     }

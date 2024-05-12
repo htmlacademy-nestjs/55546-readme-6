@@ -17,11 +17,26 @@ export class UserRdo {
   public avatar: string;
 
   @ApiProperty({
+    description: 'User name',
+    example: 'NewUser'
+  })
+  @Expose()
+  public name: string;
+
+  @ApiProperty({
     description: 'User email',
     example: 'user@user.local'
   })
   @Expose()
   public email: string;
+
+  @ApiProperty({
+    description: 'List of author IDs to which the user is subscribed',
+    isArray: true,
+    example: ['660eb9f25dac3408417b2da9', '660eb9f25dac3408417b2da9', '660eb9f25dac3408417b2da9']
+  })
+  @Expose()
+  public subscribers: string[];
 
   @ApiProperty({
     description: 'User registration date (ISO format)',

@@ -13,7 +13,9 @@ export class CreateUserDto {
 
   @ApiProperty({
     description: 'User name',
-    example: 'NewUser'
+    example: 'NewUser',
+    minimum: NameLength.Min,
+    maximum: NameLength.Max
   })
   @IsNotEmpty()
   @IsString()
@@ -23,7 +25,7 @@ export class CreateUserDto {
 
   @ApiProperty({
     description: 'User avatar entity id',
-    example: '660eb9f25dac3408417b2da9'
+    example: '660eb9f25dac3408417b2da9',
   })
   @IsOptional()
   @IsMongoId()
@@ -32,7 +34,9 @@ export class CreateUserDto {
 
   @ApiProperty({
     description: 'User password',
-    example: '123456'
+    example: '123456',
+    minimum: PasswordLength.Min,
+    maximum: PasswordLength.Max
   })
   @IsNotEmpty()
   @IsString()
