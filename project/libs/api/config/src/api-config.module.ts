@@ -3,15 +3,15 @@ import { ConfigModule } from '@nestjs/config';
 
 import rabbitConfig from './rabbit.config';
 
-const ENV_USERS_FILE_PATH = 'apps/api/api.env';
+const ENV_FILE_PATH = 'apps/api/api.env';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      cache: true,
+      cache: false,
       load: [rabbitConfig],
-      envFilePath: ENV_USERS_FILE_PATH
+      envFilePath: ENV_FILE_PATH
     })
   ]
 })

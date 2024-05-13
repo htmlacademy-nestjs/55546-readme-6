@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-
 import { EmailSubscriberEntity } from './email-subscriber.entity';
 import { CreateSubscriberDto } from './dto/create-subscriber.dto';
 import { EmailSubscriberRepository } from './email-subscriber.repository';

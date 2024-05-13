@@ -1,5 +1,5 @@
 import { ConfigType, registerAs } from '@nestjs/config';
-import { DEFAULT_RABBIT_PORT, DEFAULT_SMTP_PORT, DefaultPort, ENVIRONMENTS } from './notify.const';
+import { DefaultPort, ENVIRONMENTS } from './notify.const';
 import { NotifyConfiguration } from './notify.env';
 import { plainToClass } from 'class-transformer';
 
@@ -48,14 +48,14 @@ async function getConfig(): Promise<NotifyConfiguration> {
     rabbit: {
       host: process.env.RABBIT_HOST,
       password: process.env.RABBIT_PASSWORD,
-      port: parseInt(process.env.RABBIT_PORT ?? DEFAULT_RABBIT_PORT.toString(), 10),
+      port: parseInt(process.env.RABBIT_PORT ?? DefaultPort.Rabbit.toString(), 10),
       user: process.env.RABBIT_USER,
       queue: process.env.RABBIT_QUEUE,
       exchange: process.env.RABBIT_EXCHANGE,
     },
     mail: {
       host: process.env.MAIL_SMTP_HOST,
-      port: parseInt(process.env.MAIL_SMTP_PORT ?? DEFAULT_SMTP_PORT.toString(), 10),
+      port: parseInt(process.env.MAIL_SMTP_PORT ?? DefaultPort.Smtp.toString(), 10),
       user: process.env.MAIL_USER_NAME,
       password: process.env.MAIL_USER_PASSWORD,
       from: process.env.MAIL_FROM,

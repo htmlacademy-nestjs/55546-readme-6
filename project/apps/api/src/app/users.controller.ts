@@ -51,9 +51,9 @@ export class UsersController {
   }
 
   @UseGuards(CheckAuthGuard)
-  @Post('subscribe')
+  @Patch('subscribe')
   public async subscribe(@Body() dto: CreateSubscribeDto) {
-    const { data } = await this.httpService.axiosRef.post(`${ApplicationServiceURL.Users}/subscribe`, dto);
+    const { data } = await this.httpService.axiosRef.patch(`${ApplicationServiceURL.Users}/subscribe`, dto);
     return data;
   }
 

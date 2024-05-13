@@ -1,5 +1,4 @@
-import { IsString, IsNumber, validate } from 'class-validator';
-import { handleClassValidatorError } from '@project/shared/helpers';
+import { IsString, IsNumber, validateOrReject } from 'class-validator';
 import { EnvValidationMessage } from './rabbit.messages';
 
 export class RabbitConfiguration {
@@ -22,7 +21,7 @@ export class RabbitConfiguration {
   exchange: string;
 
   public async validate(): Promise<void> {
-    handleClassValidatorError(await validate(this) as any);
+    await validateOrReject(this);
   }
 }
 

@@ -8,7 +8,7 @@ const ENV_FILE_PATH = 'apps/notify/notify.env';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      cache: true,
+      cache: false,
       load: [notifyConfig],
       envFilePath: ENV_FILE_PATH
     })

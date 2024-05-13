@@ -1,9 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-
 import { PrismaClientService } from '@project/blog-models';
 import { PaginationResult, Post } from '@project/shared/core';
 import { BasePostgresRepository } from '@project/data-access';
-
 import { BlogPostEntity } from './blog-post.entity';
 import { BlogPostFactory } from './blog-post.factory';
 import { PostStatus, Prisma } from '@prisma/client';
@@ -108,7 +106,10 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       throw new NotFoundException(`Post with id ${id} not found.`);
     }
 
-    return this.createEntityFromDocument(document)
+    const entity = this.createEntityFromDocument(document);
+    document.postsDetails.map(detail => entity.addDetail(detail));
+
+    return entity;
   }
 
   public async deleteById(id: string): Promise<void> {

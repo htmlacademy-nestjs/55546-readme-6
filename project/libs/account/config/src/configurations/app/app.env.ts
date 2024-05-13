@@ -1,5 +1,4 @@
-import { handleClassValidatorError } from '@project/shared/helpers';
-import { validate } from 'class-validator';
+import { validateOrReject } from 'class-validator';
 import { IsString, IsNumber, IsIn } from 'class-validator';
 import { EnvValidationMessage } from './app.messages';
 import { ENVIRONMENTS, EnvironmentType } from './app.const';
@@ -13,6 +12,6 @@ export default class AppConfig {
   public port: number;
 
   public async validate(): Promise<void> {
-    handleClassValidatorError(await validate(this) as any);
+    await validateOrReject(this);
   }
 }

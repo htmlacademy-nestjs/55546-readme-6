@@ -45,7 +45,7 @@ Content-Type: application/json
 ###
 
 # Subscribe on an other user
-POST http://localhost:4000/api/auth/subscribe HTTP/1.1
+PATCH http://localhost:4000/api/auth/subscribe HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBiNTBjMzNmODExMTE3MWRjZWI1NyIsImVtYWlsIjoidGVzdC11c2VyNUBtYWlsLnJ1IiwibmFtZSI6Ik5ld1VzZXIiLCJpYXQiOjE3MTU1MTg0MzMsImV4cCI6MTcxNTYwNDgzM30.SR8-Tat6isf7m1h890c0udIMGxcfJ6kkspZLmfq0CdM
 Content-Type: application/json
 

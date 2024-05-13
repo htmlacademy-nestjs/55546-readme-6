@@ -7,7 +7,6 @@ import { join } from 'node:path';
 import dayjs from 'dayjs';
 import { extension } from 'mime-types';
 import { randomUUID } from 'node:crypto';
-
 import { FileStorageConfig } from '@project/file-storage-config';
 import { FileUploaderRepository } from './file-uploader.repository';
 import { StoredFile } from '@project/shared/core';

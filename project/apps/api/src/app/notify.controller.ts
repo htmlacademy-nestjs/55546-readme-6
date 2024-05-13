@@ -2,7 +2,7 @@ import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { HttpService } from '@nestjs/axios';
 import { Controller, Get, Inject, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
-import { rabbitConfig } from '@project/account-config';
+import { rabbitConfig } from '@project/api-config';
 import { ApplicationServiceURL } from '@project/api-config';
 import { CheckAuthGuard } from '@project/guards';
 import { RabbitRouting } from '@project/shared/core';

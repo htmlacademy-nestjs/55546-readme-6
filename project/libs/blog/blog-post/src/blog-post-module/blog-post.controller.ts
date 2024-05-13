@@ -98,7 +98,7 @@ export class BlogPostController {
       .getAllPosts({ title, limit: MAX_SEARCH_COUNT } as BlogPostQuery);
 
     return postWithPagination.entities.map((blogPost) =>
-      blogPost.createResponseObject());
+      fillDto(BlogPostRdo, blogPost.createResponseObject()));
   }
 
   @ApiResponse({

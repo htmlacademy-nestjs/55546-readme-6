@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-
 import { EntityFactory, Newsletter } from '@project/shared/core';
 import { NewsletterEntity } from './newsletter.entity';
 

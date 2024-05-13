@@ -1,6 +1,5 @@
 import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-
 import { Newsletter } from '@project/shared/core';
 
 @Schema({

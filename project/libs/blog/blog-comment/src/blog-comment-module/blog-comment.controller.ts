@@ -75,10 +75,12 @@ export class BlogCommentController {
   public async getCommentsByPostId(@Param('postId') postId: string, @Query() query: BlogCommentQuery) {
     const data = await this.blogCommentService.getCommentsByPostId(postId, query);
 
-    return {
+    const result = {
       ...data,
       entities: data.entities.map(comment => fillDto(CommentRdo, { ...comment.toPOJO() }))
     };
+
+    return fillDto(BlogCommentWithPaginationRdo, result);
   }
 
   @ApiResponse({

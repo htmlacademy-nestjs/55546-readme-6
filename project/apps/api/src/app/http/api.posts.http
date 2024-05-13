@@ -88,7 +88,7 @@ Draft
 ###
 
 # Update video post
-PATCH http://localhost:3001/api/posts/e9b0adfd-9ca2-4f52-880b-d38e64fb8564 HTTP/1.1
+PATCH http://localhost:3001/api/posts/716955d3-1cec-4b07-976b-e7019eb606c2 HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
 Content-Type: application/json
 
@@ -97,7 +97,7 @@ Content-Type: application/json
   "type": "Video",
   "status": "Published",
   "tags": ["video", "youtube"],
-  "link": "https://www.youtube.com/test"
+  "link": "https://www.youtube.com/updated-test"
 }
 
 ###
@@ -150,12 +150,12 @@ Content-Type: application/json
 ###
 
 # Update photo post
-PATCH http://localhost:3001/api/posts/f2696507-eb21-4b1d-8bbf-2642f8df1c97 HTTP/1.1
+PATCH http://localhost:3001/api/posts/929424f9-2637-49fc-9a15-baa0e5fbf27c HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
 Content-Type: multipart/form-data; boundary=boundary
 
 --boundary
-Content-Disposition: form-data; name="photo"; filename="/home/arcmag/Загрузки/test-file.jpg"
+Content-Disposition: form-data; name="photo"; filename="/home/arcmag/Загрузки/updated-test-file.jpg"
 Content-Type: image/jpeg
 
 < /home/arcmag/Загрузки/updated-test-file.jpg
@@ -177,7 +177,7 @@ Published
 ###
 
 # Get post by id
-GET http://localhost:3001/api/posts/09f0be29-de56-4a52-a5c8-efa4e04c4e33 HTTP/1.1
+GET http://localhost:3001/api/posts/929424f9-2637-49fc-9a15-baa0e5fbf27c HTTP/1.1
 
 ###
 

@@ -16,15 +16,16 @@ import IsGuestGuard from '../guards/is-guest.guard';
 import { ChangeUserPasswordDto } from '../dto/change-user-password.dto';
 import { CreateSubscribeDto } from '../dto/create-subscribe.dto';
 import { UserPublicInfoRdo } from '../rdo/user-public-info.rdo';
+import { TokenRdo } from '../rdo/token.rdo';
+import { UserPayloadRdo } from '../rdo/user-payload.rdo';
 
 @ApiTags('authentication')
 @Controller('auth')
 export class AuthenticationController {
-  constructor(
-    private readonly authService: AuthenticationService,
-  ) { }
+  constructor(private readonly authService: AuthenticationService) { }
 
   @ApiResponse({
+    type: UserRdo,
     status: HttpStatus.CREATED,
     description: AuthenticationResponseMessage.UserCreated
   })
@@ -36,7 +37,7 @@ export class AuthenticationController {
   @UseGuards(IsGuestGuard)
   @Post('register')
   public async create(@Body() dto: CreateUserDto) {
-    return this.authService.register(dto);
+    return fillDto(UserRdo, { ...this.authService.register(dto) })
   }
 
   @ApiResponse({
@@ -64,7 +65,7 @@ export class AuthenticationController {
     return fillDto(LoggedUserRdo, { ...user.toPOJO(), ...userToken })
   }
 
-  @ApiResponse({ status: HttpStatus.OK })
+  @ApiResponse({ status: HttpStatus.NO_CONTENT })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
     description: AuthenticationResponseMessage.UserNotFound
@@ -75,13 +76,13 @@ export class AuthenticationController {
   })
   @ApiBody({ type: ChangeUserPasswordDto })
   @UseGuards(JwtAuthGuard)
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Patch('change-password')
   public async changePassword(
     @Req() { user: { id } }: RequestWithUser,
     @Body() { oldPassword, newPassword }: ChangeUserPasswordDto
   ) {
-    return this.authService.changeUserPassword(id, oldPassword, newPassword);
+    await this.authService.changeUserPassword(id, oldPassword, newPassword);
   }
 
   @ApiResponse({ status: HttpStatus.OK })
@@ -92,7 +93,7 @@ export class AuthenticationController {
   @ApiBody({ type: CreateSubscribeDto })
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  @Post('subscribe')
+  @Patch('subscribe')
   public async subscribe(
     @Req() { user }: RequestWithUser,
     @Body() dto: CreateSubscribeDto
@@ -116,6 +117,7 @@ export class AuthenticationController {
   }
 
   @ApiResponse({
+    type: TokenRdo,
     status: HttpStatus.OK,
     description: AuthenticationResponseMessage.GetNewTokens
   })
@@ -127,10 +129,11 @@ export class AuthenticationController {
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   public async refreshToken(@Req() { user }: RequestWithUser) {
-    return this.authService.createUserToken(user);
+    return fillDto(TokenRdo, { ...(await this.authService.createUserToken(user)) });
   }
 
   @ApiResponse({
+    type: UserPayloadRdo,
     status: HttpStatus.OK,
     description: AuthenticationResponseMessage.JwtAuthSuccess
   })
@@ -142,7 +145,7 @@ export class AuthenticationController {
   @Post('check')
   @HttpCode(HttpStatus.OK)
   public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
-    return payload;
+    return fillDto(UserPayloadRdo, { ...payload });
   }
 
   @ApiResponse({
@@ -161,7 +164,6 @@ export class AuthenticationController {
   @ApiParam({ name: "id", required: true, description: ParamDescription.UserId })
   @Get(':id')
   public async show(@Param('id', MongoIdValidationPipe) id: string) {
-
     try {
       const existedUser = await this.authService.getUserById(id);
 

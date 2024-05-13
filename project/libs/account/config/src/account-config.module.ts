@@ -11,7 +11,7 @@ const ENV_USERS_FILE_PATH = 'apps/account/account.env';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      cache: true,
+      cache: false,
       load: [applicationConfig, mongoConfig, jwtConfig, rabbitConfig],
       envFilePath: ENV_USERS_FILE_PATH
     })

@@ -53,7 +53,7 @@ Content-Type: application/json
 ###
 
 # Subscribe on an other user
-POST http://localhost:3001/api/users/subscribe HTTP/1.1
+PATCH http://localhost:3001/api/users/subscribe HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
 Content-Type: application/json
 

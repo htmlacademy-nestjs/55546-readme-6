@@ -1,7 +1,6 @@
 import { MailerAsyncOptions } from '@nestjs-modules/mailer/dist/interfaces/mailer-async-options.interface';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { ConfigService } from '@nestjs/config';
-
 import { resolve } from 'node:path';
 
 const TEMPLATE_DIR = 'assets';

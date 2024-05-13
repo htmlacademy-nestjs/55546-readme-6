@@ -45,37 +45,32 @@ export class BlogPostEntity extends Entity implements StorableEntity<CommonPostT
     const blogCommentFactory = new BlogCommentFactory();
     this.comments = post.comments?.map(comment => blogCommentFactory.create(comment)) ?? [];
 
-    const blogPostDetailFactory = new BlogPostDetailFactory();
-    this.postsDetails = post.postsDetails ?
-      post.postsDetails.map(postDetail => blogPostDetailFactory.create(postDetail))
-      : this.fillDetails(post);
+    this.fillDetails(post);
   }
 
-  fillDetails(post: any): BlogPostDetailEntity[] {
-    if (post.type === 'Photo') {
+  fillDetails(post: any) {
+    if (post.type === PostType.Photo) {
       this.addDetail({ type: PostDetailType.Photo, value: post.photoId });
     }
 
-    if (post.type === 'Text') {
+    if (post.type === PostType.Text) {
       this.addDetail({ type: PostDetailType.Text, value: post.text });
       this.addDetail({ type: PostDetailType.Announcement, value: post.announcement });
     }
 
-    if (post.type === 'Quote') {
+    if (post.type === PostType.Quote) {
       this.addDetail({ type: PostDetailType.Text, value: post.text });
       this.addDetail({ type: PostDetailType.QuoteAuthor, value: post.quoteAuthor });
     }
 
-    if (post.type === 'Link') {
+    if (post.type === PostType.Link) {
       this.addDetail({ type: PostDetailType.Link, value: post.link });
       this.addDetail({ type: PostDetailType.Description, value: post.description });
     }
 
-    if (post.type === 'Video') {
+    if (post.type === PostType.Video) {
       this.addDetail({ type: PostDetailType.Video, value: post.link });
     }
-
-    return this.postsDetails;
   }
 
   toggleLike(userId: string) {
@@ -89,6 +84,10 @@ export class BlogPostEntity extends Entity implements StorableEntity<CommonPostT
   }
 
   addDetail(detail: { type: PostDetailType, value: string }) {
+    if (!detail.type || !detail.value) {
+      return;
+    }
+
     this.postsDetails.push(
       (new BlogPostDetailFactory()).create({
         id: undefined,
@@ -117,17 +116,17 @@ export class BlogPostEntity extends Entity implements StorableEntity<CommonPostT
     } as CommonPostType;
   }
 
-  public detailsToObject() {
-    return this.postsDetails.reduce((result, { type, value }) => {
+  public createResponseObject() {
+    const { postsDetails, ...entity } = this.toPOJO();
+
+    return { ...entity, ...BlogPostEntity.detailsToObject(postsDetails) };
+  }
+
+  public static detailsToObject(details) {
+    return details.reduce((result, { type, value }) => {
       const detailName = type[0].toLowerCase() + type.slice(1);
       result[detailName] = value;
       return result;
     }, {});
-  }
-
-  public createResponseObject() {
-    const { postsDetails, ...entity } = this.toPOJO();
-
-    return { ...entity, ...this.detailsToObject() };
   }
 }

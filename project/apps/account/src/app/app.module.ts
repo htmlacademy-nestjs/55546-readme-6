@@ -3,7 +3,6 @@ import { AuthenticationModule } from '@project/authentication';
 import { AccountConfigModule, getMongooseOptions } from '@project/account-config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { NotifyModule } from '@project/account-notify';
-import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [

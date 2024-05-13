@@ -1,6 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-
 import { ApplicationServiceURL } from '@project/api-config';
 
 @Injectable()
