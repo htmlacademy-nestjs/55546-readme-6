@@ -65,6 +65,12 @@ Content-Type: application/json
 
 ###
 
+# Get a list of publishers the current user is subscribed to
+GET http://localhost:4000/api/auth/get-publishers-list HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDI0M2Y5ZjhiYjAwNjgxMDdkMWI3YyIsImVtYWlsIjoidGVzdC11c2VyMkBtYWlsLnJ1IiwibmFtZSI6Ik5ld1VzZXIiLCJpYXQiOjE3MTU2MzEwOTAsImV4cCI6MTcxNTcxNzQ5MH0.uA0y3Zi-ucWL284bEY1-Q8ADjneX7O_sAmejHsmoHDk
+
+###
+
 # Get new JWT pair
 POST http://localhost:4000/api/auth/refresh HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBiNTBjMzNmODExMTE3MWRjZWI1NyIsImVtYWlsIjoidGVzdC11c2VyNUBtYWlsLnJ1IiwibmFtZSI6Ik5ld1VzZXIiLCJ0b2tlbklkIjoiMTNkOWE5NjItMmY4Ny00MjkyLTg2MTctNmZkYTQxOTE5NTU2IiwiaWF0IjoxNzE1NTE4Mzc1LCJleHAiOjE3MTgxMTAzNzV9.FrqyfuZ9f7lDeq_Y54dwbz8Rl1K6i1hjuZJh9iwPl7s

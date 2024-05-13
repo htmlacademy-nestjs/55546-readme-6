@@ -2,7 +2,7 @@ import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
 import { PostType } from "@prisma/client";
 import { ApplicationServiceURL } from "@project/api-config";
-import { UpdatePostDto } from "@project/blog-post";
+import { BlogPostQuery, UpdatePostDto } from "@project/blog-post";
 import { saveFile } from "@project/shared/helpers";
 
 @Injectable()
@@ -60,5 +60,21 @@ export class BlogService {
   public async savePostFile(dto: UpdatePostDto, photo?: Express.Multer.File) {
     const photoId = photo ? (await saveFile(this.httpService, photo)).id : undefined;
     return dto.type === 'Photo' ? { ...dto, photoId } : dto;
+  }
+
+  public async getContentRibbon(subscriberId: string, params: BlogPostQuery) {
+    const { data: publishers } = await this.httpService
+      .axiosRef.get(`${ApplicationServiceURL.Users}/get-publishers-list`);
+
+    const { data: posts } = await this.httpService
+      .axiosRef.post(`${ApplicationServiceURL.Blog}/content-ribbon`,
+        publishers.reduce((list, publisher) => [...list, publisher.id], [subscriberId]),
+        { params }
+      );
+
+    return {
+      ...posts,
+      entities: await this.getPostsWithAdditionalData(posts.entities)
+    };
   }
 }

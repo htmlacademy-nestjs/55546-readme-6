@@ -17,6 +17,16 @@ export class BlogPostService {
   }
 
   public async getAllPosts(query?: BlogPostQuery, isOnlyDraft = false, usersIds: string[] = []): Promise<PaginationResult<BlogPostEntity>> {
+    if (!Array.isArray(usersIds) || usersIds.length === 0) {
+      return {
+        entities: [],
+        currentPage: 1,
+        totalPages: 0,
+        itemsPerPage: 0,
+        totalItems: 0
+      };
+    }
+
     return await this.blogPostRepository.find(query, isOnlyDraft, usersIds);
   }
 
@@ -74,9 +84,13 @@ export class BlogPostService {
       throw new ForbiddenException(`You are already the author of this post`);
     }
 
+    if (existsPost.status === PostStatus.Draft) {
+      throw new ForbiddenException(`You cannot repost posts in draft status`);
+    }
+
     const { entities } = await this.getAllPosts({ authorId: userId } as BlogPostQuery);
     for (const entity of entities) {
-      if (entity.isReposted && entity.originalId === postId) {
+      if (entity.isReposted && entity.originalId === existsPost.id) {
         throw new ForbiddenException(`You are already reposted this post`);
       }
     }

@@ -51,14 +51,12 @@ export class BlogPostController {
     status: HttpStatus.NOT_FOUND,
     description: PostResponseMessage.UserNotFound
   })
+  @UseGuards(CheckAuthGuard)
   @ApiQuery({ type: BlogPostQuery, description: QueryDescription.PaginationList })
-  @ApiParam({ name: "userId", required: true, description: ParamDescription.UserId })
-  @Get('/content-ribbon/:userId')
-  public async contentRibbon(@Param('userId') userId: string, @Query() query: BlogPostQuery) {
-    const { data: user } = await this.httpService
-      .axiosRef.get(`${ApplicationServiceURL.Users}/${userId}`);
-
-    const postWithPagination = await this.blogPostService.getAllPosts(query, false, [...user.subscribers, user.id]);
+  @Post('/content-ribbon')
+  public async contentRibbon(@Body() usersIds: string[], @Query() query: BlogPostQuery) {
+    const postWithPagination = await this.blogPostService
+      .getAllPosts(query, false, usersIds);
 
     const result = {
       ...postWithPagination,

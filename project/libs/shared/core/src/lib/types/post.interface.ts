@@ -26,8 +26,8 @@ export interface Post {
   dateCreate: Date;
   dateUpdate: Date;
   isReposted: boolean;
-  comments: Comment[];
-  postsDetails: any[];
+  comments?: Comment[];
+  postsDetails?: any[];
 }
 
 export type CommonPostType = PhotoPost | TextPost | VideoPost | QuotePost | LinkPost;

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseFilePipeBuilder, Patch, Post, Query, UploadedFile, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseFilePipeBuilder, Patch, Post, Query, Req, UploadedFile, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosExceptionFilter } from '@project/filters';
 import { ApplicationServiceURL } from '@project/api-config';
@@ -9,6 +9,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import 'express';
 import { BlogService } from './services/blog.service';
 import { AVAILABLE_POST_PHOTO_TYPE, MAX_POST_PHOTO_SIZE } from '@project/blog-post';
+import { RequestWithUser } from '@project/authentication';
 
 @Controller('posts')
 @UseInterceptors(InjectAxiosAuthorization)
@@ -30,15 +31,13 @@ export class BlogController {
     };
   }
 
-  @Get('/content-ribbon/:userId')
-  public async contentRibbon(@Param('userId') userId: string, @Query() params: BlogPostQuery) {
-    const { data } = await this.httpService
-      .axiosRef.get(`${ApplicationServiceURL.Blog}/content-ribbon/${userId}`, { params });
-
-    return {
-      ...data,
-      entities: await this.blogService.getPostsWithAdditionalData(data.entities)
-    };
+  @UseGuards(CheckAuthGuard)
+  @Get('/content-ribbon')
+  public async contentRibbon(
+    @Req() { user }: RequestWithUser,
+    @Query() query: BlogPostQuery
+  ) {
+    return this.blogService.getContentRibbon(user.id, query);
   }
 
   @Get('/search')

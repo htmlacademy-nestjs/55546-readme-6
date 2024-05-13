@@ -153,8 +153,12 @@ export class AuthenticationService {
       throw new NotFoundException(`Author user with id ${authorId} not found`);
     }
 
-    await this.blogUserRepository.update(subscriber.updateSubscribers(authorId));
+    await this.blogUserRepository.update(author.updateSubscribers(subscriberId));
 
-    return subscriber;
+    return author;
+  }
+
+  public async getPublishersList(subscriberId: string) {
+    return await this.blogUserRepository.findPublishersList(subscriberId);
   }
 }

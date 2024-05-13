@@ -21,10 +21,14 @@ export class BlogUserRepository extends BaseMongoRepository<BlogUserEntity, Blog
     return this.createEntityFromDocument(document);
   }
 
+  public async findPublishersList(subscriberId: string): Promise<BlogUserEntity[]> {
+    const documents = await this.model.find({ subscribers: subscriberId }).exec();
+
+    return documents.map(document => this.createEntityFromDocument(document));
+  }
+
   public async findListById(listId: string[]): Promise<BlogUserEntity[]> {
-    const documents = await this.model.find({
-      _id: { $in: listId }
-    }).where({}).exec();
+    const documents = await this.model.find({ _id: { $in: listId } }).exec();
 
     return documents.map(document => this.createEntityFromDocument(document));
   }

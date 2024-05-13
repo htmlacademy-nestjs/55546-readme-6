@@ -9,7 +9,7 @@ const usersIds = [
 ];
 
 const DataCount = {
-  Post: 15,
+  Post: 30,
   Likes: 20,
   Comment: 50,
   Details: 150
@@ -70,9 +70,11 @@ const generatePost = () => {
 
   return {
     id: randomUUID(),
+    originalId: null,
     type: getRandomValue(POSTS_TYPES),
     status: getRandomValue(POSTS_STATUSES),
     authorId: getRandomValue(usersIds),
+    originalAuthorId: null,
     title: getRandomValue(POSTS_TITLES_LIST),
     tags: [...new Set(
       Array.from({ length: Math.floor(Math.random() * POSTS_TAGS.length) }, () => {
@@ -81,7 +83,7 @@ const generatePost = () => {
     )],
     dateCreate: randomDate(new Date(POST_MIN_DATE), new Date()),
     dateUpdate: new Date(),
-    isReposted: !!(Math.round(Math.random() * 1)),
+    isReposted: false,
     likes: Array.from({ length: Math.floor(Math.random() * DataCount.Likes) }, () => {
       return new Types.ObjectId().toString();
     })

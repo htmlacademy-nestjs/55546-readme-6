@@ -12,6 +12,7 @@ export const AuthenticationResponseMessage = {
   TokenCreatedError: 'Error upon creating user token',
   BadMongoIdError: 'Bad entity mongo ID',
   GettingUsersById: 'getting a list of users by ID',
+  GettingPublishersList: 'getting a list of publishers the current user is subscribed to',
 } as const;
 
 export const ParamDescription = {

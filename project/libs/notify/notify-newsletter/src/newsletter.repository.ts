@@ -5,6 +5,7 @@ import { BaseMongoRepository } from '@project/data-access';
 import { NewsletterEntity } from './newsletter.entity';
 import { NewsletterFactory } from './newsletter.factory';
 import { NewsletterModel } from './newsletter.model';
+import { DEFAULT_LASTMAILING_DATE } from './newsletter.constants';
 
 @Injectable()
 export class NewsletterRepository extends BaseMongoRepository<NewsletterEntity, NewsletterModel> {
@@ -18,7 +19,7 @@ export class NewsletterRepository extends BaseMongoRepository<NewsletterEntity, 
   public async getLastNewsletter() {
     const document = await this.model.findOne().sort({ lastMailingDate: -1 }).exec();
     if (!document) {
-      const newEntity = new NewsletterEntity({ lastMailingDate: new Date() });
+      const newEntity = new NewsletterEntity({ lastMailingDate: new Date(DEFAULT_LASTMAILING_DATE) });
 
       await this.save(newEntity);
 

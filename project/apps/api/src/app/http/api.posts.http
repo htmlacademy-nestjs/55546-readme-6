@@ -221,4 +221,5 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmM
 ###
 
 # Receive the user's posts in accordance with the point of reference - My feed
-GET http://localhost:3001/api/posts/content-ribbon/6640e8af14daa796d67073d7 HTTP/1.1
+GET http://localhost:3001/api/posts/content-ribbon?limit=3&page=1 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDI0M2Y5ZjhiYjAwNjgxMDdkMWI3YyIsImVtYWlsIjoidGVzdC11c2VyMkBtYWlsLnJ1IiwibmFtZSI6Ik5ld1VzZXIiLCJpYXQiOjE3MTU2MzEwOTAsImV4cCI6MTcxNTcxNzQ5MH0.uA0y3Zi-ucWL284bEY1-Q8ADjneX7O_sAmejHsmoHDk

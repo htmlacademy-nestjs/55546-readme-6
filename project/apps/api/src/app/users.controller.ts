@@ -41,7 +41,7 @@ export class UsersController {
   @UseGuards(CheckAuthGuard)
   @Patch('change-password')
   public async changePassword(@Body() changeUserPasswordDto: ChangeUserPasswordDto) {
-    this.httpService.axiosRef.patch(`${ApplicationServiceURL.Users}/change-password`, changeUserPasswordDto);
+    await this.httpService.axiosRef.patch(`${ApplicationServiceURL.Users}/change-password`, changeUserPasswordDto);
   }
 
   @Post('refresh')

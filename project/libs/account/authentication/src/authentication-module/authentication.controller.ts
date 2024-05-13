@@ -37,7 +37,7 @@ export class AuthenticationController {
   @UseGuards(IsGuestGuard)
   @Post('register')
   public async create(@Body() dto: CreateUserDto) {
-    return fillDto(UserRdo, { ...this.authService.register(dto) })
+    return fillDto(UserRdo, { ...(await this.authService.register(dto)) })
   }
 
   @ApiResponse({
@@ -146,6 +146,26 @@ export class AuthenticationController {
   @HttpCode(HttpStatus.OK)
   public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
     return fillDto(UserPayloadRdo, { ...payload });
+  }
+
+  @ApiResponse({
+    type: [UserRdo],
+    status: HttpStatus.OK,
+    description: AuthenticationResponseMessage.GettingPublishersList
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: AuthenticationResponseMessage.JwtAuthError
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: AuthenticationResponseMessage.BadMongoIdError
+  })
+  @UseGuards(JwtAuthGuard)
+  @Get('/get-publishers-list')
+  public async getPublishersList(@Req() { user }: RequestWithUser) {
+    const publishers = await this.authService.getPublishersList(user.id);
+    return publishers.map(publisher => fillDto(UserRdo, { ...publisher.toPOJO() }));
   }
 
   @ApiResponse({

@@ -4,7 +4,11 @@ GET http://localhost:3002/api/posts?limit=3&page=1 HTTP/1.1
 ###
 
 # Receive the user's posts in accordance with the point of reference - My feed
-GET http://localhost:3002/api/posts/content-ribbon/663b6d0bf48517d912b1b267 HTTP/1.1
+POST http://localhost:3002/api/posts/content-ribbon?limit=3&page=1 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDI0M2Y5ZjhiYjAwNjgxMDdkMWI3YyIsImVtYWlsIjoidGVzdC11c2VyMkBtYWlsLnJ1IiwibmFtZSI6Ik5ld1VzZXIiLCJpYXQiOjE3MTU2MzEwOTAsImV4cCI6MTcxNTcxNzQ5MH0.uA0y3Zi-ucWL284bEY1-Q8ADjneX7O_sAmejHsmoHDk
+Content-Type: application/json
+
+["664243f9f8bb0068107d1b7c","6641e7c30e1dd47aa62202d9","6641e7cd0e1dd47aa62202da"]
 
 ###
 

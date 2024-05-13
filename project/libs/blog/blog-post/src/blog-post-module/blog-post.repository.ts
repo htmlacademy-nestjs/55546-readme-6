@@ -91,9 +91,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       }
     });
 
-    entity.id = record.id;
-
-    return entity;
+    return this.createEntityFromDocument(record);
   }
 
   public async findById(id: string): Promise<BlogPostEntity> {
@@ -174,7 +172,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
 
   public async findAfterDate(date: Date): Promise<BlogPostEntity[]> {
     const posts = await this.client.post.findMany({
-      where: { dateCreate: { gt: date } },
+      where: { dateCreate: { gt: date }, status: PostStatus.Published },
       include: { comments: true, postsDetails: true }
     });
 
