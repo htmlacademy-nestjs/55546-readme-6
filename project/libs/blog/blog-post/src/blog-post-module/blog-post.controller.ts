@@ -11,8 +11,6 @@ import { RequestWithUser } from '@project/authentication';
 import { ApiBody, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MAX_SEARCH_COUNT, ParamDescription, PostResponseMessage, QueryDescription } from './blog-post.constants';
 import { PostValidationPipe } from './pipes/post-validation.pipe';
-import { HttpService } from '@nestjs/axios';
-import { ApplicationServiceURL } from '@project/api-config';
 import { AxiosExceptionFilter } from '@project/filters';
 import { InjectUserIdInterceptor } from '@project/interceptors';
 
@@ -20,10 +18,7 @@ import { InjectUserIdInterceptor } from '@project/interceptors';
 @Controller('posts')
 @UseFilters(AxiosExceptionFilter)
 export class BlogPostController {
-  constructor(
-    private readonly blogPostService: BlogPostService,
-    private readonly httpService: HttpService,
-  ) { }
+  constructor(private readonly blogPostService: BlogPostService) { }
 
   @ApiResponse({
     type: BlogPostWithPaginationRdo,

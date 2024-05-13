@@ -1,6 +1,6 @@
 # Create new comment for the post
-POST http://localhost:3001/api/posts/ccaf61d0-0530-4cfc-98fa-4712838d9d96/comments HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
+POST http://localhost:3001/api/posts/e653f55d-bd5c-4a8d-8f32-ebabbb0d3b98/comments HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDI4NThlMjQ0YTI5MTc0ODEzNmExNCIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTYzNjQ3MCwiZXhwIjoxNzE1NzIyODcwfQ.aQaOlTCIDoEUybFnVCtVbTO3J5Xw4JnWzFv_gyTCis4
 Content-Type: application/json
 
 {
@@ -10,15 +10,15 @@ Content-Type: application/json
 ###
 
 # Delete comment by id
-DELETE http://localhost:3001/api/posts/ccaf61d0-0530-4cfc-98fa-4712838d9d96/comments/9cbcacc6-1604-4714-903f-ed46f33c6c3e HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDBlOGFmMTRkYWE3OTZkNjcwNzNkNyIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTUzMjU4NiwiZXhwIjoxNzE1NjE4OTg2fQ.mkHehMNp3CWXnbYqRyEK48SpHTEkgSND3knjz0MrQbc
+DELETE http://localhost:3001/api/posts/e653f55d-bd5c-4a8d-8f32-ebabbb0d3b98/comments/0ff7b2f4-7d69-40b7-aaf9-8576143fad96 HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDI4NThlMjQ0YTI5MTc0ODEzNmExNCIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTYzNjQ3MCwiZXhwIjoxNzE1NzIyODcwfQ.aQaOlTCIDoEUybFnVCtVbTO3J5Xw4JnWzFv_gyTCis4
 
 ###
 
 # Get comments list by a post id
-GET http://localhost:3001/api/posts/ccaf61d0-0530-4cfc-98fa-4712838d9d96/comments/find HTTP/1.1
+GET http://localhost:3001/api/posts/e653f55d-bd5c-4a8d-8f32-ebabbb0d3b98/comments/find HTTP/1.1
 
 ###
 
 # Get comment by id
-GET http://localhost:3001/api/posts/ccaf61d0-0530-4cfc-98fa-4712838d9d96/comments/7cda9493-3e9a-4324-b5fb-866067e20b4e HTTP/1.1
+GET http://localhost:3001/api/posts/e653f55d-bd5c-4a8d-8f32-ebabbb0d3b98/comments/0ff7b2f4-7d69-40b7-aaf9-8576143fad96 HTTP/1.1

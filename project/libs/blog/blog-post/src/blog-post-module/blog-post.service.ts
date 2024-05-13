@@ -17,16 +17,6 @@ export class BlogPostService {
   }
 
   public async getAllPosts(query?: BlogPostQuery, isOnlyDraft = false, usersIds: string[] = []): Promise<PaginationResult<BlogPostEntity>> {
-    if (!Array.isArray(usersIds) || usersIds.length === 0) {
-      return {
-        entities: [],
-        currentPage: 1,
-        totalPages: 0,
-        itemsPerPage: 0,
-        totalItems: 0
-      };
-    }
-
     return await this.blogPostRepository.find(query, isOnlyDraft, usersIds);
   }
 
