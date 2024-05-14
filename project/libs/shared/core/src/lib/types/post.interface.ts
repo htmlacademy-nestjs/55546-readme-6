@@ -23,6 +23,7 @@ export interface Post {
   title: string;
   tags?: string[];
   likes?: string[];
+  likesCount?: number;
   dateCreate: Date;
   dateUpdate: Date;
   isReposted: boolean;
