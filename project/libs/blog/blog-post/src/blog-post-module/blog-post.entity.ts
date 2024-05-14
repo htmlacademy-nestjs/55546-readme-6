@@ -13,6 +13,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<CommonPostT
   public title: string;
   public tags?: string[];
   public likes?: string[];
+  public likesCount?: number;
   public dateCreate?: Date;
   public dateUpdate?: Date;
   public isReposted: boolean;
@@ -80,6 +81,8 @@ export class BlogPostEntity extends Entity implements StorableEntity<CommonPostT
       this.likes.push(userId);
     }
 
+    this.likesCount = this.likes.length;
+
     return this;
   }
 
@@ -108,6 +111,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<CommonPostT
       originalAuthorId: this.originalAuthorId,
       tags: this.tags,
       likes: this.likes,
+      likesCount: this.likesCount,
       dateCreate: this.dateCreate,
       dateUpdate: this.dateUpdate,
       isReposted: this.isReposted,

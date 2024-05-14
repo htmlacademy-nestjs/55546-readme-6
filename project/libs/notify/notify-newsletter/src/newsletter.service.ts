@@ -18,11 +18,11 @@ export class NewsletterService {
   }
 
   public async sendNotifyNewSubscriber(posts: CommonPostType[]) {
-    if (posts.length === 0) {
+    const subscribers = await this.emailSubscriberRepository.findAll();
+
+    if (posts.length === 0 || subscribers.length === 0) {
       return;
     }
-
-    const subscribers = await this.emailSubscriberRepository.findAll();
 
     await this.mailService.sendNotifyAboutNewPosts(subscribers, posts);
     await this.newsletterRepository.save(new NewsletterEntity({ lastMailingDate: new Date() }));

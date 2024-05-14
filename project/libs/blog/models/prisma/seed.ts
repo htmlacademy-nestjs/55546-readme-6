@@ -67,6 +67,10 @@ const randomDate = (start: Date, end: Date): Date =>
   new Date(start.getTime() + ((end.getTime() - start.getTime()) * Math.random()));
 
 const generatePost = () => {
+  const likes = Array.from({ length: Math.floor(Math.random() * DataCount.Likes) }, () => {
+    return new Types.ObjectId().toString();
+  });
+
 
   return {
     id: randomUUID(),
@@ -84,9 +88,8 @@ const generatePost = () => {
     dateCreate: randomDate(new Date(POST_MIN_DATE), new Date()),
     dateUpdate: new Date(),
     isReposted: false,
-    likes: Array.from({ length: Math.floor(Math.random() * DataCount.Likes) }, () => {
-      return new Types.ObjectId().toString();
-    })
+    likesCount: likes.length,
+    likes
   };
 }
 
