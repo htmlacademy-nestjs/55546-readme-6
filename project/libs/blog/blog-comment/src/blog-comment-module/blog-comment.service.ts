@@ -16,10 +16,14 @@ export class BlogCommentService {
   }
 
   async create(postId: string, dto: CreateCommentDto) {
-    const newComment = this.blogCommentFactory.createFromDto(dto, postId);
-    await this.blogCommentRepository.save(newComment);
+    try {
+      const newComment = this.blogCommentFactory.createFromDto(dto, postId);
+      await this.blogCommentRepository.save(newComment);
 
-    return newComment;
+      return newComment;
+    } catch (err) {
+      throw new NotFoundException(`Post with ID ${postId} not found`);
+    }
   }
 
   async delete(commentId: string, authorId: string) {
