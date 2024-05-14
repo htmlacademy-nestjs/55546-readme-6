@@ -66,7 +66,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     const pojoEntity = entity.toPOJO();
     await this.client.post.update({
       where: { id: entity.id },
-      data: { likes: pojoEntity.likes }
+      data: { likes: pojoEntity.likes, likesCount: pojoEntity.likesCount }
     });
   }
 
@@ -129,7 +129,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     if (query?.sortByComments) {
       orderBy.comments = { _count: query.sortByComments };
     } else if (query?.sortByLikes) {
-      orderBy.likes = query.sortByLikes;
+      orderBy.likesCount = query.sortByLikes;
     } else if (query?.sortDirection) {
       orderBy.dateCreate = query.sortDirection;
     }

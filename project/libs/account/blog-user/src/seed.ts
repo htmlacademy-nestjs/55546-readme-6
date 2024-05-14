@@ -1,7 +1,8 @@
 import mongoose, { Schema, Types } from 'mongoose';
 import { genSalt, hash } from 'bcrypt';
 
-const MONGO_CONNECTION_STRING = 'mongodb://admin:123456@127.0.0.1:27018/readmy-users?authSource=admin';
+const USERS_MONGO_CONNECTION_STRING = 'mongodb://admin:123456@127.0.0.1:27018/readmy-users?authSource=admin';
+const NOTIFY_MONGO_CONNECTION_STRING = 'mongodb://admin:test@127.0.0.1:27020/readmy-notify?authSource=admin';
 
 export const SALT_ROUNDS = 10;
 
@@ -12,6 +13,11 @@ const BlogUserModel = mongoose.model('users', new Schema({
   subscribers: [String],
   registrationDate: Date,
   passwordHash: String
+}));
+
+const SubscriberModel = mongoose.model('email-subscribers', new Schema({
+  name: String,
+  email: String
 }));
 
 const users = [
@@ -41,7 +47,7 @@ const users = [
   },
 ];
 
-const seedDb = async () => {
+const seedUsersDb = async () => {
   const usersEntities = await Promise.all(
     users.map(async (user) => {
       const salt = await genSalt(SALT_ROUNDS);
@@ -51,14 +57,33 @@ const seedDb = async () => {
     })
   );
 
-  console.log('Database was filled', usersEntities);
+  console.log('Users database was filled', usersEntities);
+}
+
+const seedNotifyDb = async () => {
+  const subscribersEntities = await Promise.all(
+    users.map(user => SubscriberModel.create(user))
+  );
+
+  console.log('Notify database was filled', subscribersEntities);
 }
 
 async function bootstrap() {
   try {
-    await mongoose.connect(MONGO_CONNECTION_STRING);
+    await mongoose.connect(USERS_MONGO_CONNECTION_STRING);
 
-    await seedDb();
+    await seedUsersDb();
+  } catch (error: unknown) {
+    console.error(error);
+    globalThis.process.exit(1);
+  } finally {
+    await mongoose.disconnect();
+  }
+
+  try {
+    await mongoose.connect(NOTIFY_MONGO_CONNECTION_STRING);
+
+    await seedNotifyDb();
   } catch (error: unknown) {
     console.error(error);
     globalThis.process.exit(1);
