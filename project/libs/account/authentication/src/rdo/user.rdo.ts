@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
+import { UploadedFileRdo } from '@project/file-uploader';
 
 export class UserRdo {
   @ApiProperty({
@@ -14,7 +15,18 @@ export class UserRdo {
     example: '/images/user.png'
   })
   @Expose()
-  public avatar: string;
+  public avatarId: string;
+
+  @Expose()
+  @Type(() => UploadedFileRdo)
+  public avatar: UploadedFileRdo
+
+  @ApiProperty({
+    description: 'User name',
+    example: 'NewUser'
+  })
+  @Expose()
+  public name: string;
 
   @ApiProperty({
     description: 'User email',
@@ -22,6 +34,14 @@ export class UserRdo {
   })
   @Expose()
   public email: string;
+
+  @ApiProperty({
+    description: 'List of author IDs to which the user is subscribed',
+    isArray: true,
+    example: ['660eb9f25dac3408417b2da9', '660eb9f25dac3408417b2da9', '660eb9f25dac3408417b2da9']
+  })
+  @Expose()
+  public subscribers: string[];
 
   @ApiProperty({
     description: 'User registration date (ISO format)',

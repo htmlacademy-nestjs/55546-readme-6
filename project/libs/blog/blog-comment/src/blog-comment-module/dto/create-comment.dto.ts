@@ -21,4 +21,3 @@ export class CreateCommentDto {
   @IsMongoId({ message: BlogCommentValidateMessage.InvalidID })
   public authorId: string;
 }
-

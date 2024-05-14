@@ -1,18 +1,29 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
-import { HTTP_CLIENT_MAX_REDIRECTS, HTTP_CLIENT_TIMEOUT } from './app.config';
 import { UsersController } from './users.controller';
-import { CheckAuthGuard } from './guards/check-auth.guard';
 import { BlogController } from './blog.controller';
+import { ApiConfigModule, HttpClient } from '@project/api-config';
+import { CheckAuthGuard } from '@project/guards';
+import { BlogCommentController } from './comments.controller';
+import { NotifyController } from './notify.controller';
+import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
+import { getRabbitMQOptions } from '@project/shared/helpers';
+import { UsersService } from './services/users.service';
+import { BlogService } from './services/blog.service';
 
 @Module({
   imports: [
+    ApiConfigModule,
+    RabbitMQModule.forRootAsync(
+      RabbitMQModule,
+      getRabbitMQOptions('rabbit')
+    ),
     HttpModule.register({
-      timeout: HTTP_CLIENT_TIMEOUT,
-      maxRedirects: HTTP_CLIENT_MAX_REDIRECTS,
+      timeout: HttpClient.Timeout,
+      maxRedirects: HttpClient.MaxRedirects,
     }),
   ],
-  controllers: [UsersController, BlogController],
-  providers: [CheckAuthGuard],
+  controllers: [UsersController, BlogController, BlogCommentController, NotifyController],
+  providers: [UsersService, BlogService, CheckAuthGuard],
 })
 export class AppModule { }

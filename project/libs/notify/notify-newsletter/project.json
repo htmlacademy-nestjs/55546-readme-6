@@ -1,0 +1,9 @@
+{
+  "name": "notify-newsletter",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/notify/notify-newsletter/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project notify-newsletter --web",
+  "targets": {}
+}

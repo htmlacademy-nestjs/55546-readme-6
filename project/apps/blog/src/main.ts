@@ -1,8 +1,3 @@
-/**
- * This is not a production server yet!
- * This is only a minimal backend to get started.
- */
-
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
@@ -25,7 +20,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('spec', app, document);
 
-  const port = process.env.PORT || PORT;
+  const port = process.env.BLOG_PORT || PORT;
 
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 

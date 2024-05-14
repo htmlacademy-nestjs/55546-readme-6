@@ -1,31 +1,15 @@
-import { CommonPostType, Entity, LinkPost, PhotoPost, PostStatus, PostType, QuotePost, TextPost, VideoPost } from '@project/shared/core';
+import { CommonPostType, Entity } from '@project/shared/core';
 import { StorableEntity } from '@project/shared/core';
 import { BlogCommentEntity, BlogCommentFactory } from '@project/blog-comment';
-
-function isPhotoType(obj: any): obj is PhotoPost {
-  return obj.type === PostType.Photo;
-}
-
-function isTextType(obj: any): obj is TextPost {
-  return obj.type === PostType.Text;
-}
-
-function isLinkType(obj: any): obj is LinkPost {
-  return obj.type === PostType.Link;
-}
-
-function isVideoType(obj: any): obj is VideoPost {
-  return obj.type === PostType.Video;
-}
-
-function isQuoteType(obj: any): obj is QuotePost {
-  return obj.type === PostType.Quote;
-}
+import { BlogPostDetailEntity, BlogPostDetailFactory } from '@project/blog-post-detail';
+import { PostDetailType, PostType, PostStatus } from '@prisma/client';
 
 export class BlogPostEntity extends Entity implements StorableEntity<CommonPostType> {
+  public originalId: string;
   public type: PostType;
   public status: PostStatus;
   public authorId: string;
+  public originalAuthorId: string;
   public title: string;
   public tags?: string[];
   public likes?: string[];
@@ -33,13 +17,7 @@ export class BlogPostEntity extends Entity implements StorableEntity<CommonPostT
   public dateUpdate?: Date;
   public isReposted: boolean;
   public comments: BlogCommentEntity[];
-
-  public photo?: string;
-  public text?: string;
-  public announcement?: string;
-  public quoteAuthor?: string;
-  public link?: string;
-  public description?: string;
+  public postsDetails: BlogPostDetailEntity[] = [];
 
   constructor(post?: CommonPostType) {
     super();
@@ -52,80 +30,103 @@ export class BlogPostEntity extends Entity implements StorableEntity<CommonPostT
     }
 
     this.id = post.id ?? undefined;
+    this.originalId = post.originalId ?? undefined;
     this.title = post.title ?? undefined;
     this.type = post.type ?? undefined;
-    this.status = post.status ?? undefined;
+    this.status = post.status ?? PostStatus.Draft;
     this.authorId = post.authorId ?? undefined;
+    this.originalAuthorId = post.originalAuthorId ?? undefined;
     this.tags = post.tags ?? [];
     this.likes = post.likes ?? [];
-    this.dateCreate = post.dateCreate ?? new Date();
-    this.dateUpdate = post.dateUpdate ?? new Date();
+    this.isReposted = post.isReposted ?? false;
+    this.dateCreate = post.dateCreate;
+    this.dateUpdate = post.dateUpdate;
 
     const blogCommentFactory = new BlogCommentFactory();
     this.comments = post.comments?.map(comment => blogCommentFactory.create(comment)) ?? [];
 
-    if (isPhotoType(post)) {
-      this.photo = post.photo ?? undefined;
+    this.fillDetails(post);
+  }
+
+  fillDetails(post: any) {
+    if (post.type === PostType.Photo) {
+      this.addDetail({ type: PostDetailType.Photo, value: post.photoId });
     }
 
-    if (isTextType(post)) {
-      this.text = post.text ?? undefined;
-      this.announcement = post.announcement ?? undefined;
+    if (post.type === PostType.Text) {
+      this.addDetail({ type: PostDetailType.Text, value: post.text });
+      this.addDetail({ type: PostDetailType.Announcement, value: post.announcement });
     }
 
-    if (isQuoteType(post)) {
-      this.text = post.text ?? undefined;
-      this.quoteAuthor = post.quoteAuthor ?? undefined;
+    if (post.type === PostType.Quote) {
+      this.addDetail({ type: PostDetailType.Text, value: post.text });
+      this.addDetail({ type: PostDetailType.QuoteAuthor, value: post.quoteAuthor });
     }
 
-    if (isLinkType(post)) {
-      this.link = post.link ?? undefined;
-      this.description = post.description ?? undefined;
+    if (post.type === PostType.Link) {
+      this.addDetail({ type: PostDetailType.Link, value: post.link });
+      this.addDetail({ type: PostDetailType.Description, value: post.description });
     }
 
-    if (isVideoType(post)) {
-      this.link = post.link ?? undefined;
+    if (post.type === PostType.Video) {
+      this.addDetail({ type: PostDetailType.Video, value: post.link });
     }
   }
 
+  toggleLike(userId: string) {
+    if (this.likes.includes(userId)) {
+      this.likes = this.likes.filter(id => id !== userId);
+    } else {
+      this.likes.push(userId);
+    }
+
+    return this;
+  }
+
+  addDetail(detail: { type: PostDetailType, value: string }) {
+    if (!detail.type || !detail.value) {
+      return;
+    }
+
+    this.postsDetails.push(
+      (new BlogPostDetailFactory()).create({
+        id: undefined,
+        postId: this.id,
+        ...detail
+      })
+    );
+  }
+
   public toPOJO(): CommonPostType {
-    const basePost: { [key: string]: any } = {
+    return {
       id: this.id,
+      originalId: this.originalId,
       type: this.type,
       title: this.title,
       status: this.status,
       authorId: this.authorId,
+      originalAuthorId: this.originalAuthorId,
       tags: this.tags,
       likes: this.likes,
       dateCreate: this.dateCreate,
       dateUpdate: this.dateUpdate,
       isReposted: this.isReposted,
-      comments: this.comments?.map(comment => comment.toPOJO()) ?? []
-    };
+      comments: this.comments?.map(comment => comment.toPOJO()) ?? [],
+      postsDetails: this.postsDetails?.map(detail => detail.toPOJO()) ?? []
+    } as CommonPostType;
+  }
 
-    if (isPhotoType(this)) {
-      basePost.photo = this.photo;
-    }
+  public createResponseObject() {
+    const { postsDetails, ...entity } = this.toPOJO();
 
-    if (isTextType(this)) {
-      basePost.text = this.text;
-      basePost.announcement = this.announcement;
-    }
+    return { ...entity, ...BlogPostEntity.detailsToObject(postsDetails) };
+  }
 
-    if (isQuoteType(this)) {
-      basePost.text = this.text;
-      basePost.quoteAuthor = this.quoteAuthor;
-    }
-
-    if (isLinkType(this)) {
-      basePost.link = this.link;
-      basePost.description = this.description;
-    }
-
-    if (isVideoType(this)) {
-      basePost.link = this.link;
-    }
-
-    return basePost as CommonPostType;
+  public static detailsToObject(details) {
+    return details.reduce((result, { type, value }) => {
+      const detailName = type[0].toLowerCase() + type.slice(1);
+      result[detailName] = value;
+      return result;
+    }, {});
   }
 }

@@ -1,5 +1,4 @@
-import { IsString, IsNumber, IsOptional, validate, ValidateNested, IsObject, IsNotEmptyObject, IsDefined } from 'class-validator';
-import { handleClassValidatorError } from '@project/shared/helpers';
+import { IsString, IsNumber, IsOptional, ValidateNested, IsObject, IsNotEmptyObject, IsDefined, validateOrReject } from 'class-validator';
 import { EnvValidationMessage } from './file-storage.messages';
 import { Type } from 'class-transformer';
 
@@ -42,6 +41,6 @@ export class FileStorageConfiguration {
   db: FileStorageDbConfiguration;
 
   public async validate(): Promise<void> {
-    handleClassValidatorError(await validate(this) as any);
+    await validateOrReject(this);
   }
 }

@@ -11,7 +11,10 @@ export class BlogUserModel extends Document implements AuthUser {
   email: string;
 
   @Prop()
-  avatar?: string;
+  avatarId?: string;
+
+  @Prop()
+  subscribers: string[];
 
   @Prop()
   registrationDate: Date;

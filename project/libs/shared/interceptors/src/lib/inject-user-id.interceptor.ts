@@ -10,6 +10,7 @@ export class InjectUserIdInterceptor implements NestInterceptor {
   public intercept(context: ExecutionContext, next: CallHandler) {
     const request = context.switchToHttp().getRequest();
     request.body['userId'] = request.user.id;
+    request.body['authorId'] = request.user.id;
 
     return next.handle();
   }

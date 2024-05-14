@@ -1,5 +1,4 @@
-import { validate, IsString, IsNotEmpty } from 'class-validator';
-import { handleClassValidatorError } from '@project/shared/helpers';
+import { IsString, IsNotEmpty, validateOrReject } from 'class-validator';
 
 export class JWTConfiguration {
   @IsString()
@@ -19,6 +18,6 @@ export class JWTConfiguration {
   refreshTokenExpiresIn: string;
 
   public async validate(): Promise<void> {
-    handleClassValidatorError(await validate(this) as any);
+    await validateOrReject(this);
   }
 }

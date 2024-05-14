@@ -1,9 +1,15 @@
-import { PrismaClient } from '@prisma/client';
+import { PostDetailType, PostType, PrismaClient } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { Types } from 'mongoose';
 
+const usersIds = [
+  '664228e8d67b36ef7c221f8e',
+  '6641e7c30e1dd47aa62202d9',
+  '6641e7cd0e1dd47aa62202da'
+];
+
 const DataCount = {
-  Post: 15,
+  Post: 30,
   Likes: 20,
   Comment: 50,
   Details: 150
@@ -16,10 +22,6 @@ const POSTS_TYPES = ['Video', 'Text', 'Quote', 'Photo', 'Link'];
 const POSTS_STATUSES = ['Draft', 'Published'];
 
 const POSTS_TAGS = ['nature', 'globe', 'photo', 'canon', 'lands', 'random', 'new'];
-
-const POSTS_DETAILS_TYPES = ['Video', 'Text', 'QuoteAuthor', 'Photo', 'Link', 'Description', 'Announcement'] as const;
-
-const POSTS_DETAILS_LENGTH = 32;
 
 const POSTS_TITLES_LIST = [
   'The Moon by Night',
@@ -48,6 +50,16 @@ const COMMENTS_TEXTS = [
 
 const COMMENT_MIN_DATE = '2020-01-01';
 
+const DetailValue = {
+  PhotoId: '664228e8d67b36ef7c221f8e',
+  Text: 'Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.',
+  Announcement: 'Lorem ipsum dolor sit amet, qui minim labore adipisicing minim sint cillum sint consectetur cupidatat.',
+  QuoteAuthor: 'Some Quote Author',
+  LinkUrl: 'https://htmlacademy.ru',
+  Description: 'Link post description...',
+  VideoUrl: 'https://www.youtube.com/test'
+};
+
 const getRandomValue = (dataList: any[]) =>
   dataList[Math.floor(Math.random() * dataList.length)];
 
@@ -58,9 +70,11 @@ const generatePost = () => {
 
   return {
     id: randomUUID(),
+    originalId: null,
     type: getRandomValue(POSTS_TYPES),
     status: getRandomValue(POSTS_STATUSES),
-    authorId: new Types.ObjectId().toString(),
+    authorId: getRandomValue(usersIds),
+    originalAuthorId: null,
     title: getRandomValue(POSTS_TITLES_LIST),
     tags: [...new Set(
       Array.from({ length: Math.floor(Math.random() * POSTS_TAGS.length) }, () => {
@@ -69,16 +83,16 @@ const generatePost = () => {
     )],
     dateCreate: randomDate(new Date(POST_MIN_DATE), new Date()),
     dateUpdate: new Date(),
-    isReposted: !!(Math.round(Math.random() * 1)),
+    isReposted: false,
     likes: Array.from({ length: Math.floor(Math.random() * DataCount.Likes) }, () => {
       return new Types.ObjectId().toString();
     })
   };
 }
 
-type PostType = ReturnType<typeof generatePost>;
+type BlogPostType = ReturnType<typeof generatePost>;
 
-const generateComment = (post: PostType) => {
+const generateComment = (post: BlogPostType) => {
 
   return {
     id: randomUUID(),
@@ -89,14 +103,41 @@ const generateComment = (post: PostType) => {
   };
 }
 
-const generatePostDetails = (post: PostType, type: typeof POSTS_DETAILS_TYPES[number]) => {
+const generatePostDetails = (post: BlogPostType) => {
+  if (post.type === PostType.Photo) {
+    return [
+      { id: randomUUID(), postId: post.id, type: PostDetailType.Photo, value: DetailValue.PhotoId }
+    ];
+  }
 
-  return {
-    id: randomUUID(),
-    postId: post.id,
-    type,
-    value: (Math.random() + 1).toString(POSTS_DETAILS_LENGTH)
-  };
+  if (post.type === PostType.Text) {
+    return [
+      { id: randomUUID(), postId: post.id, type: PostDetailType.Text, value: DetailValue.Text },
+      { id: randomUUID(), postId: post.id, type: PostDetailType.Announcement, value: DetailValue.Announcement }
+    ];
+  }
+
+  if (post.type === PostType.Quote) {
+    return [
+      { id: randomUUID(), postId: post.id, type: PostDetailType.Text, value: DetailValue.Text },
+      { id: randomUUID(), postId: post.id, type: PostDetailType.QuoteAuthor, value: DetailValue.QuoteAuthor }
+    ];
+  }
+
+  if (post.type === PostType.Link) {
+    return [
+      { id: randomUUID(), postId: post.id, type: PostDetailType.Link, value: DetailValue.LinkUrl },
+      { id: randomUUID(), postId: post.id, type: PostDetailType.Description, value: DetailValue.Description }
+    ];
+  }
+
+  if (post.type === PostType.Video) {
+    return [
+      { id: randomUUID(), postId: post.id, type: PostDetailType.Video, value: DetailValue.VideoUrl }
+    ];
+  }
+
+  return [];
 }
 
 const seedDb = async (prismaClient: PrismaClient) => {
@@ -119,18 +160,11 @@ const seedDb = async (prismaClient: PrismaClient) => {
     }))
   );
 
-  const postsDetails = Array.from({ length: DataCount.Details },
-    () => generatePostDetails(
-      getRandomValue(posts),
-      getRandomValue(POSTS_DETAILS_TYPES as any)
-    ));
-  await Promise.all(
-    postsDetails.map(postsDetail => prismaClient.postsDetails.upsert({
-      where: { id: postsDetail.id },
-      update: {},
-      create: postsDetail
-    }))
-  );
+  const postsDetails = posts.reduce((details: any[], post) => {
+    return [...details, ...generatePostDetails(post)];
+  }, []);
+
+  await prismaClient.postsDetails.createMany({ data: postsDetails });
 
   console.log('Database was filled');
 }

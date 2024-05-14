@@ -5,9 +5,11 @@ import { SALT_ROUNDS } from './blog-user.constants';
 export class BlogUserEntity extends Entity implements StorableEntity<AuthUser> {
   email: string;
   name: string;
+  avatarId?: string;
   avatar?: string;
   registrationDate: Date;
   passwordHash: string;
+  subscribers: string[];
 
   constructor(user?: AuthUser) {
     super();
@@ -22,9 +24,10 @@ export class BlogUserEntity extends Entity implements StorableEntity<AuthUser> {
     this.id = user.id ?? '';
     this.email = user.email;
     this.name = user.name;
-    this.avatar = user.avatar ?? '';
+    this.avatarId = user.avatarId;
     this.registrationDate = user.registrationDate || new Date();
     this.passwordHash = user.passwordHash;
+    this.subscribers = user.subscribers ?? [];
   }
 
   toPOJO(): AuthUser {
@@ -32,7 +35,8 @@ export class BlogUserEntity extends Entity implements StorableEntity<AuthUser> {
       id: this.id,
       email: this.email,
       name: this.name,
-      avatar: this.avatar,
+      avatarId: this.avatarId,
+      subscribers: this.subscribers,
       registrationDate: this.registrationDate,
       passwordHash: this.passwordHash
     }
@@ -41,6 +45,22 @@ export class BlogUserEntity extends Entity implements StorableEntity<AuthUser> {
   public async setPassword(password: string): Promise<BlogUserEntity> {
     const salt = await genSalt(SALT_ROUNDS);
     this.passwordHash = await hash(password, salt);
+
+    return this;
+  }
+
+  public setAvatar(avatar: string) {
+    this.avatar = avatar;
+
+    return this;
+  }
+
+  public updateSubscribers(authorId: string) {
+    if (this.subscribers.includes(authorId)) {
+      this.subscribers = this.subscribers.filter(subscriberId => subscriberId !== authorId);
+    } else {
+      this.subscribers.push(authorId);
+    }
 
     return this;
   }

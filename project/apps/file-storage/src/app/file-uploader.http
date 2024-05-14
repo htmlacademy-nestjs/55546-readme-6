@@ -12,6 +12,14 @@ Content-Disposition: form-data; name="file"; filename="file-uploader.http"
 ###
 
 # Get file by ID
-GET http://localhost:3003/api/files/662aa48588f094431301f2a6 HTTP/1.1
+GET http://localhost:3003/api/files/6640c2739036eb5b68df8b9c HTTP/1.1
 
 ###
+
+# Get files list by ID to collect data in API Gateway
+POST http://localhost:3003/api/files/get-files-by-id HTTP/1.1
+Content-Type: application/json
+
+{
+  "filesIds": ["663f57ceb6973244113ad0a0", "663f6c9f24d5b5aade94ede0", "663f6cb324d5b5aade94ede2"]
+}

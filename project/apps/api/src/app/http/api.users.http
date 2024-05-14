@@ -1,0 +1,68 @@
+# Create a new user
+POST http://localhost:3001/api/users/register HTTP/1.1
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="avatar"; filename="/home/arcmag/Загрузки/test-file.jpg"
+Content-Type: image/jpeg
+
+< /home/arcmag/Загрузки/test-file.jpg
+
+--boundary
+Content-Disposition: form-data; name="email"
+
+test-user57@mail.ru
+--boundary
+Content-Disposition: form-data; name="name"
+
+TestUser
+--boundary
+Content-Disposition: form-data; name="password"
+
+123456
+--boundary--
+
+###
+
+# Login user by email and password
+POST http://localhost:3001/api/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "test-user57@mail.ru",
+  "password": "123456"
+}
+
+###
+
+# Get user public info by user ID (postsCount - only "Published" status!)
+GET http://localhost:3001/api/users/6642858e244a291748136a14 HTTP/1.1
+
+###
+
+# Change user password
+PATCH http://localhost:3001/api/users/change-password HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDI4NThlMjQ0YTI5MTc0ODEzNmExNCIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTYzNjQ3MCwiZXhwIjoxNzE1NzIyODcwfQ.aQaOlTCIDoEUybFnVCtVbTO3J5Xw4JnWzFv_gyTCis4
+Content-Type: application/json
+
+{
+  "oldPassword": "123456",
+  "newPassword": "123456"
+}
+
+###
+
+# Subscribe on an other user
+PATCH http://localhost:3001/api/users/subscribe HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDI4NThlMjQ0YTI5MTc0ODEzNmExNCIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsImlhdCI6MTcxNTYzNjQ3MCwiZXhwIjoxNzE1NzIyODcwfQ.aQaOlTCIDoEUybFnVCtVbTO3J5Xw4JnWzFv_gyTCis4
+Content-Type: application/json
+
+{
+  "authorId": "6641e7c30e1dd47aa62202d9"
+}
+
+###
+
+# Get new JWT pair
+POST http://localhost:3001/api/users/refresh HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NDI4NThlMjQ0YTI5MTc0ODEzNmExNCIsImVtYWlsIjoidGVzdC11c2VyNTdAbWFpbC5ydSIsIm5hbWUiOiJUZXN0VXNlciIsInRva2VuSWQiOiI0ODdiMDk1ZC0yNzE0LTQ4NTgtYjY4ZS02MTkxN2RmZjk4NTYiLCJpYXQiOjE3MTU2MzY1OTEsImV4cCI6MTcxODIyODU5MX0.Dvh6tzdzdPrPf8c7v4r3QsMq-06zrbsaw1WHN68f0w8
