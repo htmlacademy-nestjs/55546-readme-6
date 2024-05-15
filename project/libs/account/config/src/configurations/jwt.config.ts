@@ -2,13 +2,6 @@ import { plainToClass } from "class-transformer";
 import { ConfigType, registerAs } from "@nestjs/config";
 import { JWTConfiguration } from "./jwt/jwt.env";
 
-export interface JWTConfig {
-  accessTokenSecret: string;
-  accessTokenExpiresIn: string;
-  refreshTokenSecret: string;
-  refreshTokenExpiresIn: string;
-}
-
 async function getJwtConfig(): Promise<JWTConfiguration> {
   const config = plainToClass(JWTConfiguration, {
     accessTokenSecret: process.env.JWT_ACCESS_TOKEN_SECRET,

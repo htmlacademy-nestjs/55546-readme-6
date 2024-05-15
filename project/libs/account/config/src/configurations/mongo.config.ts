@@ -4,16 +4,6 @@ import { DEFAULT_MONGO_PORT } from "./mongodb/mongo.const";
 import { ConfigType, registerAs } from "@nestjs/config";
 import { RADIX_DECIMAIL } from "@project/shared/core";
 
-export interface MongoConfig {
-  host: string;
-  name: string;
-  port: number;
-  externalPort: number;
-  user: string;
-  password: string;
-  authBase: string;
-}
-
 async function getDbConfig(): Promise<MongoConfiguration> {
   const config = plainToClass(MongoConfiguration, {
     host: process.env.MONGO_HOST,

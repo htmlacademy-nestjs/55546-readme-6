@@ -6,20 +6,6 @@ import { RADIX_DECIMAIL } from "@project/shared/core";
 
 type Environment = typeof ENVIRONMENTS[number];
 
-export interface FileStorageConfig {
-  environment: string;
-  port: number;
-  uploadDirectory: string;
-  db: {
-    host: string;
-    port: number;
-    user: string;
-    name: string;
-    password: string;
-    authBase: string;
-  }
-}
-
 async function getFileStorageConfig(): Promise<FileStorageConfiguration> {
   const config = plainToClass(FileStorageConfiguration, {
     environment: process.env.NODE_ENV as Environment,
