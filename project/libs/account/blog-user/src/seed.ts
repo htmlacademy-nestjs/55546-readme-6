@@ -1,8 +1,10 @@
 import mongoose, { Schema, Types } from 'mongoose';
 import { genSalt, hash } from 'bcrypt';
 
-const USERS_MONGO_CONNECTION_STRING = 'mongodb://admin:123456@127.0.0.1:27018/readmy-users?authSource=admin';
-const NOTIFY_MONGO_CONNECTION_STRING = 'mongodb://admin:test@127.0.0.1:27020/readmy-notify?authSource=admin';
+const MongoConnectionString = {
+  User: 'mongodb://admin:123456@127.0.0.1:27018/readmy-users?authSource=admin',
+  Notify: 'mongodb://admin:test@127.0.0.1:27020/readmy-notify?authSource=admin',
+}
 
 export const SALT_ROUNDS = 10;
 
@@ -70,7 +72,7 @@ const seedNotifyDb = async () => {
 
 async function bootstrap() {
   try {
-    await mongoose.connect(USERS_MONGO_CONNECTION_STRING);
+    await mongoose.connect(MongoConnectionString.User);
 
     await seedUsersDb();
   } catch (error: unknown) {
@@ -81,7 +83,7 @@ async function bootstrap() {
   }
 
   try {
-    await mongoose.connect(NOTIFY_MONGO_CONNECTION_STRING);
+    await mongoose.connect(MongoConnectionString.Notify);
 
     await seedNotifyDb();
   } catch (error: unknown) {

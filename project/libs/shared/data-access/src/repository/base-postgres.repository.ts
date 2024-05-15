@@ -1,6 +1,9 @@
 import { PrismaClientService } from '@project/blog-models';
 import { Entity, StorableEntity, EntityFactory } from '@project/shared/core';
 import { Repository } from './repository.interface';
+import { NotImplementedException } from '@nestjs/common';
+
+const NOT_IMPLEMENTED_MESSAGE = 'Not implemented';
 
 export abstract class BasePostgresRepository<
   T extends Entity & StorableEntity<ReturnType<T['toPOJO']>>,
@@ -21,18 +24,18 @@ export abstract class BasePostgresRepository<
   }
 
   public async findById(id: T['id']): Promise<T> {
-    throw new Error('Not implemented');
+    throw new NotImplementedException(NOT_IMPLEMENTED_MESSAGE);
   }
 
   public async save(entity: T): Promise<void> {
-    throw new Error('Not implemented');
+    throw new NotImplementedException(NOT_IMPLEMENTED_MESSAGE);
   }
 
   public async update(entity: T): Promise<void> {
-    throw new Error('Not implemented');
+    throw new NotImplementedException(NOT_IMPLEMENTED_MESSAGE);
   }
 
   public async deleteById(id: T['id']): Promise<void> {
-    throw new Error('Not implemented');
+    throw new NotImplementedException(NOT_IMPLEMENTED_MESSAGE);
   }
 }

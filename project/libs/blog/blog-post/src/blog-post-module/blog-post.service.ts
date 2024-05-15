@@ -1,5 +1,4 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-
 import { BlogPostRepository } from './blog-post.repository';
 import { BlogPostEntity } from './blog-post.entity';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -7,6 +6,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { PaginationResult } from '@project/shared/core';
 import { BlogPostQuery } from './blog-post.query';
 import { PostStatus } from '@prisma/client';
+import { BlogPostValidateMessage } from './blog-post.constants';
 
 @Injectable()
 export class BlogPostService {
@@ -34,7 +34,7 @@ export class BlogPostService {
     }
 
     if (existsPost.authorId !== userId) {
-      throw new ForbiddenException(`The user is not the author of this post`);
+      throw new ForbiddenException(BlogPostValidateMessage.UserNotAuthor);
     }
 
     const blogPostEntity = new BlogPostEntity({ ...existsPost.toPOJO(), ...dto });
@@ -54,7 +54,7 @@ export class BlogPostService {
     }
 
     if (existsPost.authorId !== userId) {
-      throw new ForbiddenException(`The user is not the author of this post`);
+      throw new ForbiddenException(BlogPostValidateMessage.UserNotAuthor);
     }
 
     try {
@@ -71,17 +71,17 @@ export class BlogPostService {
     }
 
     if (existsPost.authorId === userId) {
-      throw new ForbiddenException(`You are already the author of this post`);
+      throw new ForbiddenException(BlogPostValidateMessage.UserAlreadyAuthor);
     }
 
     if (existsPost.status === PostStatus.Draft) {
-      throw new ForbiddenException(`You cannot repost posts in draft status`);
+      throw new ForbiddenException(BlogPostValidateMessage.CannotRepostDraft);
     }
 
     const { entities } = await this.getAllPosts({ authorId: userId } as BlogPostQuery);
     for (const entity of entities) {
       if (entity.isReposted && entity.originalId === existsPost.id) {
-        throw new ForbiddenException(`You are already reposted this post`);
+        throw new ForbiddenException(BlogPostValidateMessage.AlreadyReposted);
       }
     }
 
@@ -95,7 +95,7 @@ export class BlogPostService {
     }
 
     if (existsPost.status !== PostStatus.Published) {
-      throw new ForbiddenException(`You can only like published articles.`);
+      throw new ForbiddenException(BlogPostValidateMessage.LikeOnlyPublished);
     }
 
     try {

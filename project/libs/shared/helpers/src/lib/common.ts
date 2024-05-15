@@ -1,4 +1,8 @@
+import { UnprocessableEntityException } from '@nestjs/common';
+import { RADIX_DECIMAIL } from '@project/shared/core';
 import { ClassTransformOptions, plainToInstance } from 'class-transformer';
+
+const TIME_COUNT_ERROR_MESSAGE = "[parseTime] Can't parse value count. Result is NaN.";
 
 type PlainObject = Record<string, unknown>;
 
@@ -41,15 +45,15 @@ export function parseTime(time: string): TimeAndUnit {
   const match = regex.exec(time);
 
   if (!match) {
-    throw new Error(`[parseTime] Bad time string: ${time}`);
+    throw new UnprocessableEntityException(`[parseTime] Bad time string: ${time}`);
   }
 
   const [, valueRaw, unitRaw] = match;
-  const value = parseInt(valueRaw, 10);
+  const value = parseInt(valueRaw, RADIX_DECIMAIL);
   const unit = unitRaw as DateTimeUnit;
 
   if (isNaN(value)) {
-    throw new Error(`[parseTime] Can't parse value count. Result is NaN.`);
+    throw new UnprocessableEntityException(TIME_COUNT_ERROR_MESSAGE);
   }
 
   return { value, unit }

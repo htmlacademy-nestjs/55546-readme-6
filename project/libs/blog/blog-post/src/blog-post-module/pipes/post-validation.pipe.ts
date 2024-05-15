@@ -1,4 +1,4 @@
-import { ArgumentMetadata, HttpException, HttpStatus, Injectable, PipeTransform, UseInterceptors } from "@nestjs/common";
+import { ArgumentMetadata, HttpException, HttpStatus, Injectable, NotImplementedException, PipeTransform, UseInterceptors } from "@nestjs/common";
 import { CreatePostDto } from "../dto/create-post.dto";
 import { plainToClass } from "class-transformer";
 import { CreateTextPostDto } from "../dto/create-text-post.dto";
@@ -8,6 +8,8 @@ import { CreateQuotePostDto } from "../dto/create-quote-post.dto";
 import { CreateLinkPostDto } from "../dto/create-link-post.dto";
 import { CreatePhotoPostDto } from "../dto/create-photo-post.dto";
 import { PostType } from "@prisma/client";
+
+const NOT_IMPLEMENTED_MESSAGE = 'Method not implemented';
 
 @Injectable()
 export class PostValidationPipe implements PipeTransform {
@@ -36,7 +38,7 @@ export class PostValidationPipe implements PipeTransform {
         break;
 
       default:
-        throw new Error("Method not implemented.");
+        throw new NotImplementedException(NOT_IMPLEMENTED_MESSAGE);
     }
 
     const errors = await validate(plainToClass(postDto, post));

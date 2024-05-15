@@ -90,7 +90,7 @@ export class AuthenticationService {
   }
 
   public async getUserById(id: string) {
-    const existUser = this.blogUserRepository.findById(id);
+    const existUser = await this.blogUserRepository.findById(id);
     if (!existUser) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
@@ -118,7 +118,7 @@ export class AuthenticationService {
       return { accessToken, refreshToken };
     } catch (err) {
       this.logger.error('[Token generation error]: ' + err.message);
-      throw new HttpException('Ошибка при создании токена.', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(AuthenticationResponseMessage.TokenCreatedError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

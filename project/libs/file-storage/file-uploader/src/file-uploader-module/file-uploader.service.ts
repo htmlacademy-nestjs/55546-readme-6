@@ -1,5 +1,5 @@
 import 'multer';
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { ensureDir } from 'fs-extra';
 import { writeFile } from 'node:fs/promises';
@@ -12,6 +12,8 @@ import { FileUploaderRepository } from './file-uploader.repository';
 import { StoredFile } from '@project/shared/core';
 import { FileUploaderFactory } from './file-uploader.factory';
 import { FileUploaderEntity } from './file-uploader.entity';
+
+const SAVE_FILE_ERROR_MESSAGE = "Can't save file";
 
 @Injectable()
 export class FileUploaderService {
@@ -57,7 +59,7 @@ export class FileUploaderService {
       };
     } catch (error) {
       this.logger.error(`Error while saving file: ${error.message}`);
-      throw new Error(`Can't save file`);
+      throw new UnprocessableEntityException(SAVE_FILE_ERROR_MESSAGE);
     }
   }
 
