@@ -90,7 +90,7 @@ export class AuthenticationService {
   }
 
   public async getUserById(id: string) {
-    const existUser = this.blogUserRepository.findById(id);
+    const existUser = await this.blogUserRepository.findById(id);
     if (!existUser) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
