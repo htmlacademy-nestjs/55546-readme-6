@@ -118,7 +118,7 @@ export class AuthenticationService {
       return { accessToken, refreshToken };
     } catch (err) {
       this.logger.error('[Token generation error]: ' + err.message);
-      throw new HttpException('Ошибка при создании токена.', HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(AuthenticationResponseMessage.TokenCreatedError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 

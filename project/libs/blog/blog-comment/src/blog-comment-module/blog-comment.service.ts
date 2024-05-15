@@ -3,6 +3,7 @@ import { CreateCommentDto } from "./dto/create-comment.dto";
 import { BlogCommentFactory } from "./blog-comment.factory";
 import { BlogCommentRepository } from "./blog-comment.repository";
 import { BlogCommentQuery } from "./blog-comment.query";
+import { BlogCommentResponseMessage } from "./blog-comment.constants";
 
 @Injectable()
 export class BlogCommentService {
@@ -33,7 +34,7 @@ export class BlogCommentService {
     }
 
     if (existsComment.authorId !== authorId) {
-      throw new ForbiddenException(`The user is not the author of this comment`);
+      throw new ForbiddenException(BlogCommentResponseMessage.UserNotAuthor);
     }
 
     return await this.blogCommentRepository.deleteById(commentId);

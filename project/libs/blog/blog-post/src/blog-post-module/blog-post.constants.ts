@@ -43,6 +43,14 @@ export const MAX_POST_PHOTO_SIZE = 1000000;
 
 export const AVAILABLE_POST_PHOTO_TYPE = /(jpe?g|png)/;
 
+export const BlogPostValidateMessage = {
+  UserNotAuthor: 'The user is not the author of this post',
+  UserAlreadyAuthor: 'You are already the author of this post',
+  CannotRepostDraft: 'You cannot repost posts in draft status',
+  AlreadyReposted: 'You are already reposted this post',
+  LikeOnlyPublished: 'You can only like published articles'
+} as const;
+
 export const ParamDescription = {
   UserId: 'User ID',
   PostId: 'Post ID',

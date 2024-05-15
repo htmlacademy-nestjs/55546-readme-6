@@ -1,6 +1,7 @@
 import { Document, Model } from 'mongoose';
 import { Entity, EntityFactory, StorableEntity } from "@project/shared/core";
 import { Repository } from "./repository.interface";
+import { NotFoundException } from '@nestjs/common';
 
 export abstract class BaseMongoRepository<
   T extends Entity & StorableEntity<ReturnType<T['toPOJO']>>,
@@ -45,14 +46,14 @@ export abstract class BaseMongoRepository<
     ).exec();
 
     if (!updatedDocument) {
-      throw new Error(`Entity with id ${entity.id} not found`);
+      throw new NotFoundException(`Entity with id ${entity.id} not found`);
     }
   }
 
   public async deleteById(id: T["id"]): Promise<void> {
     const deletedDocument = await this.model.findByIdAndDelete(id).exec();
     if (!deletedDocument) {
-      throw new Error(`Entity with id ${id} not found`);
+      throw new NotFoundException(`Entity with id ${id} not found`);
     }
   }
 }

@@ -28,4 +28,5 @@ export const BlogCommentResponseMessage = {
   PostNotFound: 'Post not found',
   JwtAuthError: 'Failed user authorization with jwt',
   FoundCommentList: 'Successfully retrieving a list of comments based on request parameters',
+  UserNotAuthor: 'The user is not the author of this comment'
 } as const;
