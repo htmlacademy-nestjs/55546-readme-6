@@ -6,34 +6,6 @@ import { RADIX_DECIMAIL } from '@project/shared/core';
 
 type Environment = typeof ENVIRONMENTS[number];
 
-export interface NotifyConfig {
-  environment: string;
-  port: number;
-  db: {
-    host: string;
-    port: number;
-    user: string;
-    name: string;
-    password: string;
-    authBase: string;
-  },
-  rabbit: {
-    host: string;
-    password: string;
-    user: string;
-    queue: string;
-    exchange: string;
-    port: number;
-  },
-  mail: {
-    host: string;
-    port: number;
-    user: string;
-    password: string;
-    from: string;
-  }
-}
-
 async function getConfig(): Promise<NotifyConfiguration> {
   const config = plainToClass(NotifyConfiguration, {
     environment: process.env.NODE_ENV as Environment,
