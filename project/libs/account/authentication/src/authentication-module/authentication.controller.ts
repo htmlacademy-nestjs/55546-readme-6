@@ -42,7 +42,7 @@ export class AuthenticationController {
 
   @ApiResponse({
     type: LoggedUserRdo,
-    status: HttpStatus.OK,
+    status: HttpStatus.CREATED,
     description: AuthenticationResponseMessage.LoggedSuccess
   })
   @ApiResponse({
@@ -110,6 +110,7 @@ export class AuthenticationController {
     status: HttpStatus.OK,
     description: AuthenticationResponseMessage.GettingUsersById
   })
+  @HttpCode(HttpStatus.OK)
   @Post('get-users-by-id')
   public async getUserList(@Body('usersIds') usersIds: string[]) {
     const users = await this.authService.getUsersByListId(usersIds);
@@ -184,9 +185,9 @@ export class AuthenticationController {
   @ApiParam({ name: "id", required: true, description: ParamDescription.UserId })
   @Get(':id')
   public async show(@Param('id', MongoIdValidationPipe) id: string) {
-    try {
-      const existedUser = await this.authService.getUserById(id);
+    const existedUser = await this.authService.getUserById(id);
 
+    try {
       return fillDto(UserRdo, {
         ...existedUser.toPOJO(),
         avatar: existedUser.avatarId ? await this.authService.getAvatar(existedUser.avatarId) : undefined

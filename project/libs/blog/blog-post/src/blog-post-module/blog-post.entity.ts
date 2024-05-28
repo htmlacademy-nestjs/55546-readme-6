@@ -5,14 +5,14 @@ import { BlogPostDetailEntity, BlogPostDetailFactory } from '@project/blog-post-
 import { PostDetailType, PostType, PostStatus } from '@prisma/client';
 
 export class BlogPostEntity extends Entity implements StorableEntity<CommonPostType> {
-  public originalId: string;
+  public originalId: string | null;
   public type: PostType;
   public status: PostStatus;
   public authorId: string;
-  public originalAuthorId: string;
+  public originalAuthorId: string | null;
   public title: string;
   public tags?: string[];
-  public likes?: string[];
+  public likes: string[];
   public likesCount?: number;
   public dateCreate?: Date;
   public dateUpdate?: Date;
@@ -31,12 +31,12 @@ export class BlogPostEntity extends Entity implements StorableEntity<CommonPostT
     }
 
     this.id = post.id ?? undefined;
-    this.originalId = post.originalId ?? undefined;
+    this.originalId = post.originalId ?? null;
     this.title = post.title ?? undefined;
     this.type = post.type ?? undefined;
     this.status = post.status ?? PostStatus.Draft;
     this.authorId = post.authorId ?? undefined;
-    this.originalAuthorId = post.originalAuthorId ?? undefined;
+    this.originalAuthorId = post.originalAuthorId ?? null;
     this.tags = post.tags ?? [];
     this.likes = post.likes ?? [];
     this.isReposted = post.isReposted ?? false;

@@ -91,7 +91,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       }
     });
 
-    return this.createEntityFromDocument(record);
+    return this.createEntityFromDocument(record) as BlogPostEntity;
   }
 
   public async findById(id: string): Promise<BlogPostEntity> {
@@ -105,9 +105,9 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     }
 
     const entity = this.createEntityFromDocument(document);
-    document.postsDetails.map(detail => entity.addDetail(detail));
+    document.postsDetails.map(detail => entity && entity.addDetail(detail));
 
-    return entity;
+    return entity as BlogPostEntity;
   }
 
   public async deleteById(id: string): Promise<void> {
@@ -116,7 +116,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
 
   public async find(query?: BlogPostQuery, isOnlyDraft = false, usersIds: string[] = []): Promise<PaginationResult<BlogPostEntity>> {
     const skip = query?.page && query?.limit ? (query.page - 1) * query.limit : undefined;
-    const take = query?.limit;
+    const take = query?.limit || 10;
     const where: Prisma.PostWhereInput = {};
     const orderBy: Prisma.PostOrderByWithRelationInput = {};
 
@@ -162,8 +162,9 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     ]);
 
     return {
-      entities: records.map(record => this.createEntityFromDocument(record)),
-      currentPage: query?.page,
+      entities: (records || [])
+        .map(record => this.createEntityFromDocument(record) as BlogPostEntity),
+      currentPage: query?.page || 1,
       totalPages: this.calculatePostsPage(postCount, take),
       itemsPerPage: take,
       totalItems: postCount
@@ -176,6 +177,6 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       include: { comments: true, postsDetails: true }
     });
 
-    return posts.map(post => this.createEntityFromDocument(post));
+    return posts.map(post => this.createEntityFromDocument(post) as BlogPostEntity);
   }
 }

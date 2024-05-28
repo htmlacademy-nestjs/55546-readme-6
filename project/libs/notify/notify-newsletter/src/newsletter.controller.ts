@@ -11,9 +11,7 @@ import { fillDto } from '@project/shared/helpers';
 @ApiTags('newsletter')
 @Controller()
 export class NewsletterController {
-  constructor(
-    private readonly newsletterService: NewsletterService,
-  ) { }
+  constructor(private readonly newsletterService: NewsletterService) { }
 
   @RabbitSubscribe({
     exchange: 'readmy.notify.api',

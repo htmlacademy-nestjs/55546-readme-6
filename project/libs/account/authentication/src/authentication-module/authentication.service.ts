@@ -98,12 +98,13 @@ export class AuthenticationService {
     return existUser;
   }
 
-  public async getUsersByListId(usersListId: string[]) {
+  public async getUsersByListId(usersListId: string[] = []) {
     return this.blogUserRepository.findListById(
       usersListId.filter(id => Types.ObjectId.isValid(id)));
   }
 
   public async createUserToken(user: User): Promise<Token> {
+
     const accessTokenPayload = createJWTPayload(user);
     const refreshTokenPayload = { ...accessTokenPayload, tokenId: crypto.randomUUID() };
     await this.refreshTokenService.createRefreshSession(refreshTokenPayload);

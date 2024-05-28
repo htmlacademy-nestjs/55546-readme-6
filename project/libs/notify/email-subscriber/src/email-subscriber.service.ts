@@ -5,9 +5,7 @@ import { EmailSubscriberRepository } from './email-subscriber.repository';
 
 @Injectable()
 export class EmailSubscriberService {
-  constructor(
-    private readonly emailSubscriberRepository: EmailSubscriberRepository
-  ) { }
+  constructor(private readonly emailSubscriberRepository: EmailSubscriberRepository) { }
 
   public async addSubscriber(subscriber: CreateSubscriberDto) {
     const { email } = subscriber;

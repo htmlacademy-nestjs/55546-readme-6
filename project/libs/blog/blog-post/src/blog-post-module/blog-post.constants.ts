@@ -74,4 +74,5 @@ export const PostResponseMessage = {
   CommentValidationError: 'Validation error when creating comment',
   UserNotFound: 'User not found',
   JwtAuthError: 'Failed user authorization with jwt',
+  ForbiddenReposting: 'Forbiddend reposting',
 } as const;

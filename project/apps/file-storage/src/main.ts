@@ -1,8 +1,8 @@
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-
 import { AppModule } from './app/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { RequestIdInterceptor } from '@project/interceptors';
 
 const PORT = 3003;
 
@@ -11,6 +11,8 @@ const GLOBAL_PREFIX = 'api';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix(GLOBAL_PREFIX);
+
+  app.useGlobalInterceptors(new RequestIdInterceptor());
 
   const config = new DocumentBuilder()
     .setTitle('Blog Application')

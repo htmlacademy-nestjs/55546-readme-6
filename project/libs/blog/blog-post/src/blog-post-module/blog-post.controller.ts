@@ -42,12 +42,9 @@ export class BlogPostController {
     status: HttpStatus.OK,
     description: PostResponseMessage.FoundPostList
   })
-  @ApiResponse({
-    status: HttpStatus.NOT_FOUND,
-    description: PostResponseMessage.UserNotFound
-  })
-  @UseGuards(CheckAuthGuard)
   @ApiQuery({ type: BlogPostQuery, description: QueryDescription.PaginationList })
+  @UseGuards(CheckAuthGuard)
+  @HttpCode(HttpStatus.OK)
   @Post('/content-ribbon')
   public async contentRibbon(@Body() usersIds: string[], @Query() query: BlogPostQuery) {
     const postWithPagination = await this.blogPostService
@@ -224,6 +221,10 @@ export class BlogPostController {
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
     description: PostResponseMessage.PostNotFound
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: PostResponseMessage.ForbiddenReposting
   })
   @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,

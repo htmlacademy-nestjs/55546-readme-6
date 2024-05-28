@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app/app.module';
 import { ConfigService } from '@nestjs/config';
+import { RequestIdInterceptor } from '@project/interceptors';
 
 const DEFAULT_PORT = 3000;
 
@@ -20,6 +21,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('spec', app, document);
 
+  app.useGlobalInterceptors(new RequestIdInterceptor());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   const configService = app.get(ConfigService);

@@ -47,7 +47,7 @@ export class CreatePostDto {
   })
   @IsOptional()
   @IsString({ each: true })
-  @Transform(({ value }) => [...new Set(value.map((tag: string) => tag.toLowerCase()))])
+  @Transform(({ value }) => Array.isArray(value) ? [...new Set(value.map((tag: string) => tag.toLowerCase()))] : [])
   @ArrayMaxSize(MAX_POST_TAGS)
   @Matches(TAG_VALIDATE_REGEXP, { each: true })
   @IsArray()

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model, Mongoose, Types } from 'mongoose';
 import { BaseMongoRepository } from '@project/data-access';
 import { FileUploaderEntity } from './file-uploader.entity';
 import { FileUploaderFactory } from './file-uploader.factory';
@@ -17,7 +17,11 @@ export class FileUploaderRepository extends BaseMongoRepository<FileUploaderEnti
 
   public async getFilesById(filesIds: string[]) {
     const files = await this.model.find({
-      _id: { $in: filesIds.map(id => new Types.ObjectId(id)) }
+      _id: {
+        $in: (filesIds || [])
+          .filter(id => Types.ObjectId.isValid(id))
+          .map(id => new Types.ObjectId(id))
+      }
     });
 
     return files.map(file => this.createEntityFromDocument(file));

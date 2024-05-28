@@ -53,7 +53,7 @@ export class BlogPostRdo {
     example: '661022d3615ce5c3c722054f'
   })
   @Expose()
-  public originaAuthorlId: string;
+  public originalAuthorId: string;
 
   @ApiProperty({
     description: 'Post tags list',

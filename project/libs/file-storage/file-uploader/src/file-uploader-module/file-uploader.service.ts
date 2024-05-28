@@ -30,12 +30,12 @@ export class FileUploaderService {
     return this.config.uploadDirectory;
   }
 
-  private getSubUploadDirectoryPath(): string {
+  public getSubUploadDirectoryPath(): string {
     const [year, month] = dayjs().format(this.DATE_FORMAT).split(' ');
     return join(year, month);
   }
 
-  private getDestinationFilePath(filename: string): string {
+  public getDestinationFilePath(filename: string): string {
     return join(this.getUploadDirectoryPath(), this.getSubUploadDirectoryPath(), filename)
   }
 

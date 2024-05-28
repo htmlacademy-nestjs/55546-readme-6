@@ -139,3 +139,17 @@ npx nx run notify:serve
 - libs/account/authentication/src/authentication-module/authentication.http
 - libs/blog/blog-comment/src/blog-comment-module/blog-comment.http
 - libs/blog/blog-post/src/blog-post-module/blog-post.http
+
+---
+
+# Тестирование и линтинг
+
+npx nx run-many --target=lint --all --parallel=5
+
+npx nx run account:test
+
+npx nx run blog:test -i
+
+npx nx run file-storage:test
+
+npx nx run notify:test

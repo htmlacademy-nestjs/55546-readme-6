@@ -29,9 +29,7 @@ export class BlogService {
 
     return posts.map(post => {
       if (post.type === PostType.Photo && post.photo) {
-        post.photo = photos.find(photo => {
-          return photo.id === post.photo;
-        });
+        post.photo = photos.find(photo => photo.id === post.photo);
       }
 
       return { ...post, user: users.find(user => user.id === post.authorId) };

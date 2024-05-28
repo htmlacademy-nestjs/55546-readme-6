@@ -25,6 +25,8 @@ export class NewsletterService {
     }
 
     await this.mailService.sendNotifyAboutNewPosts(subscribers, posts);
-    await this.newsletterRepository.save(new NewsletterEntity({ lastMailingDate: new Date() }));
+    await this.newsletterRepository.save(
+      new NewsletterEntity({ lastMailingDate: new Date() })
+    );
   }
 }

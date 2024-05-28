@@ -53,6 +53,10 @@ export class BlogCommentController {
     description: BlogCommentResponseMessage.CommentNotFound
   })
   @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: BlogCommentResponseMessage.UserNotAuthor
+  })
+  @ApiResponse({
     status: HttpStatus.UNAUTHORIZED,
     description: BlogCommentResponseMessage.JwtAuthError
   })

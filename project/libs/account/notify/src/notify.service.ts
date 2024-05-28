@@ -9,12 +9,12 @@ export class NotifyService {
   constructor(
     private readonly rabbitClient: AmqpConnection,
     @Inject(rabbitConfig.KEY)
-    private readonly rabbiOptions: ConfigType<typeof rabbitConfig>,
+    private readonly rabbitOptions: ConfigType<typeof rabbitConfig>,
   ) { }
 
   public async registerSubscriber(dto: any) {
     return this.rabbitClient.publish<any>(
-      this.rabbiOptions.exchange,
+      this.rabbitOptions.exchange,
       RabbitRouting.AddSubscriber,
       { ...dto }
     );

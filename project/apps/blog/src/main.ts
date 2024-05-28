@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { RequestIdInterceptor } from '@project/interceptors';
 
 const PORT = 3002;
 
@@ -22,6 +23,7 @@ async function bootstrap() {
 
   const port = process.env.BLOG_PORT || PORT;
 
+  app.useGlobalInterceptors(new RequestIdInterceptor());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   await app.listen(port);

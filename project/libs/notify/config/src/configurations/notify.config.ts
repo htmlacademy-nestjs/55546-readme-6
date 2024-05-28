@@ -7,9 +7,10 @@ import { RADIX_DECIMAIL } from '@project/shared/core';
 type Environment = typeof ENVIRONMENTS[number];
 
 async function getConfig(): Promise<NotifyConfiguration> {
+
   const config = plainToClass(NotifyConfiguration, {
     environment: process.env.NODE_ENV as Environment,
-    port: parseInt(process.env.PORT || `${DefaultPort.Notify}`, RADIX_DECIMAIL),
+    port: parseInt(process.env.NOTIFY_PORT || `${DefaultPort.Notify}`, RADIX_DECIMAIL),
     db: {
       host: process.env.MONGO_HOST,
       port: parseInt(process.env.MONGO_PORT ?? DefaultPort.Mongo.toString(), RADIX_DECIMAIL),

@@ -15,14 +15,14 @@ export interface PostDetailItem {
 
 export interface Post {
   id: string;
-  originalId: string;
+  originalId: string | null;
   type: PostType;
   status: PostStatus;
   authorId: string;
-  originalAuthorId: string;
+  originalAuthorId?: string | null;
   title: string;
   tags?: string[];
-  likes?: string[];
+  likes: string[];
   likesCount?: number;
   dateCreate: Date;
   dateUpdate: Date;
