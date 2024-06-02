@@ -4,12 +4,12 @@ import { AxiosExceptionFilter } from '@project/filters';
 import { ApplicationServiceURL } from '@project/api-config';
 import { InjectAxiosAuthorization, InjectUserIdInterceptor } from '@project/interceptors';
 import { CheckAuthGuard } from '@project/guards';
-import { BlogPostQuery } from '@project/blog-post';
 import { FileInterceptor } from '@nestjs/platform-express';
 import 'express';
 import { BlogService } from './services/blog.service';
-import { AVAILABLE_POST_PHOTO_TYPE, MAX_POST_PHOTO_SIZE } from '@project/blog-post';
-import { RequestWithUser } from '@project/authentication';
+
+export const MAX_POST_PHOTO_SIZE = 1000000;
+export const AVAILABLE_POST_PHOTO_TYPE = /(jpe?g|png)/;
 
 @Controller('posts')
 @UseInterceptors(InjectAxiosAuthorization)
@@ -21,7 +21,7 @@ export class BlogController {
   ) { }
 
   @Get('/')
-  public async index(@Query() params: BlogPostQuery) {
+  public async index(@Query() params: any) {
     const { data } = await this.httpService
       .axiosRef.get(`${ApplicationServiceURL.Blog}`, { params });
 
@@ -34,8 +34,8 @@ export class BlogController {
   @UseGuards(CheckAuthGuard)
   @Get('/content-ribbon')
   public async contentRibbon(
-    @Req() { user }: RequestWithUser,
-    @Query() query: BlogPostQuery
+    @Req() { user }: { user: any },
+    @Query() query: any
   ) {
     return this.blogService.getContentRibbon(user.id, query);
   }

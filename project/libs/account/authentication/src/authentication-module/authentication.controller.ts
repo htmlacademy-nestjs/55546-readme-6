@@ -24,6 +24,11 @@ import { UserPayloadRdo } from '../rdo/user-payload.rdo';
 export class AuthenticationController {
   constructor(private readonly authService: AuthenticationService) { }
 
+  @Get('/test')
+  public async test() {
+    console.log('test successful');
+  }
+
   @ApiResponse({
     type: UserRdo,
     status: HttpStatus.CREATED,

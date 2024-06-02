@@ -5,6 +5,7 @@ import { ConfigType, registerAs } from "@nestjs/config";
 import { RADIX_DECIMAIL } from "@project/shared/core";
 
 async function getDbConfig(): Promise<MongoConfiguration> {
+
   const config = plainToClass(MongoConfiguration, {
     host: process.env.MONGO_HOST,
     name: process.env.MONGO_DB,

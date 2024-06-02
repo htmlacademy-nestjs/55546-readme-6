@@ -1,0 +1,64 @@
+version: '3.9'
+services:
+  readmy.notify:
+    image: readmy.notify:latest
+    container_name: readmy.notify
+    restart: always
+    env_file:
+      - ./notify.prod.env
+    environment:
+      PORT: ${NOTIFY_PORT}
+      NODE_ENV: production
+    depends_on:
+      - readmy.notify.mongodb
+      - readmy.notify.rabbitmq
+    ports:
+      - ${NOTIFY_PORT}:${NOTIFY_PORT}
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    networks:
+      - readmy.notify.network
+        
+  readmy.notify.rabbitmq:
+    image: rabbitmq:3.11-management
+    restart: always
+    container_name: readmy.notify.rabbitmq
+    tty: true
+    ports:
+      - '1088:15672'
+      - '5673:5672'
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - readmy.notify.network
+
+  readmy.notify.mongodb:
+    image: mongo:4.4
+    restart: always
+    container_name: readmy.notify.mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DB}
+    volumes:
+      - readmy.notify.mongodb:/data/db
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/readmy-notify --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    networks:
+      - readmy.notify.network
+
+volumes:
+  readmy.notify.mongodb:
+    
+networks:
+  readmy.notify.network:
+      driver: bridge

@@ -1,4 +1,4 @@
-import { IsString, IsNumber, Max, Min, IsOptional, validateOrReject } from 'class-validator';
+import { IsString, IsNumber, Max, Min, IsOptional, validateOrReject, validate, IsNotEmpty } from 'class-validator';
 import { DEFAULT_MONGO_PORT, PortRange } from "./mongo.const";
 import { EnvValidationMessage } from './mongo.messages';
 
@@ -25,6 +25,7 @@ export class MongoConfiguration {
   public user: string;
 
   @IsString({ message: EnvValidationMessage.DBPasswordRequired })
+  @IsNotEmpty()
   public password: string;
 
   @IsString({ message: EnvValidationMessage.DBBaseAuthRequired })

@@ -18,6 +18,16 @@
           "buildTarget": "notify:build:production"
         }
       }
+    },
+    "build-docker-image": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx run notify:build --no-cache",
+          "docker build -f ./apps/notify/Dockerfile -t readmy.notify:latest ."
+        ],
+        "parallel": false
+      }
     }
   },
   "tags": []

@@ -18,6 +18,16 @@
           "buildTarget": "file-storage:build:production"
         }
       }
+    },
+    "build-docker-image": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx run file-storage:build --no-cache",
+          "docker build -f ./apps/file-storage/Dockerfile -t readmy.file-storage:latest ."
+        ],
+        "parallel": false
+      }
     }
   },
   "tags": []

@@ -7,6 +7,7 @@ import { RADIX_DECIMAIL } from "@project/shared/core";
 type Environment = typeof ENVIRONMENTS[number];
 
 async function getFileStorageConfig(): Promise<FileStorageConfiguration> {
+
   const config = plainToClass(FileStorageConfiguration, {
     environment: process.env.NODE_ENV as Environment,
     port: process.env.PORT ? parseInt(process.env.PORT, RADIX_DECIMAIL) : DefaultPort.File,

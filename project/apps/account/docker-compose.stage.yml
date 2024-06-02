@@ -1,0 +1,39 @@
+version: '3.9'
+services:
+  readmy.account.mongo:
+    container_name: readmy.account.mongo
+    restart: always
+    volumes:
+      - readmy.account.mongo.volume:/data/db
+    env_file:
+        - account.prod.env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DB}
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongo mongodb://${MONGO_USER}:${MONGO_PASSWORD}@localhost:${MONGO_PORT}/?authSource=${MONGO_DB} --quiet
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - readmy.account.network
+        
+  readmy.account.application:
+    image: readmy.account:latest
+    container_name: readmy.account.application
+    restart: always
+    env_file:
+      - ./account.prod.env
+    environment:
+      PORT: ${PORT}
+    depends_on:
+      - readmy.account.mongo
+    ports:
+      - ${PORT}:${PORT}
+    networks:
+      - readmy.account.network
+
+networks:
+  readmy.account.network:
+    driver: bridge

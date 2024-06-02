@@ -1,0 +1,16 @@
+version: '3.9'
+services:
+  readmy.api:
+    image: readmy.api:latest
+    container_name: readmy.api
+    restart: always
+    env_file:
+      - ./api.prod.env
+    environment:
+      PORT: ${API_PORT}
+      NODE_ENV: production
+    ports:
+      - ${API_PORT}:${API_PORT}
+    extra_hosts:
+      - host.docker.internal:host-gateway
+        

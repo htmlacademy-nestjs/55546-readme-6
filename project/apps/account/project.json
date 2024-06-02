@@ -32,6 +32,16 @@
         "command": "npx ts-node reset.ts",
         "cwd": "libs/account/blog-user/src"
       }
+    },
+    "build-docker-image": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx run account:build --no-cache",
+          "docker build -f ./apps/account/Dockerfile -t readmy.account:latest ."
+        ],
+        "parallel": false
+      }
     }
   },
   "tags": []

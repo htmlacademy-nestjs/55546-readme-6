@@ -5,6 +5,7 @@ import { DEFAULT_RABBIT_PORT } from './rabbit/rabbit.const';
 import { RADIX_DECIMAIL } from '@project/shared/core';
 
 async function getConfig(): Promise<RabbitConfiguration> {
+
   const config = plainToClass(RabbitConfiguration, {
     host: process.env.API_RABBIT_HOST,
     password: process.env.API_RABBIT_PASSWORD,

@@ -6,12 +6,18 @@ import jwtConfig from './configurations/jwt.config';
 import rabbitConfig from './configurations/rabbit.config';
 
 const ENV_USERS_FILE_PATH = 'apps/account/account.env';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      cache: false,
-      load: [applicationConfig, mongoConfig, jwtConfig, rabbitConfig],
+      cache: true,
+      load: [
+        applicationConfig,
+        mongoConfig,
+        jwtConfig,
+        rabbitConfig
+      ],
       envFilePath: ENV_USERS_FILE_PATH
     })
   ]

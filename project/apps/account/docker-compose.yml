@@ -1,0 +1,9 @@
+version: '3.9'
+services:
+  readmy.account.mongo:
+    image: mongo:4.4
+    volumes:
+      - readmy.account.mongo.volume:/data/db
+
+volumes:
+  readmy.account.mongo.volume: {}

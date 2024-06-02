@@ -13,14 +13,14 @@ import { fillDto } from '@project/shared/helpers';
 export class NewsletterController {
   constructor(private readonly newsletterService: NewsletterService) { }
 
-  @RabbitSubscribe({
-    exchange: 'readmy.notify.api',
-    routingKey: RabbitRouting.NewPostsAppeared,
-    queue: 'readmy.notify.api',
-  })
-  public async notifyAboutNewPosts(posts: CommonPostType[]) {
-    this.newsletterService.sendNotifyNewSubscriber(posts);
-  }
+  // @RabbitSubscribe({
+  //   exchange: 'readmy.notify.api',
+  //   routingKey: RabbitRouting.NewPostsAppeared,
+  //   queue: 'readmy.notify.api',
+  // })
+  // public async notifyAboutNewPosts(posts: CommonPostType[]) {
+  //   this.newsletterService.sendNotifyNewSubscriber(posts);
+  // }
 
   @ApiResponse({
     type: NewsletterRdo,

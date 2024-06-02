@@ -1,9 +1,9 @@
 import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
-import { PostType } from "@prisma/client";
 import { ApplicationServiceURL } from "@project/api-config";
-import { BlogPostQuery, UpdatePostDto } from "@project/blog-post";
 import { saveFile } from "@project/shared/helpers";
+
+const POST_PHOTO_TYPE = 'Photo';
 
 @Injectable()
 export class BlogService {
@@ -14,7 +14,7 @@ export class BlogService {
   public async getPostsWithAdditionalData(posts) {
     const usersIds = [...new Set(posts.map(({ authorId }) => authorId))];
     const filesIds = posts.reduce((photos, post) => {
-      if (post.type === PostType.Photo && post.photo) {
+      if (post.type === POST_PHOTO_TYPE && post.photo) {
         photos.push(post.photo);
       }
 
@@ -28,7 +28,7 @@ export class BlogService {
       .axiosRef.post(`${ApplicationServiceURL.FilesStorage}/get-files-by-id`, { filesIds });
 
     return posts.map(post => {
-      if (post.type === PostType.Photo && post.photo) {
+      if (post.type === POST_PHOTO_TYPE && post.photo) {
         post.photo = photos.find(photo => photo.id === post.photo);
       }
 
@@ -55,12 +55,12 @@ export class BlogService {
     return post;
   }
 
-  public async savePostFile(dto: UpdatePostDto, photo?: Express.Multer.File) {
+  public async savePostFile(dto: any, photo?: Express.Multer.File) {
     const photoId = photo ? (await saveFile(this.httpService, photo)).id : undefined;
     return dto.type === 'Photo' ? { ...dto, photoId } : dto;
   }
 
-  public async getContentRibbon(subscriberId: string, params: BlogPostQuery) {
+  public async getContentRibbon(subscriberId: string, params: any) {
     const { data: publishers } = await this.httpService
       .axiosRef.get(`${ApplicationServiceURL.Users}/get-publishers-list`);
 

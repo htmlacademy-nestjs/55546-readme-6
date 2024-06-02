@@ -18,6 +18,16 @@
           "buildTarget": "api:build:production"
         }
       }
+    },
+    "build-docker-image": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx run api:build --no-cache",
+          "docker build -f ./apps/api/Dockerfile -t readmy.api:latest ."
+        ],
+        "parallel": false
+      }
     }
   },
   "tags": []

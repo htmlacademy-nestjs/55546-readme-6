@@ -1,7 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Query, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApplicationServiceURL } from '@project/api-config';
-import { BlogCommentQuery, CreateCommentDto } from '@project/blog-comment';
 import { CheckAuthGuard } from '@project/guards';
 import { InjectAxiosAuthorization, InjectUserIdInterceptor } from '@project/interceptors';
 import { AxiosExceptionFilter } from '@project/filters';
@@ -22,7 +21,7 @@ export class BlogCommentController {
   @Post('/')
   public async createComment(
     @Param('postId') postId: string,
-    @Body() dto: CreateCommentDto
+    @Body() dto: any
   ) {
     const { data } = await this.httpService.axiosRef
       .post(`${ApplicationServiceURL.Blog}/${postId}/comments`, dto);
@@ -39,7 +38,7 @@ export class BlogCommentController {
   }
 
   @Get('/find')
-  public async getCommentsByPostId(@Param('postId') postId: string, @Query() params: BlogCommentQuery) {
+  public async getCommentsByPostId(@Param('postId') postId: string, @Query() params: any) {
     const { data } = await this.httpService.axiosRef
       .get(`${ApplicationServiceURL.Blog}/${postId}/comments/find`, { params });
     return data;
